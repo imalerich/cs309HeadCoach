@@ -1,20 +1,19 @@
 //
-//  RootViewController.swift
+//  HCLiveGameViewController.swift
 //  HeadCoach
 //
-//  Created by Ian Malerich on 1/16/16.
+//  Created by Ian Malerich on 1/27/16.
 //  Copyright © 2016 Group 8. All rights reserved.
 //
 
 import UIKit
 import SnapKit
 
-class RootViewController: UIViewController {
+class HCLiveGameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // make super dope app here
+        // TODO - do cool shit here
     }
-
 }
