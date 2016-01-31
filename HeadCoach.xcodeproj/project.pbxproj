@@ -98,6 +98,8 @@
 		B972ECD11C4AF93D00C8E87B /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				B9BEF6311C5DACCE008185AB /* Head Coach League */,
+				B9BEF6301C5DACC3008185AB /* Fantasy Data */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -125,6 +127,20 @@
 				B972ECBC1C4AF8C200C8E87B /* AppDelegate.swift */,
 			);
 			name = AppData;
+			sourceTree = "<group>";
+		};
+		B9BEF6301C5DACC3008185AB /* Fantasy Data */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Fantasy Data";
+			sourceTree = "<group>";
+		};
+		B9BEF6311C5DACCE008185AB /* Head Coach League */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Head Coach League";
 			sourceTree = "<group>";
 		};
 		CA0B3B7EFF5FF2D7B6621E18 /* Frameworks */ = {
