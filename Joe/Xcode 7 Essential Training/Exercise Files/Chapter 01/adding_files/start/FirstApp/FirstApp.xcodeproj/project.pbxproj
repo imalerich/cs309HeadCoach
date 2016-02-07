@@ -14,6 +14,7 @@
 		63E206FC1BBC530400DE93C1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E206FA1BBC530400DE93C1 /* LaunchScreen.storyboard */; };
 		63E207071BBC530400DE93C1 /* FirstAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E207061BBC530400DE93C1 /* FirstAppTests.swift */; };
 		63E207121BBC530400DE93C1 /* FirstAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E207111BBC530400DE93C1 /* FirstAppUITests.swift */; };
+		B4ACE7A41C67A9A8001CE662 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B4ACE7A31C67A9A8001CE662 /* icon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		63E2070D1BBC530400DE93C1 /* FirstAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FirstAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		63E207111BBC530400DE93C1 /* FirstAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstAppUITests.swift; sourceTree = "<group>"; };
 		63E207131BBC530400DE93C1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B4ACE7A31C67A9A8001CE662 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = ../../../../assets/icon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 		63E206E51BBC530400DE93C1 = {
 			isa = PBXGroup;
 			children = (
+				B4ACE7A31C67A9A8001CE662 /* icon.png */,
 				63E206F01BBC530400DE93C1 /* FirstApp */,
 				63E207051BBC530400DE93C1 /* FirstAppTests */,
 				63E207101BBC530400DE93C1 /* FirstAppUITests */,
@@ -228,6 +231,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B4ACE7A41C67A9A8001CE662 /* icon.png in Resources */,
 				63E206FC1BBC530400DE93C1 /* LaunchScreen.storyboard in Resources */,
 				63E206F91BBC530400DE93C1 /* Assets.xcassets in Resources */,
 				63E206F71BBC530400DE93C1 /* Main.storyboard in Resources */,

@@ -4,10 +4,6 @@ import UIKit
 
 var str = "Hello, playground"
 
-var hello = "Hello"; var playground = "playground"
-
-for i in 0..<64 {
-    var point = sin(Double(i) * 100)
-}
+var a : String = "text example"
 
 //: [Next](@next)
