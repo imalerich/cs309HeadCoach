@@ -1,10 +1,22 @@
-<?php
+<html>
+	<head>
+	<title>Photostream Sample</title>
+	</head>
 
-// use json data
-header('Content-Type: application/json');
+	<body>
+	<?php
+		
+	$url = "http://photostream.iastate.edu/api/photo/?key=c88ba8aca62dd5ccb60d";
+	$data = file_get_contents($url);
+	$json = json_decode($data, True);
 
-$url = "http://photostream.iastate.edu/api/photo/?key=c88ba8aca62dd5ccb60d";
-$data = file_get_contents($url);
-echo $data;
+	for ($i = 0; $i < sizeof($json); $i++) {
+		$title = $json[$i]["title"];
+		echo "<h1>$title</h1>";
+		$img = $json[$i]["image_medium"];
+		echo "<img src=$img alt=$title/>";
+	}
 
-?>
+	?>
+	</body>
+</html>
