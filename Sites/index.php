@@ -1,22 +1,22 @@
-<html>
-	<head>
-	<title>Photostream Sample</title>
-	</head>
+<?php
 
-	<body>
-	<?php
-		
-	$url = "http://photostream.iastate.edu/api/photo/?key=c88ba8aca62dd5ccb60d";
-	$data = file_get_contents($url);
-	$json = json_decode($data, True);
+header('Content-Type: application/json');
 
-	for ($i = 0; $i < sizeof($json); $i++) {
-		$title = $json[$i]["title"];
-		echo "<h1>$title</h1>";
-		$img = $json[$i]["image_medium"];
-		echo "<img src=$img alt=$title/>";
-	}
+require_once 'HTTP/Request2.php';
 
-	?>
-	</body>
-</html>
+$request = new HTTP_Request2("https://api.fantasydata.net/nfl/v2/JSON/BoxScores/2015/1");
+$url = $request->getUrl();
+
+$headers = array("Ocp-Apim-Subscription-Key" => "fa953b83a78d44a1b054b0afbbdff57e");
+$request->setHeader($headers);
+$request->setMethod(HTTP_Request2::METHOD_GET);
+$request->setBody("{body}");
+
+try {
+	$response = $request->send();
+	echo $response->getBody();
+} catch (HttpException $e) {
+	echo "Request failed with error - $e";
+}
+
+?>
