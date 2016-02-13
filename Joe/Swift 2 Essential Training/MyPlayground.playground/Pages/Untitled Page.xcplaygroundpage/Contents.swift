@@ -4,27 +4,6 @@ import UIKit
 
 
 /*
-var complexArray : [Any] = Array()
-
-complexArray.append(5)
-complexArray.append("A String")
-
-complexArray.count
-complexArray.removeAtIndex(0)
-
-
-
-var dictionary1 = ["apple": "red", "banana": "yellow"]
-
-var dictionary2 : [String: Int] = Dictionary()
-dictionary2["Hello"] = 1
-
-var dictionary3 : [String: Any] = Dictionary()
-
-dictionary3["Goodbye"] = "A String"
-dictionary3["Key"] = 0
-*/
-
 
 // practice with optionals
 
@@ -46,6 +25,22 @@ var optString : String?
 optString = "First "
 
 optString?.stringByAppendingString("more")
+*/
+
+//Challenge Ch. 3
+var one = 1;
+var two = 2;
+var three = 3;
+var hello = "hello"
+var world = "world"
+var exclaim = "!"
+
+var intArr : [Int] = [one, two, three]
+var strArr : [String] = [hello, world, exclaim]
+
+var dict = [String : Int]()
+dict = [strArr[0]: intArr[0], strArr[1]: intArr[1], strArr[2]: intArr[2]]
+
 
 
 //: [Next](@next)
