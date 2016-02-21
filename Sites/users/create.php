@@ -1,5 +1,15 @@
 <?php
 
+// connect to the CS309 database
+$db = mysqli_connect("localhost", "group08", "password", "CS309");
+
+if (mysqli_connect_errno()) {
+	die("Database connection failed" .
+		mysqli_connect_error() .
+		" (" . mysqli_connect_errno() . ")"
+	);
+}
+
 header("Content-Type: application/json");
 
 class User {
@@ -42,5 +52,15 @@ $user = new User($_GET["account_name"]);
 
 // Return the newly created user to the caller
 echo $user;
+
+$user_id = 1;
+$query = "SELECT * FROM users WHERE id = " . $user_id;
+$result = mysqli_query($db, $query);
+
+if (!$result) {
+	die("Database query failed.");
+}
+
+mysqli_close($db);
 
 ?>
