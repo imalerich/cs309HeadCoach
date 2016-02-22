@@ -12,26 +12,6 @@ if (mysqli_connect_errno()) {
 
 header("Content-Type: application/json");
 
-class User {
-	public $id = -1; // unique account id for use in API calls
-	public $name = ""; // unique account name
-
-	// create a new user
-	public function __construct($name) {
-		$this->name = $name;
-		$this->id = 0;
-	}
-
-	public function __toString() {
-		return json_encode(
-			array(
-				"id" => $this->id,
-				"name" => $this->name
-			)
-		);
-	}
-}
-
 // This call requires an account_name parameter for the created user
 // eventually this should include a password, but this is omitted for now
 if (sizeof($_GET) == 0) {
@@ -47,19 +27,26 @@ if (sizeof($_GET) == 0) {
 	exit();
 }
 
-// Create the user and add the user to our database
-$user = new User($_GET["account_name"]);
+// if an account_name was given, add that account name to the database
+if (array_key_exists("account_name", $_GET) && strlen($_GET["account_name"])) {
+	$query  = "INSERT INTO users (";
+	$query .= "user_name, reg_date";
+	$query .= ") VALUES (";
+	$query .= "'{$_GET["account_name"]}','00/00/00'";
+	$query .= ")";
+}
 
-// Return the newly created user to the caller
-echo $user;
-
-$user_id = 1;
-$query = "SELECT * FROM users WHERE id = " . $user_id;
 $result = mysqli_query($db, $query);
 
 if (!$result) {
-	die("Database query failed.");
+	die("Database query failed with error:" . mysqli_error($db));
 }
+
+echo json_encode(
+	array(
+		"error" => False
+	)
+);
 
 mysqli_close($db);
 
