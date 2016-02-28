@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2032421AFF662DF84439C6DD /* Pods_HeadCoach.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71F0A57F9C7BA132DE3437F3 /* Pods_HeadCoach.framework */; };
+		B40E0C991C839B29005BCC9B /* HCLiveTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40E0C981C839B29005BCC9B /* HCLiveTableViewCell.swift */; };
 		B92CE18C1C594823006A9286 /* HCLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92CE18B1C594823006A9286 /* HCLandingViewController.swift */; };
 		B92CE18E1C594835006A9286 /* HCTeamManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92CE18D1C594835006A9286 /* HCTeamManagementViewController.swift */; };
 		B92CE1901C594850006A9286 /* HCLiveGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92CE18F1C594850006A9286 /* HCLiveGameViewController.swift */; };
@@ -24,6 +25,7 @@
 		306BC3D6567327B70171C64E /* Pods-HeadCoach.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HeadCoach.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HeadCoach/Pods-HeadCoach.debug.xcconfig"; sourceTree = "<group>"; };
 		386050BC7991E05265631B77 /* Pods-HeadCoach.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HeadCoach.release.xcconfig"; path = "Pods/Target Support Files/Pods-HeadCoach/Pods-HeadCoach.release.xcconfig"; sourceTree = "<group>"; };
 		71F0A57F9C7BA132DE3437F3 /* Pods_HeadCoach.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HeadCoach.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B40E0C981C839B29005BCC9B /* HCLiveTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLiveTableViewCell.swift; sourceTree = "<group>"; };
 		B92CE18B1C594823006A9286 /* HCLandingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLandingViewController.swift; sourceTree = "<group>"; };
 		B92CE18D1C594835006A9286 /* HCTeamManagementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCTeamManagementViewController.swift; sourceTree = "<group>"; };
 		B92CE18F1C594850006A9286 /* HCLiveGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLiveGameViewController.swift; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 		B972ECD01C4AF93500C8E87B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				B40E0C981C839B29005BCC9B /* HCLiveTableViewCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -280,6 +283,7 @@
 				B92CE1941C5948A4006A9286 /* HCPlayerDetailViewController.swift in Sources */,
 				B972ECCF1C4AF90E00C8E87B /* HCRootViewController.swift in Sources */,
 				B92CE1961C5948C1006A9286 /* HCUserDetailViewController.swift in Sources */,
+				B40E0C991C839B29005BCC9B /* HCLiveTableViewCell.swift in Sources */,
 				B972ECBD1C4AF8C200C8E87B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
