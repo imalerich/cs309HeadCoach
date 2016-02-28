@@ -12,37 +12,30 @@ if (mysqli_connect_errno()) {
 	);
 }
 
-// the caller may optionally filter the results by a given league
-$league_id = -1;
-if (array_key_exists("league_id", $_GET)) {
-	$league_id = $_GET["league_id"];
-}
-
-// the caller may also filter to a specific user
-// this is only valid if a specific league is provided
-$user_id = -1;
-if (array_key_exists("user_id", $_GET)) {
-	$user_id = $_GET["user_id"];
-}
-
 // query the database for all users
-$query  = "SELECT user_name, reg_date ";
-$query .= "FROM users";
+$query  = "SELECT * ";
+$query .= "FROM users ";
+
+// can only search for a single parameter at a given time
+if (array_key_exists("name", $_GET)) {
+	$query .= "WHERE user_name=";
+	$query .= "'{$_GET["name"]}' ";
+} else {
+	die("'name' arugment required");
+}
 
 // add all users to an array
-$users = array();
+$user = array();
 $result = mysqli_query($db, $query);
-if ($result) {
-	while ($user = mysqli_fetch_assoc($result)) {
-		array_push($users, $user);
-	}
 
+if ($result) {
+	$user = mysqli_fetch_assoc($result);
 } else {
-	die("Database query failed.");
+	die("Database query failed with errer: " . mysqli_error($db));
 }
 
 // then output that as json data
-echo json_encode($users);
+echo json_encode($user);
 
 // close the connection with the database
 mysqli_free_result($result);

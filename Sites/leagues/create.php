@@ -1,10 +1,9 @@
 <?php
 
-// connect to the CS309 database
 $db = mysqli_connect("localhost", "group08", "password", "CS309");
 
 if (mysqli_connect_errno()) {
-	die("Database connection failed" .
+	die("Database connetion failed" .
 		mysqli_connect_error() .
 		" (" . mysqli_connect_errno() . ")"
 	);
@@ -12,13 +11,13 @@ if (mysqli_connect_errno()) {
 
 header("Content-Type: application/json");
 
-// if an account_name was given, add that account name to the database
-if (!array_key_exists("name", $_GET) || !strlen($_GET["name"])) {
-	die("Missing 'name' parameter");
+// check and make sure all required parameters are present
+if (!array_key_exists("name", $_GET) || !strlen($_GET["name"]) || !array_key_exists("drafting", $_GET)) {
+	die("'name' and 'drafting' parameters required");
 }
 
 // check to make sure the name is not already taken
-$query  = "SELECT * FROM users WHERE user_name='{$_GET["name"]}'";
+$query  = "SELECT * FROM leagues WHERE name='{$_GET["name"]}'";
 $result = mysqli_query($db, $query);
 
 if ($result) {
@@ -26,7 +25,7 @@ if ($result) {
 		echo json_encode(
 			array(
 				"error" => True,
-				"error_msg" => "INVALID_USER_NAME"
+				"error_msg" => "INVALID_LEAGUE_NAME"
 			)
 		);
 
@@ -37,16 +36,16 @@ if ($result) {
 }
 
 $time = time();
-$query  = "INSERT INTO users (";
-$query .= "user_name, reg_date";
+$query  = "INSERT INTO leagues (";
+$query .= "name, drafting, creation_date";
 $query .= ") VALUES (";
-$query .= "'{$_GET["name"]}', '{$time}'";
+$query .= "'{$_GET["name"]}', '{$_GET["drafting"]}', '{$time}'";
 $query .= ")";
 
 $result = mysqli_query($db, $query);
 
 if (!$result) {
-	die("Database query failed with error:" . mysqli_error($db));
+	die("Database query failed with errer: " . mysqli_error($db));
 }
 
 echo json_encode(
@@ -55,6 +54,7 @@ echo json_encode(
 	)
 );
 
+// close the connection with the database
 mysqli_close($db);
 
 ?>
