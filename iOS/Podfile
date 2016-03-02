@@ -3,6 +3,8 @@ use_frameworks!
 target 'HeadCoach' do
 
 pod 'SnapKit'
+pod 'Alamofire', '~> 3.0'
+pod 'RealmSwift'
 
 end
 

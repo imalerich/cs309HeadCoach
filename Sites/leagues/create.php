@@ -9,7 +9,7 @@ if (mysqli_connect_errno()) {
 	);
 }
 
-header("Content-Type: applicaeion/json");
+// header("Content-Type: applicaeion/json");
 require_once 'HTTP/Request2.php';
 
 // check and make sure all required parameters are present
@@ -49,16 +49,17 @@ if (!$result) {
 	die("Database query failed with errer: " . mysqli_error($db));
 }
 
-echo json_encode(
-	array(
-		"error" => False
-	)
-);
-
 // now that we have created the league, we will need 
 // to create the drafting table for this league
 
 $draft_table = $_GET["name"] . "_draft";
+
+// drop the table if it exists, the original league must have been deleted
+$query = "DROP TABLE IF EXISTS {$draft_table}";
+if (!($result = mysqli_query($db, $query))) {
+	die("Database query failed with errer: " . mysqli_error($db));
+}
+
 $query = "CREATE TABLE " 
 	. $draft_table
 	. "("
@@ -103,7 +104,7 @@ try {
 		$query  = "INSERT INTO " . $draft_table .  " (";
 		$query .= "name, user_id, fd_id";
 		$query .= ") VALUES (";
-		$query .= "'{$name}', 0, $id'";
+		$query .= "\"{$name}\", 0, $id";
 		$query .= ")";
 
 		$result = mysqli_query($db, $query);
@@ -116,6 +117,12 @@ try {
 } catch (HttpException $e) {
 	echo "Request failed with error $e";
 }
+
+echo json_encode(
+	array(
+		"error" => False
+	)
+);
 
 // close the connection with the database
 mysqli_close($db);

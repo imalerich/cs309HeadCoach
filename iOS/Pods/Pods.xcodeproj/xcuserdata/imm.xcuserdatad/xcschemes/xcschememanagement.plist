@@ -4,7 +4,22 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Alamofire.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-HeadCoach.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Realm.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>RealmSwift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -17,12 +32,27 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>320579E9D6D6EFD9342605078610CA09</key>
+		<key>0DF48880F1B81E81D6E3659236096B7C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>4D6B9388659EE4E4758757B568CEBD19</key>
+		<key>79C040AFDDCE1BCBF6D8B5EB0B85887F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>AACD6CA76741D33B6F353A23456277B0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B2FD0A15ACED957E1C0AFB785BFFB5EE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B8503D7E7ECB22F2879F13342CC87E27</key>
 		<dict>
 			<key>primary</key>
 			<true/>
