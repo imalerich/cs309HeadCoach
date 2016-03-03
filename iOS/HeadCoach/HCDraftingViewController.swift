@@ -15,5 +15,8 @@ class HCDraftingViewController: UIViewController {
         super.viewDidLoad()
 
         // TODO - do cool shit here
+        self.title = "Drafting"
+        
+        
     }
 }

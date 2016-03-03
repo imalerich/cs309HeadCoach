@@ -11,10 +11,20 @@ import SnapKit
 
 class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
+    
+    
     let tableView = UITableView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // change title of window
+        self.title = "Live"
+        
+        // add chat button
+        let chatButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Compose, target: self, action: "chatMethod")
+        navigationItem.rightBarButtonItem = chatButton
+        
+        
         tableView.delegate = self
         tableView.dataSource = self
         self.view.addSubview(tableView)
@@ -25,6 +35,11 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         
         
         
+    }
+    
+    // method for performing live player chat actions
+    func chatMethod(){
+        print("Chat initialized")
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
