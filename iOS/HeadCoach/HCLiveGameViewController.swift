@@ -52,47 +52,42 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("LiveCell", forIndexPath: indexPath) as? HCLiveTableViewCell
-        
+        let cell = tableView.dequeueReusableCellWithIdentifier("LiveCell", forIndexPath: indexPath) as! HCLiveTableViewCell
+                
         if(indexPath.section == 0){
             if(indexPath.row == 0){
-                cell!.leftLabel.text = "YOU"
-                cell!.leftLabel.font = UIFont.boldSystemFontOfSize(24.0)
-                cell!.rightLabel.text = "THEM"
-                cell!.rightLabel.font = UIFont.boldSystemFontOfSize(24.0)
+                cell.leftLabel.text = "YOU"
+                cell.leftLabel.font = UIFont.boldSystemFontOfSize(24.0)
+                cell.rightLabel.text = "THEM"
+                cell.rightLabel.font = UIFont.boldSystemFontOfSize(24.0)
             }
             else{
                 let p1Total = p1Scores.reduce(0, combine: +)
                 let p2Total = p2Scores.reduce(0, combine: +)
-                cell!.leftLabel.text = "+\(p1Total)"
-                cell!.rightLabel.text = "+\(p2Total)"
+                cell.leftLabel.text = "+\(p1Total)"
+                cell.rightLabel.text = "+\(p2Total)"
                 if(p1Total != p2Total){
-                    cell!.leftBox.backgroundColor = UIColor.redColor()
-                    cell!.rightBox.backgroundColor = UIColor.redColor()
+                    cell.leftBox.backgroundColor = UIColor.redColor()
+                    cell.rightBox.backgroundColor = UIColor.redColor()
                     if(p1Total > p2Total){
-                        cell!.leftBox.backgroundColor = UIColor.greenColor()
+                        cell.leftBox.backgroundColor = UIColor.greenColor()
                     }
                     else{
-                        cell!.rightBox.backgroundColor = UIColor.greenColor()
+                        cell.rightBox.backgroundColor = UIColor.greenColor()
                     }
                 }
             }
         }
         else{
-            cell!.leftLabel.text = "+\(p1Scores[indexPath.section - 1])"
-            cell!.rightLabel.text = "+\(p2Scores[indexPath.section - 1])"
+            cell.leftLabel.text = "+\(p1Scores[indexPath.section - 1])"
+            cell.rightLabel.text = "+\(p2Scores[indexPath.section - 1])"
             if(p1Scores[indexPath.section - 1] != p2Scores[indexPath.section - 1]){
-                cell!.leftBox.backgroundColor = UIColor.redColor()
-                cell!.rightBox.backgroundColor = UIColor.redColor()
-                if(p1Scores[indexPath.section - 1] > p2Scores[indexPath.section - 1]){
-                    cell!.leftBox.backgroundColor = UIColor.greenColor()
-                }
-                else{
-                    cell!.rightBox.backgroundColor = UIColor.greenColor()
-                }
+                let p1ScoreHigher = p1Scores[indexPath.section - 1] > p2Scores[indexPath.section - 1]
+                cell.leftBox.backgroundColor = p1ScoreHigher ? UIColor.greenColor() : UIColor.redColor()
+                cell.rightBox.backgroundColor = p1ScoreHigher ? UIColor.redColor() : UIColor.greenColor()
             }
         }
-        return cell!
+        return cell
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

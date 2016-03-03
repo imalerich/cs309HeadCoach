@@ -30,6 +30,8 @@ class HCLiveTableViewCell: UITableViewCell
         rightLabel.text = "Right"
         leftLabel.font = UIFont.systemFontOfSize(16.0)
         rightLabel.font = UIFont.systemFontOfSize(16.0)
+        leftLabel.textAlignment = .Center
+        rightLabel.textAlignment = .Center
         
         lineView.backgroundColor = UIColor.blackColor()
         leftBox.backgroundColor = UIColor.whiteColor()
@@ -38,7 +40,7 @@ class HCLiveTableViewCell: UITableViewCell
         self.addSubview(leftBox)
         self.addSubview(rightBox)
         self.addSubview(lineView)
-        self.bringSubviewToFront(lineView)
+        // self.bringSubviewToFront(lineView)
         
         self.lineView.snp_makeConstraints { (make) -> Void in
             make.centerX.equalTo(self.snp_centerX)
@@ -57,11 +59,11 @@ class HCLiveTableViewCell: UITableViewCell
         }
         
         self.leftLabel.snp_makeConstraints { (make) -> Void in
-            make.center.equalTo(leftBox.snp_center)
+            make.edges.equalTo(self.leftBox)
         }
         
         self.rightLabel.snp_makeConstraints { (make) -> Void in
-            make.center.equalTo(rightBox.snp_center)
+            make.edges.equalTo(self.rightBox)
         }
         
     }
