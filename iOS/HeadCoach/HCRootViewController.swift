@@ -25,6 +25,8 @@ class HCRootViewController: UIViewController, UITableViewDataSource, UITableView
             make.edges.equalTo(self.view)
         })
 
+        HCHeadCoachDataProvider.sharedInstance.getAllUsers()
+
     }
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {

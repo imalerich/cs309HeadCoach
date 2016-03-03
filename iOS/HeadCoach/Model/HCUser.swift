@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HCUser: NSObject {
+class HCUser: CustomStringConvertible {
 
     /// Primary key for this user to be used for API calls.
     internal var id = 0
@@ -19,11 +19,16 @@ class HCUser: NSObject {
     /// The date this user registered with the service (UNIX).
     internal var reg_date = 0
 
+    /// String conversion for debug printing.
+    var description: String {
+        return "{\nid: \(id)\nname: \(name)\nreg_date: \(reg_date)\n}\n"
+    }
+
     /// Initialize with data retrieved from the 
     /// HeadCoach API.
     init(json: Dictionary<String, AnyObject>) {
-        id = json["id"] as! Int
-        name = json["name"] as! String
-        reg_date = json["reg_date"] as! Int
+        id = Int(json["id"] as! String)!
+        name = json["user_name"] as! String
+        reg_date = Int(json["reg_date"] as! String)!
     }
 }
