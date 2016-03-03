@@ -53,6 +53,7 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("LiveCell", forIndexPath: indexPath) as? HCLiveTableViewCell
+        
         if(indexPath.section == 0){
             if(indexPath.row == 0){
                 cell!.leftLabel.text = "YOU"

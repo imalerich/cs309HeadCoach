@@ -22,16 +22,22 @@ class HCLiveTableViewCell: UITableViewCell
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = UIColor.whiteColor()
-        self.addSubview(lineView)
-        self.addSubview(leftBox)
-        self.addSubview(rightBox)
+        
         self.rightBox.addSubview(rightLabel)
         self.leftBox.addSubview(leftLabel)
+        
         leftLabel.text = "Left"
         rightLabel.text = "Right"
+        leftLabel.font = UIFont.systemFontOfSize(16.0)
+        rightLabel.font = UIFont.systemFontOfSize(16.0)
+        
         lineView.backgroundColor = UIColor.blackColor()
         leftBox.backgroundColor = UIColor.whiteColor()
         rightBox.backgroundColor = UIColor.whiteColor()
+        
+        self.addSubview(leftBox)
+        self.addSubview(rightBox)
+        self.addSubview(lineView)
         self.bringSubviewToFront(lineView)
         
         self.lineView.snp_makeConstraints { (make) -> Void in
@@ -58,6 +64,14 @@ class HCLiveTableViewCell: UITableViewCell
             make.center.equalTo(rightBox.snp_center)
         }
         
+    }
+    
+    override func prepareForReuse(){
+        leftLabel.font = UIFont.systemFontOfSize(16.0)
+        rightLabel.font = UIFont.systemFontOfSize(16.0)
+        
+        leftBox.backgroundColor = UIColor.whiteColor()
+        rightBox.backgroundColor = UIColor.whiteColor()
     }
 
     required init?(coder aDecoder: NSCoder) {
