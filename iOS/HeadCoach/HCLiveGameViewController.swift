@@ -12,6 +12,10 @@ import SnapKit
 class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     
+    /*
+    let view1 = UITableView()
+    let view2 = UITableView()
+    */
     
     let tableView = UITableView()
     
@@ -34,6 +38,28 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         self.tableView.registerClass(HCLiveTableViewCell.classForCoder(), forCellReuseIdentifier: "LiveCell")
         
         
+        /*
+        view1.delegate = self
+        view2.delegate = self
+        view1.dataSource = self
+        view2.dataSource = self
+        
+        self.view.addSubview(view1)
+        self.view.addSubview(view2)
+        
+        view1.snp_makeConstraints { (make) -> Void in
+            make.top.left.bottom.equalTo(self.view)
+            make.width.equalTo(self.view.snp_width).multipliedBy(0.5)
+        }
+        
+        view2.snp_makeConstraints { (make) -> Void in
+            make.top.right.bottom.equalTo(self.view)
+            make.width.equalTo(self.view.snp_width).multipliedBy(0.5)
+        }
+        
+        self.view1.registerClass(HCLiveTableViewCell.classForCoder(), forCellReuseIdentifier: "LiveCell")
+        self.view2.registerClass(HCLiveTableViewCell.classForCoder(), forCellReuseIdentifier: "LiveCell")
+        */
         
     }
     
@@ -44,9 +70,9 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("LiveCell", forIndexPath: indexPath) as? HCLiveTableViewCell
-        cell?.textLabel?.text = "Put real shit here"
+        
         // TODO conditional here to determine whether the divider is placed
-        cell?.setDivider(CGRectMake(cell!.frame.width/2, 0, 5, cell!.frame.height))
+        // cell?.setDivider(CGRectMake(cell!.frame.width/2, 0, 5, cell!.frame.height))
         return cell!
     }
     
