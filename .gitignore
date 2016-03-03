@@ -3,3 +3,10 @@
 /Joe/Swift\ 2\ Essential\ Training/Exercise\ Files/Ch12/12-02 WorkingWithAccessControl
 /Joe/Swift\ 2\ Essential\ Training/Exercise\ Files/Ch12/12-02\ WorkingWithAccessControl_finished
 /Joe/Swift\ 2\ Essential\ Training/Exercise\ Files/Ch12/12-03\ WorkingWithAccessControl
+.gitignore~
+.gitignore
+iOS/.DS_Store
+iOS/HeadCoach.xcworkspace/xcuserdata/jayoung.xcuserdatad/UserInterfaceState.xcuserstate
+iOS/Pods/Pods.xcodeproj/xcuserdata/jayoung.xcuserdatad/xcschemes/Alamofire.xcscheme
+iOS/Pods/Pods.xcodeproj/xcuserdata/jayoung.xcuserdatad/xcschemes/Realm.xcscheme
+iOS/Pods/Pods.xcodeproj/xcuserdata/jayoung.xcuserdatad/xcschemes/RealmSwift.xcscheme

@@ -11,16 +11,17 @@ import SnapKit
 
 class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
+    let sectionHeaders : [String] = ["Current Scores", "Quarterback", "Wide Reciever 1", "Wide Reciever 2",
+        "Wide Reciever 3", "Runningback 1", "Runningback 2", "Tight End", "Kicker", "Defense / Special Teams"]
+    var p1Scores : [Int] = [2, 5, 0, 3, 8, 1, 0, 3, 2]
+    var p2Scores : [Int] = [0, 1, 3, 5, 5, 4, 1, 9, 2]
     
-    /*
-    let view1 = UITableView()
-    let view2 = UITableView()
-    */
     
     let tableView = UITableView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // change title of window
         self.title = "Live"
         
@@ -38,48 +39,76 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         self.tableView.registerClass(HCLiveTableViewCell.classForCoder(), forCellReuseIdentifier: "LiveCell")
         
         
-        /*
-        view1.delegate = self
-        view2.delegate = self
-        view1.dataSource = self
-        view2.dataSource = self
-        
-        self.view.addSubview(view1)
-        self.view.addSubview(view2)
-        
-        view1.snp_makeConstraints { (make) -> Void in
-            make.top.left.bottom.equalTo(self.view)
-            make.width.equalTo(self.view.snp_width).multipliedBy(0.5)
-        }
-        
-        view2.snp_makeConstraints { (make) -> Void in
-            make.top.right.bottom.equalTo(self.view)
-            make.width.equalTo(self.view.snp_width).multipliedBy(0.5)
-        }
-        
-        self.view1.registerClass(HCLiveTableViewCell.classForCoder(), forCellReuseIdentifier: "LiveCell")
-        self.view2.registerClass(HCLiveTableViewCell.classForCoder(), forCellReuseIdentifier: "LiveCell")
-        */
         
     }
     
     // method for performing live player chat actions
     func chatMethod(){
-        print("Chat initialized")
+        print("Chat initiated")
+    }
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 10
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("LiveCell", forIndexPath: indexPath) as? HCLiveTableViewCell
-        
-        // TODO conditional here to determine whether the divider is placed
-        // cell?.setDivider(CGRectMake(cell!.frame.width/2, 0, 5, cell!.frame.height))
+        if(indexPath.section == 0){
+            if(indexPath.row == 0){
+                cell!.leftLabel.text = "YOU"
+                cell!.leftLabel.font = UIFont.boldSystemFontOfSize(24.0)
+                cell!.rightLabel.text = "THEM"
+                cell!.rightLabel.font = UIFont.boldSystemFontOfSize(24.0)
+            }
+            else{
+                let p1Total = p1Scores.reduce(0, combine: +)
+                let p2Total = p2Scores.reduce(0, combine: +)
+                cell!.leftLabel.text = "+\(p1Total)"
+                cell!.rightLabel.text = "+\(p2Total)"
+                if(p1Total != p2Total){
+                    cell!.leftBox.backgroundColor = UIColor.redColor()
+                    cell!.rightBox.backgroundColor = UIColor.redColor()
+                    if(p1Total > p2Total){
+                        cell!.leftBox.backgroundColor = UIColor.greenColor()
+                    }
+                    else{
+                        cell!.rightBox.backgroundColor = UIColor.greenColor()
+                    }
+                }
+            }
+        }
+        else{
+            cell!.leftLabel.text = "+\(p1Scores[indexPath.section - 1])"
+            cell!.rightLabel.text = "+\(p2Scores[indexPath.section - 1])"
+            if(p1Scores[indexPath.section - 1] != p2Scores[indexPath.section - 1]){
+                cell!.leftBox.backgroundColor = UIColor.redColor()
+                cell!.rightBox.backgroundColor = UIColor.redColor()
+                if(p1Scores[indexPath.section - 1] > p2Scores[indexPath.section - 1]){
+                    cell!.leftBox.backgroundColor = UIColor.greenColor()
+                }
+                else{
+                    cell!.rightBox.backgroundColor = UIColor.greenColor()
+                }
+            }
+        }
         return cell!
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        if(section == 0){
+            return 2
+        }
+        return 1
     }
+    
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if(indexPath.section == 0 && indexPath.row == 0){
+            return 60
+        }
         return 120
+    }
+    
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return sectionHeaders[section]
     }
 }
