@@ -26,11 +26,11 @@ class HCHeadCoachDataProvider: NSObject {
                     users.append(HCUser(json: item))
                 }
             }
-        }
 
-        // output the data for debuging
-        for user in users {
-            print(user)
+            // output the data for debuging
+            for user in users {
+                print(user)
+            }
         }
 
         return users
