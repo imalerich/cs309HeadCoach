@@ -61,7 +61,7 @@ if (!$result) {
 // finished without error
 echo json_encode(
 	array(
-		"errer" = False
+		"error" => False
 	)
 );
 
