@@ -28,14 +28,14 @@ class HCLeague: NSObject {
     /// Initialize with data retrieved from the
     /// HeadCoach API.
     init(json: Dictionary<String, AnyObject>) {
-        id = json["id"] as! Int
+        id = Int(json["id"] as! String)!
         name = json["name"] as! String
-        drafting_style = json["drafting"] as! Int
-        reg_date = json["reg_date"] as! Int
+        drafting_style = Int(json["drafting"] as! String)!
+        reg_date = Int(json["reg_date"] as! String)!
 
         for i in 0...5 {
             // add all the users for this league
-            let user = json["member\(i)"] as! Int
+            let user = Int(json["member\(i)"] as! String)!
             if user > 0 {
                 users.append(user)
             }

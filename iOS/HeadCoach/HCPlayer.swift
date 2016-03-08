@@ -27,9 +27,9 @@ class HCPlayer: NSObject {
     /// Initialize with data retrieved from the
     /// HeadCoach API.
     init(json: Dictionary<String, AnyObject>) {
-        id = json["id"] as! Int
+        id = Int(json["id"] as! String)!
         name = json["name"] as! String
-        user_id = json["user_id"] as! Int
-        fantasy_id = json["fd_id"] as! Int
+        user_id = Int(json["user_id"] as! String)!
+        fantasy_id = Int(json["fd_id"] as! String)!
     }
 }

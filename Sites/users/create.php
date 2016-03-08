@@ -40,7 +40,7 @@ $time = time();
 $query  = "INSERT INTO users (";
 $query .= "user_name, reg_date";
 $query .= ") VALUES (";
-$query .= "'{$_GET["name"]}', '{$time}'";
+$query .= "'{$_GET["name"]}', {$time}";
 $query .= ")";
 
 $result = mysqli_query($db, $query);

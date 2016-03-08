@@ -14,10 +14,47 @@ class HCHeadCoachDataProvider: NSObject {
     /// Global singleton instance for this class.
     static let sharedInstance = HCHeadCoachDataProvider()
 
+    // -------------------------------------------------------------------------------------
+    // Network Requests - Utility Methods.
+    // -------------------------------------------------------------------------------------
+
+    /// Send a request to the server to create a new user in the system.
+    /// The service will assign a unique id that can be retrieved with the
+    /// 'getUserID' call, provided the user nows their account name.
+    /// This method is asynchronous.
+    internal func createNewUser(userName: String) {
+        let url = "http://localhost/users/create.php?name=\(userName)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            if let json = response.result.value as? Dictionary<String, AnyObject> {
+                if json["error"] as! Bool {
+                    // TODO - something actually useful
+                    print("an error occured in the network request")
+                }
+            }
+        }
+    }
+
+    /// Send a request to the server to retrieve the userID for
+    /// the given user name. This id will be necessary to make 
+    /// additional API requests.
+    /// This method is asynchronous.
+    internal func getUserID(userName: String) {
+        let url = "http://localhost/users/get.php?name=\(userName)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+                // there will only be one user for this call
+                let _ = HCUser(json: json[0]);
+            }
+        }
+    }
+
     /// Sample API call that retrieves all of the
     /// registered users that are registered with the
     /// HeadCoach service.
-    internal func getAllUsers() -> [HCUser] {
+    /// This method is asynchronous.
+    internal func getAllUsers() {
         var users = [HCUser]()
 
         Alamofire.request(.GET, "http://localhost/users/get.php").responseJSON { response in
@@ -26,13 +63,22 @@ class HCHeadCoachDataProvider: NSObject {
                     users.append(HCUser(json: item))
                 }
             }
+        }
+    }
 
-            // output the data for debuging
-            for user in users {
-                print(user)
+    /// Loads a list of all of the leagues available in
+    /// the HeadCoach Fantasy service.
+    /// This method is asynchronous.
+    internal func getAllLeaguesForUser(userID: Int) {
+        let url = "http://localhost/leagues/getAllForUser.php?id=\(userID)"
+        var leagues = [HCLeague]()
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+                for item in json {
+                    leagues.append(HCLeague(json: item))
+                }
             }
         }
-
-        return users
     }
 }
