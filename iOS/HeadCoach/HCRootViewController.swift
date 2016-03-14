@@ -16,7 +16,7 @@ class HCRootViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // make super dope app here
+        // make super dope app here        
         view.addSubview(self.tableView)
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "BasicCell")
         tableView.delegate = self
@@ -25,7 +25,7 @@ class HCRootViewController: UIViewController, UITableViewDataSource, UITableView
             make.edges.equalTo(self.view)
         })
 
-        HCHeadCoachDataProvider.sharedInstance.getAllUsers()
+//        HCHeadCoachDataProvider.sharedInstance.getAllUsers()
 
     }
 
