@@ -25,8 +25,20 @@ class HCRootViewController: UIViewController, UITableViewDataSource, UITableView
             make.edges.equalTo(self.view)
         })
 
-//        HCHeadCoachDataProvider.sharedInstance.getAllUsers()
+        HCHeadCoachDataProvider.sharedInstance.getUserID("imalerich") { (error, user) -> Void in
+            // check for an error
+            if error {
+                print("failed to find user")
+                return
+            }
 
+            // print the results
+            HCHeadCoachDataProvider.sharedInstance.getAllLeaguesForUser(user!, completion: { (error, leagues) -> Void in
+                for league in leagues {
+                    print(league)
+                }
+            })
+        }
     }
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
