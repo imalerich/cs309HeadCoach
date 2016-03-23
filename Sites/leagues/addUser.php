@@ -41,6 +41,25 @@ if ($result) {
 	die("Database query failed with errer: " . mysqli_error($db));
 }
 
+// we should also check whether or not the or not the league exists
+$query  = "SELECT * FROM leagues WHERE id='{$_GET["league"]}'";
+$result = mysqli_query($db, $query);
+
+if ($result) {
+	if (!mysqli_fetch_assoc($result)) {
+		echo json_encode(
+			array(
+				"error" => True,
+				"error_msg" => "LEAGUE_DOES_NOT_EXIST"
+			)
+		);
+
+		exit();
+	}
+} else {
+	die("Database query failed with errer: " . mysqli_error($db));
+}
+
 // we need to find the league, and look for the first open
 // position for this user, if there are no open positions,
 // an error will be returned to the caller
