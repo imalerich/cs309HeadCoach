@@ -87,6 +87,7 @@ $headers = array("Ocp-Apim-Subscription-Key" => "fa953b83a78d44a1b054b0afbbdff57
 $request->setHeader($headers);
 $request->setMethod(HTTP_Request2::METHOD_GET);
 $request->setBody("{body}");
+$request->setAdapter('curl');
 
 // send and process the request
 try {
