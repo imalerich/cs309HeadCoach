@@ -8,12 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		2032421AFF662DF84439C6DD /* Pods_HeadCoach.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71F0A57F9C7BA132DE3437F3 /* Pods_HeadCoach.framework */; };
+		B90BC7A51C879D790074A9C3 /* HCUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90BC7A41C879D790074A9C3 /* HCUser.swift */; };
+		B90BC7A71C879D8C0074A9C3 /* HCLeague.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90BC7A61C879D8C0074A9C3 /* HCLeague.swift */; };
+		B90BC7A91C879DA50074A9C3 /* HCPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90BC7A81C879DA50074A9C3 /* HCPlayer.swift */; };
 		B92CE18C1C594823006A9286 /* HCLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92CE18B1C594823006A9286 /* HCLandingViewController.swift */; };
 		B92CE18E1C594835006A9286 /* HCTeamManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92CE18D1C594835006A9286 /* HCTeamManagementViewController.swift */; };
 		B92CE1901C594850006A9286 /* HCLiveGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92CE18F1C594850006A9286 /* HCLiveGameViewController.swift */; };
 		B92CE1921C594882006A9286 /* HCDraftingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92CE1911C594882006A9286 /* HCDraftingViewController.swift */; };
 		B92CE1941C5948A4006A9286 /* HCPlayerDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92CE1931C5948A4006A9286 /* HCPlayerDetailViewController.swift */; };
 		B92CE1961C5948C1006A9286 /* HCUserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92CE1951C5948C1006A9286 /* HCUserDetailViewController.swift */; };
+		B949A1211C87DBE4006E0174 /* HCHeacCoachDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B949A1201C87DBE4006E0174 /* HCHeacCoachDataProvider.swift */; };
 		B972ECBD1C4AF8C200C8E87B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B972ECBC1C4AF8C200C8E87B /* AppDelegate.swift */; };
 		B972ECC41C4AF8C200C8E87B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B972ECC31C4AF8C200C8E87B /* Assets.xcassets */; };
 		B972ECC71C4AF8C200C8E87B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B972ECC51C4AF8C200C8E87B /* LaunchScreen.storyboard */; };
@@ -24,12 +28,16 @@
 		306BC3D6567327B70171C64E /* Pods-HeadCoach.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HeadCoach.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HeadCoach/Pods-HeadCoach.debug.xcconfig"; sourceTree = "<group>"; };
 		386050BC7991E05265631B77 /* Pods-HeadCoach.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HeadCoach.release.xcconfig"; path = "Pods/Target Support Files/Pods-HeadCoach/Pods-HeadCoach.release.xcconfig"; sourceTree = "<group>"; };
 		71F0A57F9C7BA132DE3437F3 /* Pods_HeadCoach.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HeadCoach.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B90BC7A41C879D790074A9C3 /* HCUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HCUser.swift; path = Model/HCUser.swift; sourceTree = "<group>"; };
+		B90BC7A61C879D8C0074A9C3 /* HCLeague.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HCLeague.swift; path = Model/HCLeague.swift; sourceTree = "<group>"; };
+		B90BC7A81C879DA50074A9C3 /* HCPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPlayer.swift; sourceTree = "<group>"; };
 		B92CE18B1C594823006A9286 /* HCLandingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLandingViewController.swift; sourceTree = "<group>"; };
 		B92CE18D1C594835006A9286 /* HCTeamManagementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCTeamManagementViewController.swift; sourceTree = "<group>"; };
 		B92CE18F1C594850006A9286 /* HCLiveGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLiveGameViewController.swift; sourceTree = "<group>"; };
 		B92CE1911C594882006A9286 /* HCDraftingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCDraftingViewController.swift; sourceTree = "<group>"; };
 		B92CE1931C5948A4006A9286 /* HCPlayerDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPlayerDetailViewController.swift; sourceTree = "<group>"; };
 		B92CE1951C5948C1006A9286 /* HCUserDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCUserDetailViewController.swift; sourceTree = "<group>"; };
+		B949A1201C87DBE4006E0174 /* HCHeacCoachDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCHeacCoachDataProvider.swift; sourceTree = "<group>"; };
 		B972ECB91C4AF8C200C8E87B /* HeadCoach.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeadCoach.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B972ECBC1C4AF8C200C8E87B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B972ECC31C4AF8C200C8E87B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -59,6 +67,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		B949A1221C87DBE8006E0174 /* DataProvider */ = {
+			isa = PBXGroup;
+			children = (
+				B949A1201C87DBE4006E0174 /* HCHeacCoachDataProvider.swift */,
+			);
+			name = DataProvider;
+			sourceTree = "<group>";
+		};
 		B972ECB01C4AF8C200C8E87B = {
 			isa = PBXGroup;
 			children = (
@@ -80,6 +96,7 @@
 		B972ECBB1C4AF8C200C8E87B /* HeadCoach */ = {
 			isa = PBXGroup;
 			children = (
+				B949A1221C87DBE8006E0174 /* DataProvider */,
 				B972ECD21C4AF94200C8E87B /* Controller */,
 				B972ECD11C4AF93D00C8E87B /* Model */,
 				B972ECD01C4AF93500C8E87B /* View */,
@@ -139,6 +156,9 @@
 		B9BEF6311C5DACCE008185AB /* Head Coach League */ = {
 			isa = PBXGroup;
 			children = (
+				B90BC7A41C879D790074A9C3 /* HCUser.swift */,
+				B90BC7A61C879D8C0074A9C3 /* HCLeague.swift */,
+				B90BC7A81C879DA50074A9C3 /* HCPlayer.swift */,
 			);
 			name = "Head Coach League";
 			sourceTree = "<group>";
@@ -273,12 +293,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B90BC7A51C879D790074A9C3 /* HCUser.swift in Sources */,
 				B92CE1921C594882006A9286 /* HCDraftingViewController.swift in Sources */,
 				B92CE1901C594850006A9286 /* HCLiveGameViewController.swift in Sources */,
+				B949A1211C87DBE4006E0174 /* HCHeacCoachDataProvider.swift in Sources */,
 				B92CE18C1C594823006A9286 /* HCLandingViewController.swift in Sources */,
 				B92CE18E1C594835006A9286 /* HCTeamManagementViewController.swift in Sources */,
 				B92CE1941C5948A4006A9286 /* HCPlayerDetailViewController.swift in Sources */,
 				B972ECCF1C4AF90E00C8E87B /* HCRootViewController.swift in Sources */,
+				B90BC7A71C879D8C0074A9C3 /* HCLeague.swift in Sources */,
+				B90BC7A91C879DA50074A9C3 /* HCPlayer.swift in Sources */,
 				B92CE1961C5948C1006A9286 /* HCUserDetailViewController.swift in Sources */,
 				B972ECBD1C4AF8C200C8E87B /* AppDelegate.swift in Sources */,
 			);
@@ -388,6 +412,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = HeadCoach/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.coms309.group8.HeadCoach;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -400,6 +425,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = HeadCoach/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.coms309.group8.HeadCoach;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

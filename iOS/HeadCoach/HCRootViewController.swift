@@ -16,7 +16,7 @@ class HCRootViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // make super dope app here
+        // make super dope app here        
         view.addSubview(self.tableView)
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "BasicCell")
         tableView.delegate = self
@@ -24,7 +24,6 @@ class HCRootViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.snp_makeConstraints(closure: { make in
             make.edges.equalTo(self.view)
         })
-
     }
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
