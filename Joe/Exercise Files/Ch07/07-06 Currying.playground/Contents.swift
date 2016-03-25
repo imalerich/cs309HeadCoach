@@ -1,5 +1,0 @@
-//: ## Currying
-
-import Foundation
-
-

@@ -1,3 +1,0 @@
-//: ## Defining Type Aliases
-
-
