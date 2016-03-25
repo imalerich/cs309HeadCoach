@@ -14,6 +14,13 @@ class HCHeadCoachDataProvider: NSObject {
     /// Global singleton instance for this class.
     static let sharedInstance = HCHeadCoachDataProvider()
 
+    /// The root API address for the HeadCoach servince.
+    /// http://localhost/ can be used for testing new changes
+    /// to the server. Otherwise the CS309 server should be used.
+    let api =
+        "http://proj-309-08.cs.iastate.edu"
+//        "http://localhost"
+
     // -------------------------------------------------------------------------------------
     // Network Requests - Utility Methods.
     // -------------------------------------------------------------------------------------
@@ -23,7 +30,7 @@ class HCHeadCoachDataProvider: NSObject {
     /// 'getUserID' call, provided the user knows their account name.
     /// This method is asynchronous.
     internal func createNewUser(userName: String, completion: (Bool) -> Void) {
-        let url = "http://localhost/users/create.php?name=\(userName)"
+        let url = "\(api)/users/create.php?name=\(userName)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Dictionary<String, AnyObject> {
@@ -39,7 +46,7 @@ class HCHeadCoachDataProvider: NSObject {
     /// 'getLeagueID' call, provided the user knows the league name.
     /// This method eqecutes asynchronously.
     internal func createNewLeague(leagueName: String, drafting: String, completion: (Bool) -> Void) {
-        let url = "http://localhost/leagues/create.php?name=\(leagueName)&drafting=\(drafting)"
+        let url = "\(api)/leagues/create.php?name=\(leagueName)&drafting=\(drafting)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Dictionary<String, AnyObject> {
@@ -55,12 +62,12 @@ class HCHeadCoachDataProvider: NSObject {
     /// additional API requests.
     /// This method is asynchronous.
     internal func getUserID(userName: String, completion: (Bool, HCUser?) -> Void) {
-        let url = "http://localhost/users/get.php?name=\(userName)"
+        let url = "\(api)/users/get.php?name=\(userName)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
                 // there will only be one user for this call
-                let user = HCUser(json: json[0]);
+                let user = HCUser(json: json[0])
                 completion(false, user)
             } else {
                 completion(true, nil)
@@ -73,12 +80,12 @@ class HCHeadCoachDataProvider: NSObject {
     /// make additional API calls.
     /// This method is asynchronous.
     internal func getLeagueID(leagueName: String, completion: (Bool, HCLeague?) -> Void) {
-        let url = "http://localhost/leagues/get.php?name=\(leagueName)"
+        let url = "\(api)/leagues/get.php?name=\(leagueName)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
                 // there will only be one user for this call
-                let league = HCLeague(json: json[0]);
+                let league = HCLeague(json: json[0])
                 completion(false, league)
             } else {
                 completion(true, nil)
@@ -91,7 +98,9 @@ class HCHeadCoachDataProvider: NSObject {
     /// HeadCoach service.
     /// This method is asynchronous.
     internal func getAllUsers(completion: (Bool, [HCUser]) -> Void) {
-        Alamofire.request(.GET, "http://localhost/users/get.php").responseJSON { response in
+        let url = "\(api)/users/get.php"
+
+        Alamofire.request(.GET, url).responseJSON { response in
             var users = [HCUser]()
             if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
                 for item in json {
@@ -111,7 +120,7 @@ class HCHeadCoachDataProvider: NSObject {
     ///     * The given user or league does not exist.
     /// This method is asynchronous.
     internal func addUserToLeague(user: HCUser, league: HCLeague, completion: (Bool) -> Void) {
-        let url = "http://localhost/leagues/addUser.php?user=\(user.id)&league=\(league)"
+        let url = "\(api)/leagues/addUser.php?user=\(user.id)&league=\(league)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Dictionary<String, AnyObject> {
@@ -126,7 +135,7 @@ class HCHeadCoachDataProvider: NSObject {
     /// the HeadCoach Fantasy service.
     /// This method is asynchronous.
     internal func getAllLeaguesForUser(user: HCUser, completion: (Bool, [HCLeague]) -> Void) {
-        let url = "http://localhost/leagues/getAllForUser.php?id=\(user.id)"
+        let url = "\(api)/leagues/getAllForUser.php?id=\(user.id)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             var leagues = [HCLeague]()
@@ -144,7 +153,7 @@ class HCHeadCoachDataProvider: NSObject {
     /// HeadCoach Fantasy service.
     /// This method is asynchronous.
     internal func getAllUsersForLeague(league: HCLeague, completion: (Bool, [HCUser]) -> Void) {
-        let url = "http://localhost/leagues/getAllUsers.php?id=\(league.id)"
+        let url = "\(api)/leagues/getAllUsers.php?id=\(league.id)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             var users = [HCUser]()

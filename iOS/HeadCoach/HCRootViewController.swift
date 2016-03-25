@@ -24,21 +24,6 @@ class HCRootViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.snp_makeConstraints(closure: { make in
             make.edges.equalTo(self.view)
         })
-
-        HCHeadCoachDataProvider.sharedInstance.getUserID("imalerich") { (error, user) -> Void in
-            // check for an error
-            if error {
-                print("failed to find user")
-                return
-            }
-
-            // print the results
-            HCHeadCoachDataProvider.sharedInstance.getAllLeaguesForUser(user!, completion: { (error, leagues) -> Void in
-                for league in leagues {
-                    print(league)
-                }
-            })
-        }
     }
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
