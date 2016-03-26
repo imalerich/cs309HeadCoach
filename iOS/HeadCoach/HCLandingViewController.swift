@@ -77,11 +77,28 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
         for i in 0...2 {
             let btn = UIButton(type: .Custom)
             
-            let name = ["Team", "Leagues", "Stats"][i]
+            let name = ["Team", "League", "Drafts"][i]
             btn.setTitle(name, forState: .Normal)
             let s = 1.0 - 0.2 * CGFloat(i % 2)
             btn.backgroundColor = UIColor(red: 0, green: s * 92/222.0, blue: s * 9/255.0, alpha: 1.0)
-            
+
+            switch (i) {
+            case 0:
+                btn.addTarget(self, action: #selector(HCLandingViewController.openTeamView),
+                              forControlEvents: .TouchUpInside)
+                break
+            case 1:
+                btn.addTarget(self, action: #selector(HCLandingViewController.openLeagueView),
+                              forControlEvents: .TouchUpInside)
+                break
+            case 2:
+                btn.addTarget(self, action: #selector(HCLandingViewController.openDraftingView),
+                              forControlEvents: .TouchUpInside)
+                break
+            default:
+                break
+            }
+
             headerBar.addSubview(btn)
             btn.snp_makeConstraints(closure: { make in
                 make.top.equalTo(headerBar.snp_top)
@@ -101,7 +118,37 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
     
     /// Add the notification button to the navigation bar.
     func addNotificationButton() {
-        let btn = UIBarButtonItem(title: "User", style: .Plain, target: nil, action: nil)
+        let btn = UIBarButtonItem(title: "Profile", style: .Plain, target: nil, action: nil)
+        btn.target = self
+        btn.action = #selector(HCLandingViewController.openUserView)
         navigationItem.rightBarButtonItem = btn
+    }
+
+    /// Opens the HCTeamManagementViewController
+    /// This view will be pushed on the current navigation controller.
+    func openTeamView() {
+        let vc = HCTeamManagementViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+
+    /// Opens the HCLeagueViewController
+    /// This view will be pushed on the current navigation controller.
+    func openDraftingView() {
+        let vc = HCDraftingViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+
+    /// Opens the HCDraftingViewController
+    /// This view will be pushed on the current navigation controller.
+    func openLeagueView() {
+//        let vc = HCDraftingViewController()
+//        self.navigationController?.pushViewController(vc, animated: true)
+    }
+
+    /// Opens the HCPlayerDetailViewController
+    /// This view will be pushed on the current navigation controller.
+    func openUserView() {
+        let vc = HCPlayerDetailViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
