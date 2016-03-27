@@ -85,12 +85,14 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-HeadCoach/Alamofire.framework"
+  install_framework "Pods-HeadCoach/ImageLoader.framework"
   install_framework "Pods-HeadCoach/Realm.framework"
   install_framework "Pods-HeadCoach/RealmSwift.framework"
   install_framework "Pods-HeadCoach/SnapKit.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-HeadCoach/Alamofire.framework"
+  install_framework "Pods-HeadCoach/ImageLoader.framework"
   install_framework "Pods-HeadCoach/Realm.framework"
   install_framework "Pods-HeadCoach/RealmSwift.framework"
   install_framework "Pods-HeadCoach/SnapKit.framework"

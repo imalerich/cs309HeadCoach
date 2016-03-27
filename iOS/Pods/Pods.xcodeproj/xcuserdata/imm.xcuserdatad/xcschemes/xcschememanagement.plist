@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>ImageLoader.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-HeadCoach.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -31,6 +36,37 @@
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
-	<dict/>
+	<dict>
+		<key>1B8C1452343C2BE1168C8054C4F3C3F4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>64E0D6D3356BB27D53F4B179A3097B8E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>79C040AFDDCE1BCBF6D8B5EB0B85887F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C10EFA928E7114BFF77CBD57226437E5</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D6B75E41C85748657BF059C97CD86175</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F4E9EA25B771DD7BED328F036B07A285</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
 </dict>
 </plist>

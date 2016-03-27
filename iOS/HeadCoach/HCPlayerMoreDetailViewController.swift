@@ -6,7 +6,7 @@ import Alamofire
 
 class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var player: HCPlayer!
+    var player: FDPlayer!
     var detail: PlayerDetailView!
     @IBOutlet var playerImage: UIImageView!
     var header: UIView!
@@ -25,7 +25,6 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
         detail.addCustomView()
         detail.setPlayer(player)
 //        sendDataRequest()
-        
     }
     
     func sendDataRequest(){

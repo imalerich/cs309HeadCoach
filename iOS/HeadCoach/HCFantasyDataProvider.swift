@@ -23,7 +23,7 @@ class HCFantasyDataProvider{
                 let json:NSArray = try NSJSONSerialization.JSONObjectWithData(response.data!, options: NSJSONReadingOptions.MutableContainers) as! NSArray
                     for items in json{
                         let player = items as! NSDictionary
-                        let temp = HCPlayer()
+                        let temp = FDPlayer()
                         if let name = player["Name"] as? String{
                             temp.name = name
                         }

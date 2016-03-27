@@ -16,7 +16,7 @@ class HCPlayerDetailViewController: UIViewController, UITextViewDelegate, UITabl
 
     let colors = [UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.05), UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.1)]
     let progress = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-    let playerList: Results<(HCPlayer)> = try! Realm().objects(HCPlayer)
+    let playerList: Results<(FDPlayer)> = try! Realm().objects(FDPlayer)
     let tableView = UITableView()
     let loading = UITextView()
     

@@ -44,7 +44,7 @@ class PlayerTableViewCell: UITableViewCell {
         super.init(coder: aDecoder)
     }
     
-    func setPlayer(player: HCPlayer){
+    func setPlayer(player: FDPlayer){
         nameLabel.text = player.name
         if(!player.fantasyPosition.isEmpty){
             teamLabel.text = player.fantasyPosition + " for " + player.team
