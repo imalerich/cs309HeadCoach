@@ -1,2 +1,4 @@
 iOS/Podfile.lock
+iOS/Pods/Pods.xcodeproj
+*.xcuserstate
 *.swp
