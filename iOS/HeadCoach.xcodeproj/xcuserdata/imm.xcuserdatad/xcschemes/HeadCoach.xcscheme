@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0720"
+   LastUpgradeVersion = "0730"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B972ECB81C4AF8C200C8E87B"
+               BlueprintIdentifier = "B96E55ED1CA850AB001A4017"
                BuildableName = "HeadCoach.app"
                BlueprintName = "HeadCoach"
                ReferencedContainer = "container:HeadCoach.xcodeproj">
@@ -32,7 +32,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "B972ECB81C4AF8C200C8E87B"
+            BlueprintIdentifier = "B96E55ED1CA850AB001A4017"
             BuildableName = "HeadCoach.app"
             BlueprintName = "HeadCoach"
             ReferencedContainer = "container:HeadCoach.xcodeproj">
@@ -55,7 +55,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "B972ECB81C4AF8C200C8E87B"
+            BlueprintIdentifier = "B96E55ED1CA850AB001A4017"
             BuildableName = "HeadCoach.app"
             BlueprintName = "HeadCoach"
             ReferencedContainer = "container:HeadCoach.xcodeproj">
@@ -74,7 +74,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "B972ECB81C4AF8C200C8E87B"
+            BlueprintIdentifier = "B96E55ED1CA850AB001A4017"
             BuildableName = "HeadCoach.app"
             BlueprintName = "HeadCoach"
             ReferencedContainer = "container:HeadCoach.xcodeproj">

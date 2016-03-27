@@ -12,8 +12,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+
         // we will not be using any storyboards, so the following sets up the primary (and only window)
         let nav = UINavigationController(rootViewController: HCRootViewController())
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
