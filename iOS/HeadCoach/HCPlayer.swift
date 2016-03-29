@@ -19,6 +19,11 @@ class HCPlayer: NSObject {
     /// The id of the user who has drafted this player.
     internal var user_id = 0
 
+    /// The users fantasy data position.
+    /// A team must be composed of a set number
+    /// of players to fill each required position.
+    internal var position = ""
+
     /// The FantasyData id for this player.
     /// This id should be used for FantasyData calls 
     /// only, and not for HeadCoach API calls.
@@ -30,6 +35,7 @@ class HCPlayer: NSObject {
         id = Int(json["id"] as! String)!
         name = json["name"] as! String
         user_id = Int(json["user_id"] as! String)!
+        position = json["position"] as! String
         fantasy_id = Int(json["fd_id"] as! String)!
     }
 }

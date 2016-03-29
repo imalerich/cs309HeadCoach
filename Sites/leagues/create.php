@@ -66,6 +66,7 @@ $query = "CREATE TABLE "
 	. "id INT(11) NOT NULL AUTO_INCREMENT, "
 	. "name VARCHAR(100) NOT NULL, "
 	. "user_id INT(11) NOT NULL, "
+	. "pos VARCHAR(11) NOT NULL,"
 	. "fd_id INT(11) NOT NULL, "
 	. "PRIMARY KEY (id), "
 	. "INDEX (user_id) "
@@ -100,12 +101,13 @@ try {
 		$first = $json[$i]["FirstName"];
 		$last = $json[$i]["LastName"];
 		$name = $first . " " . $last;
+		$pos = $json[$i]["PositionCategory"];
 		$id = $json[$i]["PlayerID"];
 
 		$query  = "INSERT INTO " . $draft_table .  " (";
-		$query .= "name, user_id, fd_id";
+		$query .= "name, user_id, pos, fd_id";
 		$query .= ") VALUES (";
-		$query .= "\"{$name}\", 0, $id";
+		$query .= "\"{$name}\", 0, \"{$pos}\", $id";
 		$query .= ")";
 
 		$result = mysqli_query($db, $query);
