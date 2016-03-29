@@ -26,10 +26,19 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
 
         // add the tableView underneath the header bar
         view.addSubview(self.tableView)
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "BasicCell")
+        tableView.registerClass(HCLandingPageDetailCellTableViewCell.self,
+                                forCellReuseIdentifier: "BasicCell")
         tableView.delegate = self
         tableView.dataSource = self
-        
+        tableView.separatorStyle = .None
+        tableView.showsVerticalScrollIndicator = false
+        tableView.allowsSelection = false
+        tableView.backgroundColor = UIColor(white: 0.4, alpha: 1.0)
+
+        let s = CGFloat(1.0 - 0.4)
+        tableView.backgroundColor =
+            UIColor(red: 0, green: s * 92/222.0, blue: s * 9/255.0, alpha: 1.0)
+
         tableView.snp_makeConstraints(closure: { make in
             make.top.equalTo(headerBar.snp_bottom)
             make.bottom.equalTo(view.snp_bottom)
@@ -38,9 +47,9 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
         })
     }
     
-    /* -------------------------------------------------------------------------------------------------------
+    /* -----------------------------------------------------------------------------------------------
         UITableView
-    ------------------------------------------------------------------------------------------------------- */
+    ----------------------------------------------------------------------------------------------- */
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
@@ -50,16 +59,21 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
         return 6
     }
 
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 120
+    }
+
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("BasicCell")!
-        cell.textLabel?.text = "SampleText"
+        let cell = tableView.dequeueReusableCellWithIdentifier("BasicCell")
+            as! HCLandingPageDetailCellTableViewCell
+        cell.details.text = "Sampe Text!"
 
         return cell
     }
     
-    /* -------------------------------------------------------------------------------------------------------
+    /* -----------------------------------------------------------------------------------------------
         Utilities
-    ------------------------------------------------------------------------------------------------------- */
+    ----------------------------------------------------------------------------------------------- */
     
     /// Initializes and adds the headerView and its contents.
     func setupHeaderBar() {
@@ -77,7 +91,7 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
         for i in 0...2 {
             let btn = UIButton(type: .Custom)
             
-            let name = ["Team", "League", "Drafts"][i]
+            let name = ["Team", "League", "Players"][i]
             btn.setTitle(name, forState: .Normal)
             let s = 1.0 - 0.2 * CGFloat(i % 2)
             btn.backgroundColor = UIColor(red: 0, green: s * 92/222.0, blue: s * 9/255.0, alpha: 1.0)
@@ -92,7 +106,7 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
                               forControlEvents: .TouchUpInside)
                 break
             case 2:
-                btn.addTarget(self, action: #selector(HCLandingViewController.openDraftingView),
+                btn.addTarget(self, action: #selector(HCLandingViewController.openPlayersView),
                               forControlEvents: .TouchUpInside)
                 break
             default:
@@ -133,8 +147,8 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
 
     /// Opens the HCLeagueViewController
     /// This view will be pushed on the current navigation controller.
-    func openDraftingView() {
-        let vc = HCDraftingViewController()
+    func openPlayersView() {
+        let vc = HCPlayerDetailViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
