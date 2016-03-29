@@ -31,4 +31,8 @@ class HCUser: CustomStringConvertible {
         name = json["user_name"] as! String
         reg_date = Int(json["reg_date"] as! String)!
     }
+
+    /// Creates an empty user, any API call will fail
+    /// with this user, as 0 is an invalid 'id'
+    init() { }
 }

@@ -14,6 +14,11 @@ class HCHeadCoachDataProvider: NSObject {
     /// Global singleton instance for this class.
     static let sharedInstance = HCHeadCoachDataProvider()
 
+    /// Use the 'login' parameter to set this property.
+    /// Use this property with this data providers calls to
+    /// perform actions on behalf of the user.
+    var user = HCUser()
+
     /// The root API address for the HeadCoach servince.
     /// http://localhost/ can be used for testing new changes
     /// to the server. Otherwise the CS309 server should be used.
@@ -28,7 +33,24 @@ class HCHeadCoachDataProvider: NSObject {
     /// Send a request to the server to create a new user in the database.
     /// The service will assign a unique id that can be retrieved with the
     /// 'getUserID' call, provided the user knows their account name.
-    internal func createNewUser(userName: String, completion: (Bool) -> Void) {
+    internal func getUserID(userName: String, completion: (Bool, HCUser?) -> Void) {
+        let url = "\(api)/users/get.php?name=\(userName)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+                // set the currently logged in user
+                self.user = HCUser(json: json[0])
+                completion(false, self.user)
+            } else {
+                completion(true, nil)
+            }
+        }
+    }
+
+    /// User Login method, this method expects the user to provide their 
+    /// username (and if time permits password), their HCUser representation
+    /// will then be stored in the 'user' property to be used in other API calls.
+    internal func registerUser(userName: String, completion: (Bool) -> Void) {
         let url = "\(api)/users/create.php?name=\(userName)"
 
         Alamofire.request(.GET, url).responseJSON { response in
@@ -43,7 +65,7 @@ class HCHeadCoachDataProvider: NSObject {
     /// Send a request to the server to create a new league in the database.
     /// The service will assign a unique id that can be retrieved with the
     /// 'getLeagueID' call, provided the user knows the league name.
-    internal func createNewLeague(leagueName: String, drafting: String, completion: (Bool) -> Void) {
+    internal func registerLeague(leagueName: String, drafting: String, completion: (Bool) -> Void) {
         let url = "\(api)/leagues/create.php?name=\(leagueName)&drafting=\(drafting)"
 
         Alamofire.request(.GET, url).responseJSON { response in
@@ -51,23 +73,6 @@ class HCHeadCoachDataProvider: NSObject {
                 completion(json["error"] as! Bool)
             } else {
                 completion(false)
-            }
-        }
-    }
-
-    /// Send a request to the server to retrieve the HCUser for
-    /// the given user name. This user will be necessary to make
-    /// additional API requests.
-    internal func getUserID(userName: String, completion: (Bool, HCUser?) -> Void) {
-        let url = "\(api)/users/get.php?name=\(userName)"
-
-        Alamofire.request(.GET, url).responseJSON { response in
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
-                // there will only be one user for this call
-                let user = HCUser(json: json[0])
-                completion(false, user)
-            } else {
-                completion(true, nil)
             }
         }
     }
