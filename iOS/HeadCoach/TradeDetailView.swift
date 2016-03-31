@@ -10,14 +10,26 @@ class TradeDetailView: UIView {
     var alterButton: UIButton!
     var acceptButton: UIButton!
     var recommendLabel: UILabel!
-    var user1NameText: UILabel!
+    var nameTextU1: UILabel!
     var user2NameText: UILabel!
-    @IBOutlet var player1Image: UIImageView!
-    @IBOutlet var player2Image: UIImageView!
-    var player1NameText: UILabel!
-    var player2NameText: UILabel!
+    @IBOutlet var imageP1: UIImageView!
+    @IBOutlet var imageP2: UIImageView!
+    var nameTextP1: UILabel!
+    var nameTextP2: UILabel!
     var horizontalDivider: UIView!
     var verticalDivider: UIView!
+    var stat1Label: UILabel!
+    var stat1TextP1: UILabel!
+    var stat1TextP2: UILabel!
+    var stat2Label: UILabel!
+    var stat2TextP1: UILabel!
+    var stat2TextP2: UILabel!
+    var stat3Label: UILabel!
+    var stat3TextP1: UILabel!
+    var stat3TextP2: UILabel!
+    var stat4Label: UILabel!
+    var stat4TextP1: UILabel!
+    var stat4TextP2: UILabel!
     
     override init (frame : CGRect) {
         super.init(frame : frame)
