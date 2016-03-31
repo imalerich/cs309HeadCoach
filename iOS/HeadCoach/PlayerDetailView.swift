@@ -31,6 +31,8 @@ class PlayerDetailView: UIView {
     var weekPtsText1: UILabel!
     var weekPtsText2: UILabel!
     
+    var tempTradeButton: UIButton!
+    
     
     override init (frame : CGRect) {
         super.init(frame : frame)
@@ -44,6 +46,7 @@ class PlayerDetailView: UIView {
     required init(coder aDecoder: NSCoder) {
         fatalError("This class does not support NSCoding")
     }
+
     
     func setPlayer(player: FDPlayer){
         nameLabel.text = player.name
@@ -224,6 +227,15 @@ class PlayerDetailView: UIView {
         statusText.textColor = UIColor.whiteColor()
         headerLabelContainer.addSubview(statusText)
         
+        tempTradeButton = UIButton.init(type: UIButtonType.System)
+        tempTradeButton.setTitle("Trade", forState: UIControlState.Normal)
+        tempTradeButton.titleLabel!.text = "Trade"
+        tempTradeButton.titleLabel!.font = tempTradeButton.titleLabel!.font.fontWithSize(14)
+        tempTradeButton.titleLabel!.textAlignment = .Center
+        tempTradeButton.sizeToFit()
+        tempTradeButton.setTitleColor(UIColor.init(red: 0, green: 0, blue: 0.8, alpha: 1), forState: UIControlState.Normal)
+        headerLabelContainer.addSubview(tempTradeButton)
+        
         playerImage = UIImageView()
         playerImage.layer.shadowOffset = CGSize(width: 0, height: -3)
         playerImage.layer.shadowOpacity = 0.5
@@ -300,6 +312,10 @@ class PlayerDetailView: UIView {
         statusLabel.snp_makeConstraints { (make) -> Void in
             make.right.equalTo(statusText.snp_left).offset(-5)
             make.bottom.equalTo(headerLabelContainer).inset(8)
+        }
+        tempTradeButton.snp_makeConstraints { (make) in
+            make.bottom.equalTo(statusText.snp_top)
+            make.right.equalTo(headerLabelContainer).inset(8)
         }
         detailContainer.snp_makeConstraints { (make) -> Void in
             make.top.equalTo(headerLabelContainer.snp_bottom).inset(15)
