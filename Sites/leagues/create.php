@@ -112,6 +112,11 @@ try {
 		$pos_cat = $json[$i]["PositionCategory"];
 		$id = $json[$i]["PlayerID"];
 
+		// we will only use one defensive position for this league
+		if (strcmp($pos, "LB") == 0 || strcmp($pos, "DB") == 0) {
+			$pos = "DL";
+		}
+
 		$query  = "INSERT INTO " . $draft_table .  " (";
 		$query .= "name, user_id, pos, pos_cat, fd_id";
 		$query .= ") VALUES (";

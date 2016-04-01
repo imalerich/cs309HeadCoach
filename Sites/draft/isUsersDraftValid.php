@@ -6,7 +6,7 @@
 //	3 Wide Receivers	- WR
 //	1 Tight End			- TE
 //	1 Kicker			- K
-//	1 Defensive line	- DL LB DB
+//	5 Defensive	Players	- DL
 //	
 // and up to 6 benched players.
 
@@ -60,11 +60,9 @@ $required = array(
 	"WR" => 3,
 	"TE" => 1,
 	"K" => 1,
-	"DL" => 1,
+	"DL" => 5,
 	"BENCH" => 6
 );
-
-//	1 Defensive line	- DL LB DB
 
 $remaining = $required;
 foreach ($draft as $player) {
