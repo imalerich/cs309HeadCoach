@@ -21,7 +21,7 @@ if (!array_key_exists("league", $_GET) || !array_key_exists("user", $_GET) ||
 // find the name of the league the user wants, this
 // will then be used to determine the name of the draft table 
 // for that league
-$query  = "SELECT name FROM leagues WHERE id={$_GET["league"]}";
+$query  = "SELECT * FROM leagues WHERE id={$_GET["league"]}";
 
 $result = mysqli_query($db, $query);
 if (!$result) {
@@ -89,5 +89,7 @@ echo json_encode(
 		"error" => False
 	)
 );
+
+mysqli_close($db);
 
 ?>

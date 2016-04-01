@@ -12,8 +12,9 @@ if (mysqli_connect_errno()) {
 	);
 }
 
-// make sure the 'league' id is set
-if (!array_key_exists("league", $_GET)) {
+// make sure we have all of the required arguments
+if (!array_key_exists("league", $_GET) || !array_key_exists("player", $_GET)
+	|| !array_key_exists("state", $_GET)) {
 	die("'league' argument is required");
 }
 
@@ -30,28 +31,21 @@ if (!$result) {
 $league = mysqli_fetch_assoc($result);
 $draft_table = $league["name"] . "_draft";
 
-// now that we have the table name, output all the data as json
-$query = "SELECT * FROM {$draft_table}";
-
-// the query may be limited to a single users draft
-if (array_key_exists("user", $_GET)) {
-	$query .= " WHERE user_id={$_GET["user"]}";
-}
+// update the draft table for this league to the now state
+$query = "UPDATE {$draft_tabel} SET on_bench={$_GET["state"]} WHERE id={$_GET["player"]}";
 
 $result = mysqli_query($db, $query);
 if (!$result) {
-	die("Database query failed with error: " . mysqli_error($db));
+	die("Database query failed with errer: " . mysqli_error($db));
 }
 
-// fetch all the results inta an array
-$draft = array();
-while ($player = mysqli_fetch_assoc($result)) {
-	array_push($draft, $player);
-}
+// finished without error
+echo json_encode(
+	array(
+		"error" => False
+	)
+);
 
-echo json_encode($draft);
-
-// and we are done
 mysqli_close($db);
 
 ?>

@@ -67,6 +67,8 @@ $query = "CREATE TABLE "
 	. "name VARCHAR(100) NOT NULL, "
 	. "user_id INT(11) NOT NULL, "
 	. "pos VARCHAR(11) NOT NULL,"
+	. "pos_cat VARCHAR(11) NOT NULL,"
+	. "on_bench INT(1) NOT NULL DEFAULT 0,"
 	. "fd_id INT(11) NOT NULL, "
 	. "PRIMARY KEY (id), "
 	. "INDEX (user_id) "
@@ -88,7 +90,12 @@ $headers = array("Ocp-Apim-Subscription-Key" => "fa953b83a78d44a1b054b0afbbdff57
 $request->setHeader($headers);
 $request->setMethod(HTTP_Request2::METHOD_GET);
 $request->setBody("{body}");
-$request->setAdapter('curl');
+
+// RHEL will not behave without this
+// Mac OS X will not behave with this
+// if either is not working it's probably
+// this lines fault
+// $request->setAdapter('curl');
 
 // send and process the request
 try {
@@ -101,13 +108,14 @@ try {
 		$first = $json[$i]["FirstName"];
 		$last = $json[$i]["LastName"];
 		$name = $first . " " . $last;
-		$pos = $json[$i]["PositionCategory"];
+		$pos = $json[$i]["FantasyPosition"];
+		$pos_cat = $json[$i]["PositionCategory"];
 		$id = $json[$i]["PlayerID"];
 
 		$query  = "INSERT INTO " . $draft_table .  " (";
-		$query .= "name, user_id, pos, fd_id";
+		$query .= "name, user_id, pos, pos_cat, fd_id";
 		$query .= ") VALUES (";
-		$query .= "\"{$name}\", 0, \"{$pos}\", $id";
+		$query .= "\"{$name}\", 0, \"{$pos}\", \"{$pos_cat}\", $id";
 		$query .= ")";
 
 		$result = mysqli_query($db, $query);
