@@ -7,3 +7,16 @@
 //
 
 import Foundation
+import SnapKit
+
+class HCDraftTableViewCell : UITableViewCell{
+    
+    var lineView = UIView()
+    var leftBox = UIView()
+    var rightBox = UIView()
+    
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        
+    }
+}
