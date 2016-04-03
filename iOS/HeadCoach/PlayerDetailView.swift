@@ -243,7 +243,7 @@ class PlayerDetailView: UIView {
         playerImage.layer.borderWidth = 1
         playerImage.layer.borderColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.1 ).CGColor
         playerImage.layer.cornerRadius = 32
-        self.addSubview(playerImage)
+        addSubview(playerImage)
         
         table = UITableView()
         addSubview(table)
@@ -252,23 +252,23 @@ class PlayerDetailView: UIView {
     }
     
     func setConstraints(){
-        circle.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(self.snp_top).inset(10)
-            make.left.equalTo(self.snp_left).inset(10)
-            make.width.equalTo(75)
-            make.height.equalTo(100)
-        }
-        headerLabelContainer.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(circle.snp_top).inset(10)
-            make.bottom.equalTo(circle.snp_bottom).inset(10)
-            make.left.equalTo(self.snp_left).inset(40)
-            make.right.equalTo(self.snp_right).inset(10)
-        }
         playerImage.snp_makeConstraints { (make) -> Void in
             make.top.equalTo(self.snp_top).inset(15)
             make.left.equalTo(self.snp_left).inset(15)
-            make.width.equalTo(65)
-            make.height.equalTo(90)
+            make.height.equalTo(self).multipliedBy(0.15)
+            make.width.equalTo(playerImage.snp_height).multipliedBy(0.72)
+        }
+        circle.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(self.snp_top).inset(10)
+            make.left.equalTo(self.snp_left).inset(10)
+            make.right.equalTo(playerImage.snp_right).offset(5)
+            make.bottom.equalTo(playerImage.snp_bottom).offset(5)
+        }
+        headerLabelContainer.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(playerImage.snp_top).inset(5)
+            make.bottom.equalTo(playerImage.snp_bottom).inset(5)
+            make.left.equalTo(self.snp_left).inset(40)
+            make.right.equalTo(self.snp_right).inset(10)
         }
         nameLabel.snp_makeConstraints { (make) -> Void in
             make.left.equalTo(playerImage.snp_right).offset(5)

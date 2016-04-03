@@ -72,6 +72,7 @@ class TradeDetailView: UIView {
         p1ID = player.id
         nameTextP1.text = player.name
         stat1TextP1.text = player.position
+        imageP1.load(player.photoURL)
         setNeedsLayout()
     }
     
@@ -84,6 +85,7 @@ class TradeDetailView: UIView {
             passYds = data["PassingYards"] as! Int
             rushYds = data["RushingYards"] as! Int
             tds = data["Touchdowns"] as! Int
+            print("got data")
         }
         if(p1ID == id){
             stat2TextP1.text = String(passYds)
@@ -190,95 +192,96 @@ class TradeDetailView: UIView {
         
         stat1Label = UILabel.init()
         stat1Label.textAlignment = .Center
-        stat1Label.textColor = UIColor.blackColor()
+        stat1Label.textColor = UIColor.darkGrayColor()
         stat1Label.font = stat1Label.font.fontWithSize(12)
         addSubview(stat1Label)
         
         stat1TextP1 = UILabel.init()
         stat1TextP1.textAlignment = .Center
-        stat1TextP1.textColor = UIColor.darkGrayColor()
+        stat1TextP1.textColor = UIColor.blackColor()
         stat1TextP1.font = stat1TextP1.font.fontWithSize(12)
         addSubview(stat1TextP1)
         
         stat1TextP2 = UILabel.init()
         stat1TextP2.textAlignment = .Center
-        stat1TextP2.textColor = UIColor.darkGrayColor()
+        stat1TextP2.textColor = UIColor.blackColor()
         stat1TextP2.font = stat1TextP2.font.fontWithSize(12)
         addSubview(stat1TextP2)
         
         stat2Label = UILabel.init()
         stat2Label.textAlignment = .Center
-        stat2Label.textColor = UIColor.blackColor()
+        stat2Label.textColor = UIColor.darkGrayColor()
         stat2Label.font = stat2Label.font.fontWithSize(12)
         addSubview(stat2Label)
         
         stat2TextP1 = UILabel.init()
         stat2TextP1.textAlignment = .Center
-        stat2TextP1.textColor = UIColor.darkGrayColor()
+        stat2TextP1.textColor = UIColor.blackColor()
         stat2TextP1.font = stat2TextP1.font.fontWithSize(12)
         addSubview(stat2TextP1)
         
         stat2TextP2 = UILabel.init()
         stat2TextP2.textAlignment = .Center
-        stat2TextP2.textColor = UIColor.darkGrayColor()
+        stat2TextP2.textColor = UIColor.blackColor()
         stat2TextP2.font = stat2TextP2.font.fontWithSize(12)
         addSubview(stat2TextP2)
         
         stat3Label = UILabel.init()
         stat3Label.textAlignment = .Center
-        stat3Label.textColor = UIColor.blackColor()
+        stat3Label.textColor = UIColor.darkGrayColor()
         stat3Label.font = stat3Label.font.fontWithSize(12)
         addSubview(stat3Label)
         
         stat3TextP1 = UILabel.init()
         stat3TextP1.textAlignment = .Center
-        stat3TextP1.textColor = UIColor.darkGrayColor()
+        stat3TextP1.textColor = UIColor.blackColor()
         stat3TextP1.font = stat3TextP1.font.fontWithSize(12)
         addSubview(stat3TextP1)
         
         stat3TextP2 = UILabel.init()
         stat3TextP2.textAlignment = .Center
-        stat3TextP2.textColor = UIColor.darkGrayColor()
+        stat3TextP2.textColor = UIColor.blackColor()
         stat3TextP2.font = stat3TextP2.font.fontWithSize(12)
         addSubview(stat3TextP2)
         
         stat4Label = UILabel.init()
         stat4Label.textAlignment = .Center
-        stat4Label.textColor = UIColor.blackColor()
+        stat4Label.textColor = UIColor.darkGrayColor()
         stat4Label.font = stat4Label.font.fontWithSize(12)
         addSubview(stat4Label)
         
         stat4TextP1 = UILabel.init()
         stat4TextP1.textAlignment = .Center
-        stat4TextP1.textColor = UIColor.darkGrayColor()
+        stat4TextP1.textColor = UIColor.blackColor()
         stat4TextP1.font = stat4TextP1.font.fontWithSize(12)
         addSubview(stat4TextP1)
         
         stat4TextP2 = UILabel.init()
         stat4TextP2.textAlignment = .Center
-        stat4TextP2.textColor = UIColor.darkGrayColor()
+        stat4TextP2.textColor = UIColor.blackColor()
         stat4TextP2.font = stat4TextP2.font.fontWithSize(12)
         addSubview(stat4TextP2)
         
         stat5Label = UILabel.init()
         stat5Label.textAlignment = .Center
-        stat5Label.textColor = UIColor.blackColor()
+        stat5Label.textColor = UIColor.darkGrayColor()
         stat5Label.font = stat5Label.font.fontWithSize(12)
         addSubview(stat5Label)
         
         stat5TextP1 = UILabel.init()
         stat5TextP1.textAlignment = .Center
-        stat5TextP1.textColor = UIColor.darkGrayColor()
+        stat5TextP1.textColor = UIColor.blackColor()
         stat5TextP1.font = stat5TextP1.font.fontWithSize(12)
         addSubview(stat5TextP1)
         
         stat5TextP2 = UILabel.init()
         stat5TextP2.textAlignment = .Center
-        stat5TextP2.textColor = UIColor.darkGrayColor()
+        stat5TextP2.textColor = UIColor.blackColor()
         stat5TextP2.font = stat5TextP2.font.fontWithSize(12)
         addSubview(stat5TextP2)
         
         analysisLabel = UILabel.init()
+        analysisLabel.text = "Analysis"
         analysisLabel.textAlignment = .Center
         analysisLabel.textColor = UIColor.blackColor()
         analysisLabel.font = analysisLabel.font.fontWithSize(12)
@@ -286,23 +289,12 @@ class TradeDetailView: UIView {
         
         nameTextU1.text = "Davor Civsa"
         nameTextU2.text = "You"
-        nameTextP1.text = "D'Brickashaw Henderson"
         nameTextP2.text = "Supa Dupa Long Name"
         stat1Label.text = "POS"
         stat2Label.text = "PASS YDS"
         stat3Label.text = "RUSH YDS"
         stat4Label.text = "TD"
         stat5Label.text = "PTS/GM"
-        stat1TextP1.text = "QB"
-        stat1TextP2.text = "QB"
-        stat2TextP1.text = "3837"
-        stat2TextP2.text = "4770"
-        stat3TextP1.text = "636"
-        stat3TextP2.text = "53"
-        stat4TextP1.text = "45"
-        stat4TextP2.text = "39"
-        stat5TextP1.text = "24.32"
-        stat5TextP2.text = "21.48"
         
         setConstraints()
     }
