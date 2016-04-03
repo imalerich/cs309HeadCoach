@@ -23,13 +23,15 @@ class HCDraftingViewController: UIViewController, UITableViewDataSource, UITable
         // initialize tableView
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
+        tableView.separatorColor = UIColor.blackColor()
         self.view.addSubview(tableView)
         tableView.snp_makeConstraints { (make) in
             make.edges.equalTo(self.view)
         }
         
-        // TODO - register custom cell
-    
+        
+        //register custom cell
         self.tableView.registerClass(HCDraftTableViewCell.classForCoder(), forCellReuseIdentifier: "DraftCell")
     }
     
@@ -46,10 +48,24 @@ class HCDraftingViewController: UIViewController, UITableViewDataSource, UITable
         
         let cell = tableView.dequeueReusableCellWithIdentifier("DraftCell", forIndexPath: indexPath) as! HCDraftTableViewCell
         
+        cell.preservesSuperviewLayoutMargins = false
+        cell.separatorInset = UIEdgeInsetsZero
+        cell.layoutMargins = UIEdgeInsetsZero
+        
         if(indexPath.row == 0){
-            cell.lineView.snp_remakeConstraints(closure: { (make) in
-                make.width.equalTo(0)
+            cell.leftBox.hidden = true
+            cell.rightBox.snp_remakeConstraints(closure: { (make) in
+                make.edges.equalTo(cell)
             })
+            cell.rightLabel2.hidden = true
+            cell.rightLabel3.hidden = true
+            
+            // TODO - Display actual amount of turns until pick
+            cell.rightLabel1.text = "Your pick in x turns"
+        }
+        
+        if(indexPath.row == 1){
+            
         }
         
         if(indexPath.row > 1 && (indexPath.row % 2) == 1){
