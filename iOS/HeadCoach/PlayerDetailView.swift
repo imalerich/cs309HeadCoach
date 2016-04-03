@@ -229,7 +229,6 @@ class PlayerDetailView: UIView {
         
         tempTradeButton = UIButton.init(type: UIButtonType.System)
         tempTradeButton.setTitle("Trade", forState: UIControlState.Normal)
-        tempTradeButton.titleLabel!.text = "Trade"
         tempTradeButton.titleLabel!.font = tempTradeButton.titleLabel!.font.fontWithSize(14)
         tempTradeButton.titleLabel!.textAlignment = .Center
         tempTradeButton.sizeToFit()

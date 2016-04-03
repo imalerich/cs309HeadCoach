@@ -125,13 +125,6 @@ class HCPlayerDetailViewController: UIViewController, UITextViewDelegate, UITabl
             
         }
     }
-    
-    
-    
-    func filterList() { // should probably be called sort and not filter
-       // fruitArr.sort() { $0.fruitName > $1.fruitName } // sort the fruit by name
-       // fruitList.reloadData(); // notify the table view the data has changed
-    }
 
 
 }

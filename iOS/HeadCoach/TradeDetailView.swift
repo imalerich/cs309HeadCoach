@@ -5,6 +5,8 @@ import SnapKit
 
 class TradeDetailView: UIView {
     
+    var p1ID: Int!
+    var p2ID: Int!
     var tradeTitleLabel: UILabel!
     var declineButton: UIButton!
     var alterButton: UIButton!
@@ -30,6 +32,10 @@ class TradeDetailView: UIView {
     var stat4Label: UILabel!
     var stat4TextP1: UILabel!
     var stat4TextP2: UILabel!
+    var stat5Label: UILabel!
+    var stat5TextP1: UILabel!
+    var stat5TextP2: UILabel!
+    var analysisLabel: UILabel!
     
     let wtt = " wants to trade!"
     
@@ -47,7 +53,8 @@ class TradeDetailView: UIView {
     }
     
     func setInfo(user1: HCUser, user2: HCUser, player1: FDPlayer, player2: FDPlayer){
-        setNeedsLayout()
+        p1ID = player1.id
+        p2ID = player2.id
         tradeTitleLabel.text = user1.name + wtt
         
         nameTextU1.text = user1.name
@@ -58,6 +65,38 @@ class TradeDetailView: UIView {
         stat1Label.text = "Pos"
         stat1TextP1.text = player1.position
         stat1TextP2.text = player2.position
+        setNeedsLayout()
+    }
+    
+    func setPlayer1(player: FDPlayer){
+        p1ID = player.id
+        nameTextP1.text = player.name
+        stat1TextP1.text = player.position
+        setNeedsLayout()
+    }
+    
+    func setStats(id: Int, json: NSArray) -> Void{
+        var passYds: Int = 0
+        var rushYds: Int = 0
+        var tds: Int = 0
+        for item in json{
+            let data = item as! NSDictionary
+            passYds = data["PassingYards"] as! Int
+            rushYds = data["RushingYards"] as! Int
+            tds = data["Touchdowns"] as! Int
+        }
+        if(p1ID == id){
+            stat2TextP1.text = String(passYds)
+            stat3TextP1.text = String(rushYds)
+            stat4TextP1.text = String(tds)
+            stat5TextP1.text = String(arc4random_uniform(40))
+        }else{
+            stat2TextP2.text = String(passYds)
+            stat3TextP2.text = String(rushYds)
+            stat4TextP2.text = String(tds)
+            stat5TextP2.text = String(arc4random_uniform(40))
+        }
+        setNeedsLayout()
     }
     
     func addCustomView(){
@@ -72,33 +111,49 @@ class TradeDetailView: UIView {
         addSubview(tradeTitleLabel)
         
         declineButton = UIButton.init(type: UIButtonType.System)
-        declineButton.titleLabel!.text = "Decline"
+        declineButton.setTitle("Decline", forState: UIControlState.Normal)
+        declineButton.titleLabel!.font = declineButton.titleLabel!.font.fontWithSize(14)
+        declineButton.titleLabel!.textAlignment = .Center
+        declineButton.sizeToFit()
         declineButton.setTitleColor(UIColor.init(red: 1, green: 0.2, blue: 0.2, alpha: 1), forState: UIControlState.Normal)
         addSubview(declineButton)
         
         acceptButton = UIButton.init(type: UIButtonType.System)
-        acceptButton.titleLabel!.text = "Accept"
+        acceptButton.setTitle("Accept", forState: UIControlState.Normal)
+        acceptButton.titleLabel!.font = acceptButton.titleLabel!.font.fontWithSize(14)
+        acceptButton.titleLabel!.textAlignment = .Center
+        acceptButton.sizeToFit()
         acceptButton.setTitleColor(UIColor.init(red: 0.2, green: 1, blue: 0.2, alpha: 1), forState: UIControlState.Normal)
         addSubview(acceptButton)
         
         alterButton = UIButton.init(type: UIButtonType.System)
-        alterButton.titleLabel!.text = "Alter"
+        alterButton.setTitle("Alter", forState: UIControlState.Normal)
+        alterButton.titleLabel!.font = alterButton.titleLabel!.font.fontWithSize(14)
+        alterButton.titleLabel!.textAlignment = .Center
+        alterButton.sizeToFit()
         addSubview(alterButton)
+        
+        recommendLabel = UILabel.init()
+        recommendLabel.text = "Recommended"
+        recommendLabel.textAlignment = .Center
+        recommendLabel.textColor = UIColor.lightGrayColor()
+        recommendLabel.font = recommendLabel.font.fontWithSize(8)
+        addSubview(recommendLabel)
         
         nameTextU1 = UILabel.init()
         nameTextU1.textAlignment = .Center
         nameTextU1.textColor = UIColor.darkGrayColor()
-        nameTextU1.font = nameTextU1.font.fontWithSize(12)
+        nameTextU1.font = nameTextU1.font.fontWithSize(14)
         addSubview(nameTextU1)
         
         nameTextU2 = UILabel.init()
         nameTextU2.textAlignment = .Center
         nameTextU2.textColor = UIColor.darkGrayColor()
-        nameTextU2.font = nameTextU2.font.fontWithSize(12)
+        nameTextU2.font = nameTextU2.font.fontWithSize(14)
         addSubview(nameTextU2)
     
         imageP1 = UIImageView.init()
-        imageP1 = UIImageView()
+        imageP1.backgroundColor = UIColor.blackColor()
         imageP1.layer.shadowOffset = CGSize(width: 0, height: -3)
         imageP1.layer.shadowOpacity = 0.5
         imageP1.layer.shadowRadius = 4
@@ -106,7 +161,7 @@ class TradeDetailView: UIView {
         self.addSubview(imageP1)
         
         imageP2 = UIImageView.init()
-        imageP2 = UIImageView()
+        imageP2.backgroundColor = UIColor.blackColor()
         imageP2.layer.shadowOffset = CGSize(width: 0, height: -3)
         imageP2.layer.shadowOpacity = 0.5
         imageP2.layer.shadowRadius = 4
@@ -205,6 +260,50 @@ class TradeDetailView: UIView {
         stat4TextP2.font = stat4TextP2.font.fontWithSize(12)
         addSubview(stat4TextP2)
         
+        stat5Label = UILabel.init()
+        stat5Label.textAlignment = .Center
+        stat5Label.textColor = UIColor.blackColor()
+        stat5Label.font = stat5Label.font.fontWithSize(12)
+        addSubview(stat5Label)
+        
+        stat5TextP1 = UILabel.init()
+        stat5TextP1.textAlignment = .Center
+        stat5TextP1.textColor = UIColor.darkGrayColor()
+        stat5TextP1.font = stat5TextP1.font.fontWithSize(12)
+        addSubview(stat5TextP1)
+        
+        stat5TextP2 = UILabel.init()
+        stat5TextP2.textAlignment = .Center
+        stat5TextP2.textColor = UIColor.darkGrayColor()
+        stat5TextP2.font = stat5TextP2.font.fontWithSize(12)
+        addSubview(stat5TextP2)
+        
+        analysisLabel = UILabel.init()
+        analysisLabel.textAlignment = .Center
+        analysisLabel.textColor = UIColor.blackColor()
+        analysisLabel.font = analysisLabel.font.fontWithSize(12)
+        addSubview(analysisLabel)
+        
+        nameTextU1.text = "Davor Civsa"
+        nameTextU2.text = "You"
+        nameTextP1.text = "D'Brickashaw Henderson"
+        nameTextP2.text = "Supa Dupa Long Name"
+        stat1Label.text = "POS"
+        stat2Label.text = "PASS YDS"
+        stat3Label.text = "RUSH YDS"
+        stat4Label.text = "TD"
+        stat5Label.text = "PTS/GM"
+        stat1TextP1.text = "QB"
+        stat1TextP2.text = "QB"
+        stat2TextP1.text = "3837"
+        stat2TextP2.text = "4770"
+        stat3TextP1.text = "636"
+        stat3TextP2.text = "53"
+        stat4TextP1.text = "45"
+        stat4TextP2.text = "39"
+        stat5TextP1.text = "24.32"
+        stat5TextP2.text = "21.48"
+        
         setConstraints()
     }
     
@@ -212,7 +311,162 @@ class TradeDetailView: UIView {
         tradeTitleLabel.snp_makeConstraints { (make) -> Void in
             make.left.equalTo(self.snp_left)
             make.right.equalTo(self.snp_right)
+            make.height.equalTo(self.snp_height).multipliedBy(0.05)
+        }
+        declineButton.snp_makeConstraints { (make) in
+            make.left.equalTo(self.snp_left)
+            make.top.equalTo(tradeTitleLabel.snp_bottom)
+            make.height.equalTo(self.snp_height).multipliedBy(0.05)
+            make.width.equalTo(self.snp_width).dividedBy(3)
+        }
+        alterButton.snp_makeConstraints { (make) in
+            make.left.equalTo(declineButton.snp_right)
+            make.top.equalTo(declineButton.snp_top)
+            make.height.equalTo(declineButton.snp_height)
+            make.width.equalTo(declineButton.snp_width)
+        }
+        acceptButton.snp_makeConstraints { (make) in
+            make.left.equalTo(alterButton.snp_right)
+            make.top.equalTo(declineButton)
+            make.height.equalTo(declineButton)
+            make.width.equalTo(declineButton)
+        }
+        recommendLabel.snp_makeConstraints { (make) in
+            make.top.equalTo(declineButton.snp_bottom)
+            make.left.equalTo(acceptButton)
+            make.width.equalTo(acceptButton)
+            make.height.equalTo(self.snp_height).multipliedBy(0.025)
+        }
+        nameTextU1.snp_makeConstraints { (make) in
+            make.top.equalTo(recommendLabel.snp_bottom)
+            make.left.equalTo(self.snp_left)
+            make.right.equalTo(self.snp_centerX)
+            make.height.equalTo(self.snp_height).multipliedBy(0.075)
+        }
+        nameTextU2.snp_makeConstraints { (make) in
+            make.top.equalTo(nameTextU1.snp_top)
+            make.left.equalTo(self.snp_centerX)
+            make.right.equalTo(self.snp_right)
+            make.height.equalTo(nameTextU1)
+        }
+        horizontalDivider.snp_makeConstraints { (make) in
+            make.bottom.equalTo(nameTextU1.snp_bottom)
+            make.width.equalTo(self.snp_width)
+            make.height.equalTo(1)
+        }
+        verticalDivider.snp_makeConstraints { (make) in
+            make.top.equalTo(nameTextU1.snp_bottom)
+            make.height.equalTo(self.snp_height)
+            make.centerX.equalTo(self.snp_centerX)
+            make.width.equalTo(1)
+        }
+        imageP1.snp_makeConstraints { (make) in
+            make.top.equalTo(nameTextU1.snp_bottom).offset(5)
+            make.centerX.equalTo(self.snp_centerX).dividedBy(2)
             make.height.equalTo(self.snp_height).multipliedBy(0.1)
+            make.width.equalTo(imageP1.snp_height).multipliedBy(0.72)
+        }
+        imageP2.snp_makeConstraints { (make) in
+            make.top.equalTo(imageP1)
+            make.centerX.equalTo(self.snp_centerX).multipliedBy(1.5)
+            make.width.equalTo(imageP1)
+            make.height.equalTo(imageP1)
+        }
+        nameTextP1.snp_makeConstraints { (make) in
+            make.top.equalTo(imageP1.snp_bottom)
+            make.left.equalTo(self.snp_left)
+            make.right.equalTo(self.snp_centerX)
+            make.height.equalTo(self.snp_height).multipliedBy(0.05)
+        }
+        nameTextP2.snp_makeConstraints { (make) in
+            make.top.equalTo(nameTextP1)
+            make.left.equalTo(self.snp_centerX)
+            make.right.equalTo(self.snp_right)
+            make.height.equalTo(nameTextP1)
+        }
+        stat1Label.snp_makeConstraints { (make) in
+            make.top.equalTo(nameTextP1.snp_bottom).offset(10)
+            make.centerX.equalTo(self.snp_centerX)
+        }
+        stat2Label.snp_makeConstraints { (make) in
+            make.top.equalTo(stat1Label.snp_bottom).offset(5)
+            make.centerX.equalTo(stat1Label)
+        }
+        stat3Label.snp_makeConstraints { (make) in
+            make.top.equalTo(stat2Label.snp_bottom).offset(5)
+            make.centerX.equalTo(stat2Label)
+        }
+        stat4Label.snp_makeConstraints { (make) in
+            make.top.equalTo(stat3Label.snp_bottom).offset(5)
+            make.centerX.equalTo(stat3Label)
+        }
+        stat5Label.snp_makeConstraints { (make) in
+            make.top.equalTo(stat4Label.snp_bottom).offset(5)
+            make.centerX.equalTo(stat3Label)
+        }
+        analysisLabel.snp_makeConstraints { (make) in
+            make.top.equalTo(stat5Label.snp_bottom).offset(5)
+            make.centerX.equalTo(stat1Label)
+        }
+        stat1TextP1.snp_makeConstraints { (make) in
+            make.top.equalTo(stat1Label)
+            make.left.equalTo(self)
+            make.right.equalTo(self.snp_centerX)
+            make.height.equalTo(stat1Label)
+        }
+        stat1TextP2.snp_makeConstraints { (make) in
+            make.top.equalTo(stat1Label)
+            make.left.equalTo(self.snp_centerX)
+            make.right.equalTo(self)
+            make.height.equalTo(stat1Label)
+        }
+        stat2TextP1.snp_makeConstraints { (make) in
+            make.top.equalTo(stat2Label)
+            make.left.equalTo(self)
+            make.right.equalTo(self.snp_centerX)
+            make.height.equalTo(stat2Label)
+        }
+        stat2TextP2.snp_makeConstraints { (make) in
+            make.top.equalTo(stat2Label)
+            make.left.equalTo(self.snp_centerX)
+            make.right.equalTo(self)
+            make.height.equalTo(stat2Label)
+        }
+        stat3TextP1.snp_makeConstraints { (make) in
+            make.top.equalTo(stat3Label)
+            make.left.equalTo(self)
+            make.right.equalTo(self.snp_centerX)
+            make.height.equalTo(stat3Label)
+        }
+        stat3TextP2.snp_makeConstraints { (make) in
+            make.top.equalTo(stat3Label)
+            make.left.equalTo(self.snp_centerX)
+            make.right.equalTo(self)
+            make.height.equalTo(stat3Label)
+        }
+        stat4TextP1.snp_makeConstraints { (make) in
+            make.top.equalTo(stat4Label)
+            make.left.equalTo(self)
+            make.right.equalTo(self.snp_centerX)
+            make.height.equalTo(stat4Label)
+        }
+        stat4TextP2.snp_makeConstraints { (make) in
+            make.top.equalTo(stat4Label)
+            make.left.equalTo(self.snp_centerX)
+            make.right.equalTo(self)
+            make.height.equalTo(stat4Label)
+        }
+        stat5TextP1.snp_makeConstraints { (make) in
+            make.top.equalTo(stat5Label)
+            make.left.equalTo(self)
+            make.right.equalTo(self.snp_centerX)
+            make.height.equalTo(stat5TextP2)
+        }
+        stat5TextP2.snp_makeConstraints { (make) in
+            make.top.equalTo(stat5Label)
+            make.left.equalTo(self.snp_centerX)
+            make.right.equalTo(self)
+            make.height.equalTo(stat5TextP2)
         }
     }
     

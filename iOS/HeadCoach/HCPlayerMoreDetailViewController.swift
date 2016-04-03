@@ -51,6 +51,7 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
     func buttonClicked(sender: AnyObject?) {
         if sender === detail.tempTradeButton {
             let vc = HCTradeDetailViewController()
+            vc.player1 = player
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }

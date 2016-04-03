@@ -117,6 +117,23 @@ class HCFantasyDataProvider{
         }
     }
     
+    func getPlayerStatsForPlayerID(id : Int, handler: (Int, NSArray) -> Void){
+        // Using Joe's subscription key
+        let headers = ["Ocp-Apim-Subscription-Key": "2ae4d2ad88ae486e8dd3004e4259e2f1"]
+        Alamofire.request(.GET, "https://api.fantasydata.net/nfl/v2/XML/PlayerSeasonStatsByPlayerID/2015/\(id)", headers: headers)
+            .responseJSON { response in
+                do{
+                    let json:NSArray = try NSJSONSerialization.JSONObjectWithData(response.data!, options: NSJSONReadingOptions.MutableContainers) as! NSArray
+                    handler(id, json)
+                    //onCompletion("DONE")
+                    
+                }catch let caught{
+                    print(caught)
+                }
+                
+        }
+    }
+    
     func getCurrentSeason(){
         // Using Joe's subscription key
         let headers = ["Ocp-Apim-Subscription-Key": "2ae4d2ad88ae486e8dd3004e4259e2f1"]
@@ -132,6 +149,7 @@ class HCFantasyDataProvider{
                 
         }
     }
+    
     
     
     
