@@ -8,16 +8,19 @@
 
 import Foundation
 import SnapKit
+import ImageLoader
 
 
 class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
 {
     
     let tableView = UITableView()
+    let image = UIImageView()
     
     override func viewDidLoad(){
         super.viewDidLoad()
         tableView.delegate = self
+        
         tableView.dataSource = self
 
         tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
@@ -26,6 +29,14 @@ class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableView
         self.tableView.registerClass(HCLeagueTableViewCell.classForCoder(), forCellReuseIdentifier: "LeagueCell")
         self.tableView.snp_makeConstraints { (make) -> Void in
             make.edges.equalTo(self.view)
+        }
+        //changes
+        HCHeadCoachDataProvider.sharedInstance.createNewUser("Doug") { (error) in
+            print(error)
+            HCHeadCoachDataProvider.sharedInstance.getAllUsers({ (error, users) in
+                print(error)
+                print(users.count)
+            })
         }
         
         
