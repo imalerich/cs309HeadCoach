@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		18540B8A336DE7AA4DC83BC5 /* Pods_HeadCoach.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BF8C3817BE05FA3D44A916C /* Pods_HeadCoach.framework */; };
+		4802EF6F1CB1A6A700F14FC8 /* HCLeagueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49CE1CA8539B00F2C2F0 /* HCLeagueViewController.swift */; };
 		B94C49E01CA8539B00F2C2F0 /* FDPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49C51CA8539A00F2C2F0 /* FDPlayer.swift */; };
 		B94C49E11CA8539B00F2C2F0 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49C61CA8539A00F2C2F0 /* Game.swift */; };
 		B94C49E21CA8539B00F2C2F0 /* GameTableViewDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49C71CA8539A00F2C2F0 /* GameTableViewDetail.swift */; };
@@ -17,7 +18,6 @@
 		B94C49E61CA8539B00F2C2F0 /* HCLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49CB1CA8539B00F2C2F0 /* HCLandingViewController.swift */; };
 		B94C49E71CA8539B00F2C2F0 /* HCLeague.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49CC1CA8539B00F2C2F0 /* HCLeague.swift */; };
 		B94C49E81CA8539B00F2C2F0 /* HCLeagueTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49CD1CA8539B00F2C2F0 /* HCLeagueTableViewCell.swift */; };
-		B94C49E91CA8539B00F2C2F0 /* HCLeagueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49CE1CA8539B00F2C2F0 /* HCLeagueViewController.swift */; };
 		B94C49EA1CA8539B00F2C2F0 /* HCLiveGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49CF1CA8539B00F2C2F0 /* HCLiveGameViewController.swift */; };
 		B94C49EB1CA8539B00F2C2F0 /* HCLiveTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49D01CA8539B00F2C2F0 /* HCLiveTableViewCell.swift */; };
 		B94C49EC1CA8539B00F2C2F0 /* HCPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49D11CA8539B00F2C2F0 /* HCPlayer.swift */; };
@@ -322,6 +322,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4802EF6F1CB1A6A700F14FC8 /* HCLeagueViewController.swift in Sources */,
 				B94C49E51CA8539B00F2C2F0 /* HCHeachCoachDataProvider.swift in Sources */,
 				B94C49EF1CA8539B00F2C2F0 /* HCPlayerMoreDetailViewController.swift in Sources */,
 				B94C49F41CA8539B00F2C2F0 /* HCUserDetailViewController.swift in Sources */,
@@ -343,7 +344,6 @@
 				B94C49E41CA8539B00F2C2F0 /* HCFantasyDataProvider.swift in Sources */,
 				B94C49F81CA8539B00F2C2F0 /* TradeDetailView.swift in Sources */,
 				B94C49F91CA8539B00F2C2F0 /* UserDetailCollectionItemView.swift in Sources */,
-				B94C49E91CA8539B00F2C2F0 /* HCLeagueViewController.swift in Sources */,
 				B94C49ED1CA8539B00F2C2F0 /* HCPlayerDetailCell.swift in Sources */,
 				B9BD66591CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift in Sources */,
 				B94C49F11CA8539B00F2C2F0 /* HCTeamManagementViewController.swift in Sources */,
