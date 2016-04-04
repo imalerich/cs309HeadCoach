@@ -101,5 +101,7 @@ class HCLoginScreenViewController: UIViewController{
     func newAccount(sender:UIButton!){
         createNew = sender as UIButton
         UIView.animateWithDuration(0.09,animations: { self.createNew.transform = CGAffineTransformMakeScale(0.6, 0.6) },completion: { finish in UIView.animateWithDuration(0.09){ self.createNew.transform = CGAffineTransformIdentity }})
+        let vc = HCCreateAccountViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
