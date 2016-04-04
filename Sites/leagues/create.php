@@ -95,7 +95,7 @@ $request->setBody("{body}");
 // Mac OS X will not behave with this
 // if either is not working it's probably
 // this lines fault
-// $request->setAdapter('curl');
+$request->setAdapter('curl');
 
 // send and process the request
 try {

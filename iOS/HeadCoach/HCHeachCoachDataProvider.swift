@@ -130,10 +130,27 @@ class HCHeadCoachDataProvider: NSObject {
         }
     }
 
+    /// Creates a list of all available leagues in the
+    /// HeadCoach service.
+    internal func getAllLeagues(completion: (Bool, [HCLeague]) -> Void) {
+        let url = "\(api)/leagues/getAllLeagues.php?id=\(user.id)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            var leagues = [HCLeague]()
+            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+                for item in json {
+                    leagues.append(HCLeague(json: item))
+                }
+            }
+
+            completion(leagues.count == 0, leagues)
+        }
+    }
+
     /// Creates a list of all of the leagues available in
     /// the HeadCoach Fantasy service.
     internal func getAllLeaguesForUser(user: HCUser, completion: (Bool, [HCLeague]) -> Void) {
-        let url = "\(api)/leagues/getAllForUser.php?id=\(user.id)"
+        let url = "\(api)/leagues/getAllLeagues.php?id=\(user.id)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             var leagues = [HCLeague]()
