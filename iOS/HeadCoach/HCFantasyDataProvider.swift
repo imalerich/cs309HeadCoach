@@ -27,6 +27,12 @@ class HCFantasyDataProvider{
                         if let name = player["Name"] as? String{
                             temp.name = name
                         }
+                        if let fname = player["FirstName"] as? String{
+                            temp.firstName = fname
+                        }
+                        if let lname = player["LastName"] as? String{
+                            temp.lastName = lname
+                        }
                         if let photoURL = player["PhotoUrl"] as? String{
                             temp.photoURL = photoURL
                         }
@@ -56,6 +62,9 @@ class HCFantasyDataProvider{
                         }
                         if let age = player["Age"] as? Int{
                             temp.age = age
+                        }
+                        if let byeWeek = player["ByeWeek"] as? Int{
+                            temp.byeWeek = byeWeek
                         }
                         if let byeWeek = player["ByeWeek"] as? Int{
                             temp.byeWeek = byeWeek
