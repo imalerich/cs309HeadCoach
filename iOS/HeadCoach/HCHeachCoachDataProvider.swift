@@ -13,6 +13,11 @@ class HCHeadCoachDataProvider: NSObject {
 
     /// Global singleton instance for this class.
     static let sharedInstance = HCHeadCoachDataProvider()
+    //Name and id of current user
+    struct defaultKeys{
+        static let keyOne = ""
+        static let keyTwo = ""
+    }
 
     /// The root API address for the HeadCoach servince.
     /// http://localhost/ can be used for testing new changes
@@ -39,6 +44,7 @@ class HCHeadCoachDataProvider: NSObject {
             }
         }
     }
+    
 
     /// Send a request to the server to create a new league in the database.
     /// The service will assign a unique id that can be retrieved with the
@@ -64,8 +70,11 @@ class HCHeadCoachDataProvider: NSObject {
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
                 // there will only be one user for this call
-                let user = HCUser(json: json[0])
-                completion(false, user)
+                if (json.count==0) {completion(true,nil)}
+                else{
+                    let user = HCUser(json: json[0])
+                    completion(false, user)
+                }
             } else {
                 completion(true, nil)
             }
