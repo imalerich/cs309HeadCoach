@@ -65,13 +65,28 @@ class HCDraftingViewController: UIViewController, UITableViewDataSource, UITable
         }
         
         if(indexPath.row == 1){
+            cell.rightLabel2.hidden = true
+            cell.rightLabel3.hidden = true
             
+            cell.leftLabel.text = "Player"
+            cell.rightLabel1.text = "Info"
+            
+            cell.rightLabel1.snp_remakeConstraints(closure: { (make) in
+                make.center.equalTo(cell.rightBox)
+            })
+            cell.leftLabel.snp_remakeConstraints(closure: { (make) in
+                make.height.centerX.equalTo(cell.leftBox)
+            })
+            
+            cell.leftLabel.font = UIFont.boldSystemFontOfSize(20.0)
+            cell.rightLabel1.font = UIFont.boldSystemFontOfSize(20.0)
         }
         
         if(indexPath.row > 1 && (indexPath.row % 2) == 1){
             cell.backgroundColor = UIColor.lightGrayColor()
             cell.leftBox.backgroundColor = UIColor.lightGrayColor()
             cell.rightBox.backgroundColor = UIColor.lightGrayColor()
+            cell.leftLabel.textAlignment = .Center
         }
         
         return cell

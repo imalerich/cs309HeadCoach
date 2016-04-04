@@ -78,6 +78,7 @@ class HCDraftTableViewCell : UITableViewCell{
         
         self.leftLabel.snp_makeConstraints { (make) -> Void in
             make.edges.equalTo(self.leftBox)
+            make.height.equalTo(self.leftBox).dividedBy(3.0)
         }
         
         self.rightLabel1.snp_makeConstraints { (make) -> Void in
@@ -104,6 +105,13 @@ class HCDraftTableViewCell : UITableViewCell{
         rightLabel2.font = UIFont.systemFontOfSize(16.0)
         rightLabel3.font = UIFont.systemFontOfSize(16.0)
         
+        leftLabel.text = "Left"
+        
+        rightLabel1.snp_remakeConstraints { (make) in
+            make.top.left.centerX.equalTo(rightBox)
+            make.height.equalTo(rightBox).dividedBy(3.0)
+        }
+        
         leftBox.hidden = false
         rightLabel2.hidden = false
         rightLabel3.hidden = false
@@ -113,8 +121,14 @@ class HCDraftTableViewCell : UITableViewCell{
             make.width.equalTo(self.snp_width).multipliedBy(0.5)
         }
         
+        leftLabel.snp_remakeConstraints { (make) in
+            make.height.equalTo(self.leftBox).dividedBy(3.0)
+            make.centerX.equalTo(self.leftBox)
+        }
+        
         leftBox.backgroundColor = UIColor.whiteColor()
         rightBox.backgroundColor = UIColor.whiteColor()
+        leftLabel.textAlignment = .Center
     }
     
     required init?(coder aDecoder: NSCoder) {
