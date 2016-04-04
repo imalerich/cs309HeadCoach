@@ -31,6 +31,31 @@ if (!$result) {
 $league = mysqli_fetch_assoc($result);
 $draft_table = $league["name"] . "_draft";
 
+// parse this league to make sure the given user is a member
+$user_found = False;
+for ($i = 0; $i < 5; $i++) {
+	$key = "member" . $i;
+	$user_id = $league[$key];
+
+	// ignore empty user slots
+	if ($user_id == $_GET["user"]) {
+		$user_found = true;
+		break;
+	}
+}
+
+// throw an error if the user is not a member of the given league
+if (!$user_found) {
+	echo json_encode(
+		array(
+			"error" => True,
+			"error_msg" => "PLAYER_NOT_MEMBER"
+		)
+	);
+
+	exit();
+}
+
 // next we need to check if the given player has already been drafted
 $query = "SELECT * FROM {$draft_table} WHERE user_id={$_GET["user"]} AND id={$_GET["player"]}";
 
