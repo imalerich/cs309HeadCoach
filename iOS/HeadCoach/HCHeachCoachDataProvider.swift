@@ -133,7 +133,7 @@ class HCHeadCoachDataProvider: NSObject {
     /// Creates a list of all available leagues in the
     /// HeadCoach service.
     internal func getAllLeagues(completion: (Bool, [HCLeague]) -> Void) {
-        let url = "\(api)/leagues/getAllLeagues.php?id=\(user.id)"
+        let url = "\(api)/leagues/getAllLeagues.php"
 
         Alamofire.request(.GET, url).responseJSON { response in
             var leagues = [HCLeague]()
