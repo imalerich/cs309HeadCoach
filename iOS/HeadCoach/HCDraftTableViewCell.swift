@@ -14,6 +14,7 @@ class HCDraftTableViewCell : UITableViewCell{
     // var lineView = UIView()
     var leftBox = UIView()
     var rightBox = UIView()
+    var photo = UIImageView()
     
     var leftLabel = UILabel()
     var rightLabel1 = UILabel()
@@ -24,18 +25,17 @@ class HCDraftTableViewCell : UITableViewCell{
     var info2 = "Info2"
     var info3 = "Info3"
     
-    var photo = UIImageView()
-    
-    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = UIColor.whiteColor()
+        photo.load("http://electrodvigatel31.ru/image/no-foto.jpeg")
         
         self.rightBox.addSubview(rightLabel1)
         self.rightBox.addSubview(rightLabel2)
         self.rightBox.addSubview(rightLabel3)
         self.leftBox.addSubview(leftLabel)
+        self.leftBox.addSubview(photo)
         
         leftLabel.text = "Left"
         rightLabel1.text = "\(info1)"
@@ -49,6 +49,12 @@ class HCDraftTableViewCell : UITableViewCell{
         rightLabel1.textAlignment = .Center
         rightLabel2.textAlignment = .Center
         rightLabel3.textAlignment = .Center
+        
+        photo.layer.cornerRadius = 25
+        photo.layer.borderWidth = 1
+        photo.layer.masksToBounds = false
+        photo.clipsToBounds = true
+        photo.layer.borderColor = UIColor.blackColor().CGColor
         
         // lineView.backgroundColor = UIColor.blackColor()
         leftBox.backgroundColor = UIColor.whiteColor()
@@ -95,6 +101,12 @@ class HCDraftTableViewCell : UITableViewCell{
             make.bottom.centerX.equalTo(self.rightBox)
             make.height.equalTo(self.rightBox).dividedBy(3.0)
         }
+        
+        self.photo.snp_makeConstraints { (make) in
+            make.centerX.equalTo(self.leftBox)
+            make.top.lessThanOrEqualTo(30)
+            make.size.equalTo(CGSizeMake(60, 60))
+        }
     }
     
     
@@ -115,6 +127,7 @@ class HCDraftTableViewCell : UITableViewCell{
         leftBox.hidden = false
         rightLabel2.hidden = false
         rightLabel3.hidden = false
+        photo.hidden = false
         rightLabel1.text = "\(info1)"
         rightBox.snp_remakeConstraints { (make) in
             make.top.right.bottom.equalTo(self)

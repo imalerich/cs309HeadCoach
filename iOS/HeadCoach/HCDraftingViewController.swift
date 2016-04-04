@@ -67,6 +67,7 @@ class HCDraftingViewController: UIViewController, UITableViewDataSource, UITable
         if(indexPath.row == 1){
             cell.rightLabel2.hidden = true
             cell.rightLabel3.hidden = true
+            cell.photo.hidden = true
             
             cell.leftLabel.text = "Player"
             cell.rightLabel1.text = "Info"
