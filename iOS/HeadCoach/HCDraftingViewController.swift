@@ -130,6 +130,13 @@ class HCDraftingViewController: UIViewController, UITableViewDataSource, UITable
         return cell
     }
     
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if(indexPath.row > 1){
+            var vc: UIViewController? = HCUserDetailViewController()
+            self.navigationController?.pushViewController(vc!, animated: true)
+        }
+    }
+    
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if(indexPath.row == 0 || indexPath.row == 1){
             return 60
