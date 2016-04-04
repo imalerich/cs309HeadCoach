@@ -78,6 +78,7 @@ class PlayerListView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         picker.delegate = self
         picker.dataSource = self
         picker.backgroundColor = UIColor.whiteColor()
+        picker.hidden = true
         addSubview(picker)
         setConstraints()
     }
@@ -172,6 +173,7 @@ class PlayerListView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     func showPicker(forDataSource source: [String]){
         pickerDataSource = source
         picker.hidden = false
+        picker.reloadAllComponents()
         setNeedsLayout()
     }
     
@@ -181,6 +183,7 @@ class PlayerListView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if(pickerDataSource == pickerSortData){
+            delegate.filterPlayer(delegate.filterType)
             switch(pickerDataSource[row]){
                 case "A-Z": delegate.sortPlayers(FDPlayer.SortType.AlphaAZ)
                 case "Z-A": delegate.sortPlayers(FDPlayer.SortType.AlphaZA)
@@ -193,6 +196,7 @@ class PlayerListView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
                 case "TE": delegate.filterPlayer(FDPlayer.PositionFilterType.TE)
             default: break
             }
+            delegate.sortPlayers(delegate.sortType)
         }
         picker.hidden = true
     }

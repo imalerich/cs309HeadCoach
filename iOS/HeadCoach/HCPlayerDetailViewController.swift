@@ -25,6 +25,8 @@ class HCPlayerDetailViewController: UIViewController, UITextViewDelegate, UITabl
         self.edgesForExtendedLayout = UIRectEdge.None
         playerListView = PlayerListView(frame: view.bounds, delegate: self)
         view.addSubview(playerListView)
+        playerListView.filterButton.addTarget(self, action: #selector(HCPlayerDetailViewController.buttonClicked(_:)), forControlEvents: .TouchUpInside)
+        playerListView.sortButton.addTarget(self, action: #selector(HCPlayerDetailViewController.buttonClicked(_:)), forControlEvents: .TouchUpInside)
         if(playerList.count==0){
             HCFantasyDataProvider.sharedInstance.getPlayerDetails(){(responseString:String?) in
                 self.playerList = try! Realm().objects(FDPlayer)
@@ -52,6 +54,7 @@ class HCPlayerDetailViewController: UIViewController, UITextViewDelegate, UITabl
     }
     
     func buttonClicked(sender: AnyObject?) {
+        print("button clicked")
         if sender === playerListView.sortButton {
             print("sort button pressed")
             playerListView.showPicker(forDataSource: playerListView.pickerSortData)
