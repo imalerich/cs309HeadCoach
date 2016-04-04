@@ -96,6 +96,7 @@ class HCDraftingViewController: UIViewController, UITableViewDataSource, UITable
             cell.rightLabel2.hidden = true
             cell.rightLabel3.hidden = true
             cell.photo.hidden = true
+            cell.button.hidden = true
             
             cell.leftLabel.text = "Player"
             cell.rightLabel1.text = "Info"
@@ -132,7 +133,7 @@ class HCDraftingViewController: UIViewController, UITableViewDataSource, UITable
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if(indexPath.row > 1){
-            var vc: UIViewController? = HCUserDetailViewController()
+            let vc: UIViewController? = HCUserDetailViewController()
             self.navigationController?.pushViewController(vc!, animated: true)
         }
     }

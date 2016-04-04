@@ -15,6 +15,7 @@ class HCDraftTableViewCell : UITableViewCell{
     var leftBox = UIView()
     var rightBox = UIView()
     var photo = UIImageView()
+    var button = UIButton()
     
     var leftLabel = UILabel()
     var rightLabel1 = UILabel()
@@ -36,6 +37,7 @@ class HCDraftTableViewCell : UITableViewCell{
         self.rightBox.addSubview(rightLabel3)
         self.leftBox.addSubview(leftLabel)
         self.leftBox.addSubview(photo)
+        self.leftBox.addSubview(button)
         
         leftLabel.text = "Left"
         rightLabel1.text = "\(info1)"
@@ -50,8 +52,19 @@ class HCDraftTableViewCell : UITableViewCell{
         rightLabel2.textAlignment = .Center
         rightLabel3.textAlignment = .Center
         
-        photo.layer.cornerRadius = 25
-        photo.layer.borderWidth = 1
+        button.setTitle("Draft", forState: .Normal)
+        button.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        button.layer.borderColor = UIColor.blackColor().CGColor
+        button.layer.borderWidth = 1
+        button.addTarget(self, action: "pressed:", forControlEvents: .TouchUpInside)
+        button.snp_makeConstraints { (make) in
+            make.size.equalTo(CGSizeMake(50, 30))
+            make.right.equalTo(self.leftBox)
+            make.centerY.equalTo(self.leftBox).offset(10)
+        }
+        
+        photo.layer.cornerRadius = 30
+        photo.layer.borderWidth = 2
         photo.layer.masksToBounds = false
         photo.clipsToBounds = true
         photo.layer.borderColor = UIColor.blackColor().CGColor
@@ -103,19 +116,27 @@ class HCDraftTableViewCell : UITableViewCell{
         }
         
         self.photo.snp_makeConstraints { (make) in
-            make.centerX.equalTo(self.leftBox)
+            make.left.lessThanOrEqualTo(20)
             make.top.lessThanOrEqualTo(30)
             make.size.equalTo(CGSizeMake(60, 60))
         }
     }
     
-    
+    func pressed(sender: UIButton!){
+        var alert = UIAlertView()
+        alert.addButtonWithTitle("OK")
+        alert.title = "Draft Successful"
+        alert.message = "The selected player was drafted successfully"
+        alert.show()
+    }
     
     override func prepareForReuse(){
         leftLabel.font = UIFont.systemFontOfSize(16.0)
         rightLabel1.font = UIFont.systemFontOfSize(16.0)
         rightLabel2.font = UIFont.systemFontOfSize(16.0)
         rightLabel3.font = UIFont.systemFontOfSize(16.0)
+        
+        accessoryType = UITableViewCellAccessoryType.None
         
         leftLabel.text = "Left"
         
@@ -128,6 +149,7 @@ class HCDraftTableViewCell : UITableViewCell{
         rightLabel2.hidden = false
         rightLabel3.hidden = false
         photo.hidden = false
+        button.hidden = false
         rightLabel1.text = "\(info1)"
         rightBox.snp_remakeConstraints { (make) in
             make.top.right.bottom.equalTo(self)
