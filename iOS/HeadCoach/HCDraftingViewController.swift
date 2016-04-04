@@ -8,17 +8,44 @@
 
 import UIKit
 import SnapKit
+import RealmSwift
+
 
 class HCDraftingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-
+    
+ 
+    let progress = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
     let tableView = UITableView()
-    var numPlayers = 10
+    var numPlayers = 0
+    var selection = "TE"
+    var players = try! Realm().objects(FDPlayer)
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // change title of window
         self.title = "Drafting"
+        
+        if(numPlayers == 0){
+            view.addSubview(progress)
+            progress.snp_makeConstraints(closure: { (make) in
+                make.center.equalTo(self.view)
+                progress.startAnimating()
+                self.view.bringSubviewToFront(progress)
+            })
+            
+            HCFantasyDataProvider().getPlayerDetails(){(responseString:String?) in
+                print(responseString)
+                self.progress.removeFromSuperview()
+                self.progress.stopAnimating()
+            }
+            
+            players = try! Realm().objects(FDPlayer).filter("position = '\(selection)'")
+            
+            numPlayers = players.count
+        }
+        
+        
         
         // initialize tableView
         tableView.delegate = self
@@ -29,6 +56,7 @@ class HCDraftingViewController: UIViewController, UITableViewDataSource, UITable
         tableView.snp_makeConstraints { (make) in
             make.edges.equalTo(self.view)
         }
+        
         
         
         //register custom cell
@@ -88,6 +116,15 @@ class HCDraftingViewController: UIViewController, UITableViewDataSource, UITable
             cell.leftBox.backgroundColor = UIColor.lightGrayColor()
             cell.rightBox.backgroundColor = UIColor.lightGrayColor()
             cell.leftLabel.textAlignment = .Center
+        }
+        
+        if(indexPath.row > 1){
+            cell.leftLabel.text = players[indexPath.row - 2].name
+            cell.photo.load(players[indexPath.row - 2].photoURL)
+            cell.rightLabel1.text = "Position: " + players[indexPath.row - 2].position
+            cell.rightLabel2.text = "Age: \(players[indexPath.row - 2].age)"
+            cell.rightLabel3.text = "Height: " + players[indexPath.row - 2].height
+            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
         }
         
         return cell

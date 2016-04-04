@@ -27,6 +27,7 @@ class FDPlayer: Object
     dynamic var draftYear:Int = 0
     dynamic var age:Int = 0
     dynamic var byeWeek:Int = 0
+    // dynamic var adp:Float = 0.0
     
     
     override static func primaryKey() -> String?{
