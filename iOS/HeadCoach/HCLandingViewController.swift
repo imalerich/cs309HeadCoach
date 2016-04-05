@@ -69,6 +69,9 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
             as! HCLandingPageDetailCellTableViewCell
         cell.details.text = "Sampe Text!"
 
+        let tap = UITapGestureRecognizer(target: self, action: #selector(HCLandingViewController.openLiveGameView))
+        cell.addGestureRecognizer(tap)
+
         return cell
     }
     
@@ -92,14 +95,14 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
         for i in 0...2 {
             let btn = UIButton(type: .Custom)
             
-            let name = ["Team", "League", "Players"][i]
+            let name = ["Profile", "League", "Players"][i]
             btn.setTitle(name, forState: .Normal)
             let s = 1.0 - 0.2 * CGFloat(i % 2)
             btn.backgroundColor = UIColor(red: 0, green: s * 92/222.0, blue: s * 9/255.0, alpha: 1.0)
 
             switch (i) {
             case 0:
-                btn.addTarget(self, action: #selector(HCLandingViewController.openTeamView),
+                btn.addTarget(self, action: #selector(HCLandingViewController.openUserDetailView),
                               forControlEvents: .TouchUpInside)
                 break
             case 1:
@@ -133,22 +136,17 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
     
     /// Add the notification button to the navigation bar.
     func addNotificationButton() {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if let currentUser = defaults.stringForKey("currentUser"){
-            let btn = UIBarButtonItem(title: currentUser, style: .Plain, target: nil, action: nil)
-            btn.target = self
-            btn.action = #selector(HCLandingViewController.openUserView)
-            navigationItem.rightBarButtonItem = btn
-        }else{
-            print("shit")
-        }
-        
+        let btn = UIBarButtonItem(title: "Settings", style: .Plain, target: nil, action: nil)
+//        btn.action = #selector(HCLandingViewController.openUserView)
+        btn.target = self
+
+        navigationItem.rightBarButtonItem = btn
     }
 
-    /// Opens the HCTeamManagementViewController
+    /// Opens the HCUserDetailViewController
     /// This view will be pushed on the current navigation controller.
-    func openTeamView() {
-        let vc = HCTeamManagementViewController()
+    func openUserDetailView() {
+        let vc = HCUserDetailViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
@@ -166,10 +164,10 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    /// Opens the HCPlayerDetailViewController
+    /// Opens the HCLiveGameViewController
     /// This view will be pushed on the current navigation controller.
-    func openUserView() {
-        let vc = HCUserDetailViewController()
+    func openLiveGameView() {
+        let vc = HCLiveGameViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
