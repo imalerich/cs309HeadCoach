@@ -147,7 +147,8 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
     /// This view will be pushed on the current navigation controller.
     func openSettingsView() {
         let vc = HCSettingsViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
+        let nav = UINavigationController(rootViewController: vc)
+        self.navigationController?.presentViewController(nav, animated: true, completion: nil)
     }
 
     /// Opens the HCUserDetailViewController

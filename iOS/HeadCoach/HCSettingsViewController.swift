@@ -37,6 +37,13 @@ class HCSettingsViewController: UIViewController {
             make.width.equalTo(200)
             make.height.equalTo(50)
         }
+
+        // this button will dismiss this view when it is presented modally
+        let done = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(HCSettingsViewController.dismiss))
+        self.navigationItem.leftBarButtonItem = done
     }
 
+    internal func dismiss() {
+        self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+    }
 }
