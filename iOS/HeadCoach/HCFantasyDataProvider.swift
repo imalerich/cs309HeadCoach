@@ -27,6 +27,12 @@ class HCFantasyDataProvider{
                         if let name = player["Name"] as? String{
                             temp.name = name
                         }
+                        if let fname = player["FirstName"] as? String{
+                            temp.firstName = fname
+                        }
+                        if let lname = player["LastName"] as? String{
+                            temp.lastName = lname
+                        }
                         if let photoURL = player["PhotoUrl"] as? String{
                             temp.photoURL = photoURL
                         }
@@ -56,6 +62,9 @@ class HCFantasyDataProvider{
                         }
                         if let age = player["Age"] as? Int{
                             temp.age = age
+                        }
+                        if let byeWeek = player["ByeWeek"] as? Int{
+                            temp.byeWeek = byeWeek
                         }
                         if let byeWeek = player["ByeWeek"] as? Int{
                             temp.byeWeek = byeWeek
@@ -117,6 +126,25 @@ class HCFantasyDataProvider{
         }
     }
     
+    func getPlayerStatsForPlayerID(id : Int, handler: (Int, NSArray) -> Void){
+        // Using Joe's subscription key
+        let headers = ["Ocp-Apim-Subscription-Key": "fa953b83a78d44a1b054b0afbbdff57e"]
+        Alamofire.request(.GET, "https://api.fantasydata.net/nfl/v2/JSON/PlayerSeasonStatsByPlayerID/2015/\(id)", headers: headers)
+            .responseJSON { response in
+                do{
+                    print(response)
+                    let json:NSArray = try NSJSONSerialization.JSONObjectWithData(response.data!, options: NSJSONReadingOptions.MutableContainers) as! NSArray
+                    handler(id, json)
+                    print("done")
+                    
+                }catch let caught{
+                    print(String(id))
+                    print(caught)
+                }
+                
+        }
+    }
+    
     func getCurrentSeason(){
         // Using Joe's subscription key
         let headers = ["Ocp-Apim-Subscription-Key": "2ae4d2ad88ae486e8dd3004e4259e2f1"]
@@ -132,6 +160,7 @@ class HCFantasyDataProvider{
                 
         }
     }
+    
     
     
     

@@ -31,6 +31,8 @@ class PlayerDetailView: UIView {
     var weekPtsText1: UILabel!
     var weekPtsText2: UILabel!
     
+    var tempTradeButton: UIButton!
+    
     
     override init (frame : CGRect) {
         super.init(frame : frame)
@@ -44,6 +46,7 @@ class PlayerDetailView: UIView {
     required init(coder aDecoder: NSCoder) {
         fatalError("This class does not support NSCoding")
     }
+
     
     func setPlayer(player: FDPlayer){
         nameLabel.text = player.name
@@ -224,6 +227,14 @@ class PlayerDetailView: UIView {
         statusText.textColor = UIColor.whiteColor()
         headerLabelContainer.addSubview(statusText)
         
+        tempTradeButton = UIButton.init(type: UIButtonType.System)
+        tempTradeButton.setTitle("Trade", forState: UIControlState.Normal)
+        tempTradeButton.titleLabel!.font = tempTradeButton.titleLabel!.font.fontWithSize(14)
+        tempTradeButton.titleLabel!.textAlignment = .Center
+        tempTradeButton.sizeToFit()
+        tempTradeButton.setTitleColor(UIColor.init(red: 0, green: 0, blue: 0.8, alpha: 1), forState: UIControlState.Normal)
+        headerLabelContainer.addSubview(tempTradeButton)
+        
         playerImage = UIImageView()
         playerImage.layer.shadowOffset = CGSize(width: 0, height: -3)
         playerImage.layer.shadowOpacity = 0.5
@@ -232,7 +243,7 @@ class PlayerDetailView: UIView {
         playerImage.layer.borderWidth = 1
         playerImage.layer.borderColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.1 ).CGColor
         playerImage.layer.cornerRadius = 32
-        self.addSubview(playerImage)
+        addSubview(playerImage)
         
         table = UITableView()
         addSubview(table)
@@ -241,23 +252,23 @@ class PlayerDetailView: UIView {
     }
     
     func setConstraints(){
-        circle.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(self.snp_top).inset(10)
-            make.left.equalTo(self.snp_left).inset(10)
-            make.width.equalTo(75)
-            make.height.equalTo(100)
-        }
-        headerLabelContainer.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(circle.snp_top).inset(10)
-            make.bottom.equalTo(circle.snp_bottom).inset(10)
-            make.left.equalTo(self.snp_left).inset(40)
-            make.right.equalTo(self.snp_right).inset(10)
-        }
         playerImage.snp_makeConstraints { (make) -> Void in
             make.top.equalTo(self.snp_top).inset(15)
             make.left.equalTo(self.snp_left).inset(15)
-            make.width.equalTo(65)
-            make.height.equalTo(90)
+            make.height.equalTo(self).multipliedBy(0.15)
+            make.width.equalTo(playerImage.snp_height).multipliedBy(0.72)
+        }
+        circle.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(self.snp_top).inset(10)
+            make.left.equalTo(self.snp_left).inset(10)
+            make.right.equalTo(playerImage.snp_right).offset(5)
+            make.bottom.equalTo(playerImage.snp_bottom).offset(5)
+        }
+        headerLabelContainer.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(playerImage.snp_top).inset(5)
+            make.bottom.equalTo(playerImage.snp_bottom).inset(5)
+            make.left.equalTo(self.snp_left).inset(40)
+            make.right.equalTo(self.snp_right).inset(10)
         }
         nameLabel.snp_makeConstraints { (make) -> Void in
             make.left.equalTo(playerImage.snp_right).offset(5)
@@ -300,6 +311,10 @@ class PlayerDetailView: UIView {
         statusLabel.snp_makeConstraints { (make) -> Void in
             make.right.equalTo(statusText.snp_left).offset(-5)
             make.bottom.equalTo(headerLabelContainer).inset(8)
+        }
+        tempTradeButton.snp_makeConstraints { (make) in
+            make.bottom.equalTo(statusText.snp_top)
+            make.right.equalTo(headerLabelContainer).inset(8)
         }
         detailContainer.snp_makeConstraints { (make) -> Void in
             make.top.equalTo(headerLabelContainer.snp_bottom).inset(15)

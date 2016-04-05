@@ -31,6 +31,10 @@ class PlayerTableViewCell: UITableViewCell {
         playerImage.layer.shadowOffset = CGSize(width: 0, height: -3)
         playerImage.layer.shadowOpacity = 0.5
         playerImage.layer.shadowRadius = 4
+        playerImage.layer.masksToBounds=true
+        playerImage.layer.borderWidth = 0
+        playerImage.layer.borderColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.1 ).CGColor
+        playerImage.layer.cornerRadius = 15
         
         contentView.addSubview(playerImage)
         contentView.addSubview(textContainer)
@@ -51,6 +55,7 @@ class PlayerTableViewCell: UITableViewCell {
         }else{
             teamLabel.text = player.team
         }
+        setNeedsLayout()
     }
     
     func setUp(){

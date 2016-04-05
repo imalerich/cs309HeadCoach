@@ -27,12 +27,24 @@ class FDPlayer: Object
     dynamic var draftYear:Int = 0
     dynamic var age:Int = 0
     dynamic var byeWeek:Int = 0
+    dynamic var firstName:String = ""
+    dynamic var lastName:String = ""
     
     
     override static func primaryKey() -> String?{
         return "id"
     }
     
-   
+    enum SortType : String{
+        case AlphaAZ = "A-Z"
+        case AlphaZA = "Z-A"
+    }
+    
+    enum PositionFilterType : String{
+        case All = "All"
+        case QB = "QB"
+        case TE = "TE"
+    }
+    
     
 }

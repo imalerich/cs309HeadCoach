@@ -24,6 +24,7 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
         view.addSubview(detail)
         detail.addCustomView()
         detail.setPlayer(player)
+        detail.tempTradeButton.addTarget(self, action: #selector(HCPlayerMoreDetailController.buttonClicked(_:)), forControlEvents: .TouchUpInside)
 //        sendDataRequest()
     }
     
@@ -44,6 +45,14 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
                     print("Request failed with error: \(error)")
                     }
             }
+        }
+    }
+    
+    func buttonClicked(sender: AnyObject?) {
+        if sender === detail.tempTradeButton {
+            let vc = HCTradeDetailViewController()
+            vc.player1 = player
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
     
