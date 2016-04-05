@@ -49,6 +49,7 @@
 		3086D3F01CB1CAF70069BF19 /* HCLoginScreenViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLoginScreenViewController.swift; sourceTree = "<group>"; };
 		4802EF701CB2199C00F14FC8 /* HCCreateAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCCreateAccountViewController.swift; sourceTree = "<group>"; };
 		7BF8C3817BE05FA3D44A916C /* Pods_HeadCoach.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HeadCoach.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4FAF10E1CB06CD100C130F9 /* HCDraftTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCDraftTableViewCell.swift; sourceTree = "<group>"; };
 		B94C49C51CA8539A00F2C2F0 /* FDPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FDPlayer.swift; sourceTree = "<group>"; };
 		B94C49C61CA8539A00F2C2F0 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		B94C49C71CA8539A00F2C2F0 /* GameTableViewDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameTableViewDetail.swift; sourceTree = "<group>"; };
