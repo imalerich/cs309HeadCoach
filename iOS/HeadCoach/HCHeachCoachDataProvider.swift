@@ -94,8 +94,8 @@ class HCHeadCoachDataProvider: NSObject {
     /// Send a request to the server to create a new league in the database.
     /// The service will assign a unique id that can be retrieved with the
     /// 'getLeagueID' call, provided the user knows the league name.
-    internal func registerLeague(leagueName: String, drafting: String, completion: (Bool) -> Void) {
-        let url = "\(api)/leagues/create.php?name=\(leagueName)&drafting=\(drafting)"
+    internal func registerLeague(leagueName: String, completion: (Bool) -> Void) {
+        let url = "\(api)/leagues/create.php?name=\(leagueName)&drafting=\(1)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Dictionary<String, AnyObject> {
