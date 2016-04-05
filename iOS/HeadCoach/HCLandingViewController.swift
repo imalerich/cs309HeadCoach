@@ -137,10 +137,21 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
     /// Add the notification button to the navigation bar.
     func addNotificationButton() {
         let btn = UIBarButtonItem(title: "Settings", style: .Plain, target: nil, action: nil)
-//        btn.action = #selector(HCLandingViewController.openUserView)
+        btn.action = #selector(HCLandingViewController.openSettingsView)
         btn.target = self
 
         navigationItem.rightBarButtonItem = btn
+    }
+
+    // -------------------------------------------------------------------------------------
+    // Open view utilities for event response.
+    // -------------------------------------------------------------------------------------
+
+    /// Opens the HCSettingsViewController
+    /// This view will be pushed on the current navigation controller.
+    func openSettingsView() {
+        let vc = HCSettingsViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 
     /// Opens the HCUserDetailViewController

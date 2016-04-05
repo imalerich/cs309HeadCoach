@@ -14,6 +14,10 @@ class HCHeadCoachDataProvider: NSObject {
     /// Global singleton instance for this class.
     static let sharedInstance = HCHeadCoachDataProvider()
 
+    // -------------------------------------------------------------------------------------
+    // User account management.
+    // -------------------------------------------------------------------------------------
+
     /// Use the 'login' parameter to set this property.
     /// Use this property with this data providers calls to
     /// perform actions on behalf of the user.
@@ -47,16 +51,25 @@ class HCHeadCoachDataProvider: NSObject {
         return user != nil
     }
 
+    /// Clears the user data from the NSUserDefaults.
+    /// This will trigger a new login event the next time the
+    /// user opens the application.
+    internal func logoutUser() {
+        NSUserDefaults.standardUserDefaults().setValue(0, forKey: "HC.USER.ID")
+        NSUserDefaults.standardUserDefaults().setValue(nil, forKey: "HC.USER.NAME")
+        NSUserDefaults.standardUserDefaults().setValue(0, forKey: "HC.USER.REG_DATE")
+    }
+
+    // -------------------------------------------------------------------------------------
+    // Network Requests - Utility Methods.
+    // -------------------------------------------------------------------------------------
+
     /// The root API address for the HeadCoach servince.
     /// http://localhost/ can be used for testing new changes
     /// to the server. Otherwise the CS309 server should be used.
     let api =
         "http://proj-309-08.cs.iastate.edu"
 //        "http://localhost"
-
-    // -------------------------------------------------------------------------------------
-    // Network Requests - Utility Methods.
-    // -------------------------------------------------------------------------------------
 
     /// Send a request to the server to create a new user in the database.
     /// The service will assign a unique id that can be retrieved with the

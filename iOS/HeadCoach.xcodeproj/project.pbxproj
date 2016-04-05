@@ -29,7 +29,7 @@
 		B94C49EF1CA8539B00F2C2F0 /* HCPlayerMoreDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49D41CA8539B00F2C2F0 /* HCPlayerMoreDetailViewController.swift */; };
 		B94C49F31CA8539B00F2C2F0 /* HCUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49D81CA8539B00F2C2F0 /* HCUser.swift */; };
 		B94C49F41CA8539B00F2C2F0 /* HCUserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49D91CA8539B00F2C2F0 /* HCUserDetailViewController.swift */; };
-		B94C49F51CA8539B00F2C2F0 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49DA1CA8539B00F2C2F0 /* Helpers.swift */; };
+		B94C49F51CA8539B00F2C2F0 /* HCUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49DA1CA8539B00F2C2F0 /* HCUtil.swift */; };
 		B94C49F61CA8539B00F2C2F0 /* PlayerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49DB1CA8539B00F2C2F0 /* PlayerDetailView.swift */; };
 		B94C49F71CA8539B00F2C2F0 /* PlayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49DC1CA8539B00F2C2F0 /* PlayerTableViewCell.swift */; };
 		B94C49F81CA8539B00F2C2F0 /* TradeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49DD1CA8539B00F2C2F0 /* TradeDetailView.swift */; };
@@ -39,6 +39,7 @@
 		B96E55F91CA850AB001A4017 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B96E55F81CA850AB001A4017 /* Assets.xcassets */; };
 		B96E55FC1CA850AB001A4017 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B96E55FA1CA850AB001A4017 /* LaunchScreen.storyboard */; };
 		B9BD66591CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BD66581CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift */; };
+		B9E731891CB40AFD002C5638 /* HCSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E731881CB40AFD002C5638 /* HCSettingsViewController.swift */; };
 		C808336F1CACCB5D006F8CAC /* HCTradeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C808336E1CACCB5D006F8CAC /* HCTradeDetailViewController.swift */; };
 		C86B87781CB238D300218C31 /* PlayerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C86B87771CB238D300218C31 /* PlayerListView.swift */; };
 /* End PBXBuildFile section */
@@ -68,7 +69,7 @@
 		B94C49D41CA8539B00F2C2F0 /* HCPlayerMoreDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPlayerMoreDetailViewController.swift; sourceTree = "<group>"; };
 		B94C49D81CA8539B00F2C2F0 /* HCUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCUser.swift; sourceTree = "<group>"; };
 		B94C49D91CA8539B00F2C2F0 /* HCUserDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCUserDetailViewController.swift; sourceTree = "<group>"; };
-		B94C49DA1CA8539B00F2C2F0 /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		B94C49DA1CA8539B00F2C2F0 /* HCUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCUtil.swift; sourceTree = "<group>"; };
 		B94C49DB1CA8539B00F2C2F0 /* PlayerDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerDetailView.swift; sourceTree = "<group>"; };
 		B94C49DC1CA8539B00F2C2F0 /* PlayerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerTableViewCell.swift; sourceTree = "<group>"; };
 		B94C49DD1CA8539B00F2C2F0 /* TradeDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeDetailView.swift; sourceTree = "<group>"; };
@@ -80,6 +81,7 @@
 		B96E55FB1CA850AB001A4017 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B96E55FD1CA850AB001A4017 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9BD66581CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLandingPageDetailCellTableViewCell.swift; sourceTree = "<group>"; };
+		B9E731881CB40AFD002C5638 /* HCSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCSettingsViewController.swift; sourceTree = "<group>"; };
 		C808336E1CACCB5D006F8CAC /* HCTradeDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCTradeDetailViewController.swift; sourceTree = "<group>"; };
 		C86B87771CB238D300218C31 /* PlayerListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -117,6 +119,7 @@
 				3086D3F01CB1CAF70069BF19 /* HCLoginScreenViewController.swift */,
 				4802EF701CB2199C00F14FC8 /* HCCreateAccountViewController.swift */,
 				C808336E1CACCB5D006F8CAC /* HCTradeDetailViewController.swift */,
+				B9E731881CB40AFD002C5638 /* HCSettingsViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -168,7 +171,7 @@
 				B96E55F81CA850AB001A4017 /* Assets.xcassets */,
 				B96E55FA1CA850AB001A4017 /* LaunchScreen.storyboard */,
 				B96E55FD1CA850AB001A4017 /* Info.plist */,
-				B94C49DA1CA8539B00F2C2F0 /* Helpers.swift */,
+				B94C49DA1CA8539B00F2C2F0 /* HCUtil.swift */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -340,7 +343,7 @@
 				B94C49F41CA8539B00F2C2F0 /* HCUserDetailViewController.swift in Sources */,
 				B94C49EC1CA8539B00F2C2F0 /* HCPlayer.swift in Sources */,
 				B94C49F61CA8539B00F2C2F0 /* PlayerDetailView.swift in Sources */,
-				B94C49F51CA8539B00F2C2F0 /* Helpers.swift in Sources */,
+				B94C49F51CA8539B00F2C2F0 /* HCUtil.swift in Sources */,
 				B94C49EA1CA8539B00F2C2F0 /* HCLiveGameViewController.swift in Sources */,
 				C86B87781CB238D300218C31 /* PlayerListView.swift in Sources */,
 				B94C49F71CA8539B00F2C2F0 /* PlayerTableViewCell.swift in Sources */,
@@ -354,6 +357,7 @@
 				B94C49E11CA8539B00F2C2F0 /* Game.swift in Sources */,
 				B4FAF10F1CB06CD100C130F9 /* HCDraftTableViewCell.swift in Sources */,
 				4802EF711CB2199C00F14FC8 /* HCCreateAccountViewController.swift in Sources */,
+				B9E731891CB40AFD002C5638 /* HCSettingsViewController.swift in Sources */,
 				B96E55F21CA850AB001A4017 /* AppDelegate.swift in Sources */,
 				B94C49FA1CA8539B00F2C2F0 /* UserDetailTableViewCell.swift in Sources */,
 				B94C49E41CA8539B00F2C2F0 /* HCFantasyDataProvider.swift in Sources */,

@@ -34,15 +34,19 @@ class HCLoginScreenViewController: UIViewController{
         createNew.setTitleColor(UIColor.grayColor(), forState: .Normal)
         createNew.layer.borderColor = UIColor.lightGrayColor().CGColor
         createNew.layer.borderWidth = 2
+        createNew.addTouchEvents()
         createNew.addTarget(self, action: #selector(HCLoginScreenViewController.newAccount(_:)),
                             forControlEvents: UIControlEvents.TouchUpInside)
+
         login.setTitle("Login", forState: .Normal)
         login.setTitleColor(UIColor.grayColor(), forState: .Normal)
         login.layer.borderColor = UIColor.lightGrayColor().CGColor
         login.layer.borderWidth = 2
         login.showsTouchWhenHighlighted = true
+        login.addTouchEvents()
         login.addTarget(self, action: #selector(HCLoginScreenViewController.loginAction(_:)),
                         forControlEvents: UIControlEvents.TouchUpInside)
+
         userName.snp_makeConstraints { (make) in
             make.centerX.equalTo(self.view.snp_centerX)
             make.centerY.equalTo(self.view.snp_centerY).dividedBy(1.3)
@@ -74,7 +78,6 @@ class HCLoginScreenViewController: UIViewController{
     func loginAction(sender:UIButton!){
         progress.startAnimating()
         login = sender as UIButton
-        UIView.animateWithDuration(0.09,animations: { self.login.transform = CGAffineTransformMakeScale(0.6, 0.6) }, completion: { finish in UIView.animateWithDuration(0.09) { self.login.transform = CGAffineTransformIdentity }})
 
         HCHeadCoachDataProvider.sharedInstance.getUserID(userName.text!) { (error, user) in
             if(error){
@@ -93,7 +96,6 @@ class HCLoginScreenViewController: UIViewController{
     
     func newAccount(sender:UIButton!){
         createNew = sender as UIButton
-        UIView.animateWithDuration(0.09,animations: { self.createNew.transform = CGAffineTransformMakeScale(0.6, 0.6) },completion: { finish in UIView.animateWithDuration(0.09){ self.createNew.transform = CGAffineTransformIdentity }})
         let vc = HCCreateAccountViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
