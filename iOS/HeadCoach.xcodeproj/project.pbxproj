@@ -115,6 +115,8 @@
 				B94C49D91CA8539B00F2C2F0 /* HCUserDetailViewController.swift */,
 				B94C49D61CA8539B00F2C2F0 /* HCTeamManagementViewController.swift */,
 				B94C49C81CA8539A00F2C2F0 /* HCDraftingViewController.swift */,
+				3086D3F01CB1CAF70069BF19 /* HCLoginScreenViewController.swift */,
+				4802EF701CB2199C00F14FC8 /* HCCreateAccountViewController.swift */,
 				C808336E1CACCB5D006F8CAC /* HCTradeDetailViewController.swift */,
 			);
 			name = ViewControllers;
