@@ -13,6 +13,11 @@ class HCHeadCoachDataProvider: NSObject {
 
     /// Global singleton instance for this class.
     static let sharedInstance = HCHeadCoachDataProvider()
+    //Name and id of current user
+    struct defaultKeys{
+        static let keyOne = ""
+        static let keyTwo = ""
+    }
 
     /// Use the 'login' parameter to set this property.
     /// Use this property with this data providers calls to
@@ -61,6 +66,7 @@ class HCHeadCoachDataProvider: NSObject {
             }
         }
     }
+    
 
     /// Send a request to the server to create a new league in the database.
     /// The service will assign a unique id that can be retrieved with the

@@ -23,6 +23,7 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
         self.edgesForExtendedLayout = .None
         self.setupHeaderBar()
         self.addNotificationButton()
+        self.navigationItem.setHidesBackButton(true, animated: false)
 
         // add the tableView underneath the header bar
         view.addSubview(self.tableView)
@@ -132,10 +133,16 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
     
     /// Add the notification button to the navigation bar.
     func addNotificationButton() {
-        let btn = UIBarButtonItem(title: "Profile", style: .Plain, target: nil, action: nil)
-        btn.target = self
-        btn.action = #selector(HCLandingViewController.openUserView)
-        navigationItem.rightBarButtonItem = btn
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if let currentUser = defaults.stringForKey("currentUser"){
+            let btn = UIBarButtonItem(title: currentUser, style: .Plain, target: nil, action: nil)
+            btn.target = self
+            btn.action = #selector(HCLandingViewController.openUserView)
+            navigationItem.rightBarButtonItem = btn
+        }else{
+            print("shit")
+        }
+        
     }
 
     /// Opens the HCTeamManagementViewController
