@@ -35,10 +35,7 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
         tableView.showsVerticalScrollIndicator = false
         tableView.allowsSelection = false
         tableView.backgroundColor = UIColor(white: 0.4, alpha: 1.0)
-
-        let s = CGFloat(1.0 - 0.4)
-        tableView.backgroundColor =
-            UIColor(red: 0, green: s * 92/222.0, blue: s * 9/255.0, alpha: 1.0)
+        tableView.backgroundColor = UIColor.footballColor(0.6)
 
         tableView.snp_makeConstraints(closure: { make in
             make.top.equalTo(headerBar.snp_bottom)
@@ -97,8 +94,7 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
             
             let name = ["Profile", "League", "Players"][i]
             btn.setTitle(name, forState: .Normal)
-            let s = 1.0 - 0.2 * CGFloat(i % 2)
-            btn.backgroundColor = UIColor(red: 0, green: s * 92/222.0, blue: s * 9/255.0, alpha: 1.0)
+            btn.backgroundColor = UIColor.footballColor(1.0 - 0.2 * CGFloat(i % 2))
 
             switch (i) {
             case 0:

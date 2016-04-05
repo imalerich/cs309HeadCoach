@@ -27,6 +27,10 @@ extension UIColor {
         
         return UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: 1.0)
     }
+
+    class func footballColor(s: CGFloat) -> UIColor {
+        return UIColor(red: 0, green: s * 92/222.0, blue: s * 9/255.0, alpha: 1.0)
+    }
 }
 
 /// UIButtion extension that adds support for automatically
@@ -35,7 +39,7 @@ extension UIColor {
 extension UIButton {
 
     /// Adds the animation events for this button.
-    func addTouchEvents() {
+    internal func addTouchEvents() {
         self.addTarget(self, action: #selector(UIButton.animatePressed(_:)),
                          forControlEvents: .TouchDown)
         self.addTarget(self, action: #selector(UIButton.animateReset(_:)),
@@ -45,14 +49,14 @@ extension UIButton {
     }
 
     /// Animates the input buttown with a shrinking animation.
-    func animateReset(sender: UIButton) {
+    internal func animateReset(sender: UIButton) {
         UIView.animateWithDuration(0.09, animations: {
             sender.transform = CGAffineTransformIdentity
             }, completion: nil)
     }
 
     /// Animates the input button to the identity transformation.
-    func animatePressed(sender: UIButton) {
+    internal func animatePressed(sender: UIButton) {
         UIView.animateWithDuration(0.09, animations: {
             sender.transform = CGAffineTransformMakeScale(0.95, 0.95)
             }, completion: nil)
