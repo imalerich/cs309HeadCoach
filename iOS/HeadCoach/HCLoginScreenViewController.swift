@@ -84,7 +84,10 @@ class HCLoginScreenViewController: UIViewController{
                 let preferences = NSUserDefaults.standardUserDefaults()
                 
                 let currentUser = user?.name
+                let currentID = user?.id
+                
                 preferences.setValue(currentUser, forKey: "currentUser")
+                preferences.setValue(currentID, forKey: "currentID")
                 //  Save to disk
                 let didSave = preferences.synchronize()
                 

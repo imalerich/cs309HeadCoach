@@ -12,12 +12,7 @@ import Alamofire
 class HCHeadCoachDataProvider: NSObject {
 
     /// Global singleton instance for this class.
-    static let sharedInstance = HCHeadCoachDataProvider()
-    //Name and id of current user
-    struct defaultKeys{
-        static let keyOne = ""
-        static let keyTwo = ""
-    }
+    static let sharedInstance = HCHeadCoachDataProvider()    
 
     /// The root API address for the HeadCoach servince.
     /// http://localhost/ can be used for testing new changes
@@ -49,7 +44,7 @@ class HCHeadCoachDataProvider: NSObject {
     /// Send a request to the server to create a new league in the database.
     /// The service will assign a unique id that can be retrieved with the
     /// 'getLeagueID' call, provided the user knows the league name.
-    internal func createNewLeague(leagueName: String, drafting: String, completion: (Bool) -> Void) {
+    internal func createNewLeague(leagueName: String, drafting: Int, completion: (Bool) -> Void) {
         let url = "\(api)/leagues/create.php?name=\(leagueName)&drafting=\(drafting)"
 
         Alamofire.request(.GET, url).responseJSON { response in
@@ -96,6 +91,22 @@ class HCHeadCoachDataProvider: NSObject {
                 completion(true, nil)
             }
         }
+    }
+    internal func getAllLeagues(completion: (Bool, [HCLeague]) -> Void) {
+        let url = "\(api)/leagues/getAllLeagues.php"
+        
+        Alamofire.request(.GET, url).responseJSON { response in
+                var leagues = [HCLeague]()
+                if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+                    for item in json {
+                        leagues.append(HCLeague(json: item))
+                    }
+                }
+                
+                completion(leagues.count == 0, leagues)
+            }
+        
+       
     }
 
     /// HeadCoach API call to retrieve all of the
@@ -150,6 +161,7 @@ class HCHeadCoachDataProvider: NSObject {
             completion(leagues.count == 0, leagues)
         }
     }
+
 
     /// Creates a list of all the users currently registered to the
     /// HeadCoach Fantasy service.

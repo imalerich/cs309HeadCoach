@@ -11,6 +11,7 @@
 		3086D3F11CB1CAF70069BF19 /* HCLoginScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3086D3F01CB1CAF70069BF19 /* HCLoginScreenViewController.swift */; };
 		4802EF6F1CB1A6A700F14FC8 /* HCLeagueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49CE1CA8539B00F2C2F0 /* HCLeagueViewController.swift */; };
 		4802EF711CB2199C00F14FC8 /* HCCreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4802EF701CB2199C00F14FC8 /* HCCreateAccountViewController.swift */; };
+		480FE98D1CB2E6BB00763C1B /* HCLeagueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480FE98C1CB2E6BB00763C1B /* HCLeagueCell.swift */; };
 		B94C49E01CA8539B00F2C2F0 /* FDPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49C51CA8539A00F2C2F0 /* FDPlayer.swift */; };
 		B94C49E11CA8539B00F2C2F0 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49C61CA8539A00F2C2F0 /* Game.swift */; };
 		B94C49E21CA8539B00F2C2F0 /* GameTableViewDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49C71CA8539A00F2C2F0 /* GameTableViewDetail.swift */; };
@@ -46,6 +47,7 @@
 		1B062472852011590E14C0FB /* Pods-HeadCoach.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HeadCoach.release.xcconfig"; path = "Pods/Target Support Files/Pods-HeadCoach/Pods-HeadCoach.release.xcconfig"; sourceTree = "<group>"; };
 		3086D3F01CB1CAF70069BF19 /* HCLoginScreenViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLoginScreenViewController.swift; sourceTree = "<group>"; };
 		4802EF701CB2199C00F14FC8 /* HCCreateAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCCreateAccountViewController.swift; sourceTree = "<group>"; };
+		480FE98C1CB2E6BB00763C1B /* HCLeagueCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLeagueCell.swift; sourceTree = "<group>"; };
 		7BF8C3817BE05FA3D44A916C /* Pods_HeadCoach.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HeadCoach.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B94C49C51CA8539A00F2C2F0 /* FDPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FDPlayer.swift; sourceTree = "<group>"; };
 		B94C49C61CA8539A00F2C2F0 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				B94C49D01CA8539B00F2C2F0 /* HCLiveTableViewCell.swift */,
 				B94C49D21CA8539B00F2C2F0 /* HCPlayerDetailCell.swift */,
 				B9BD66581CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift */,
+				480FE98C1CB2E6BB00763C1B /* HCLeagueCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -339,6 +342,7 @@
 				B94C49F71CA8539B00F2C2F0 /* PlayerTableViewCell.swift in Sources */,
 				B94C49EE1CA8539B00F2C2F0 /* HCPlayerDetailViewController.swift in Sources */,
 				B94C49E81CA8539B00F2C2F0 /* HCLeagueTableViewCell.swift in Sources */,
+				480FE98D1CB2E6BB00763C1B /* HCLeagueCell.swift in Sources */,
 				B94C49EB1CA8539B00F2C2F0 /* HCLiveTableViewCell.swift in Sources */,
 				B94C49E71CA8539B00F2C2F0 /* HCLeague.swift in Sources */,
 				B94C49E21CA8539B00F2C2F0 /* GameTableViewDetail.swift in Sources */,
