@@ -52,12 +52,19 @@ class HCCreateAccountViewController: UIViewController,UITableViewDelegate,UITabl
         }
         
     }
+
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
+        // TODO
+
+        return UITableViewCell()
     }
+
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        code
+        // TODO
+
+        return 0
     }
+
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 80
     }

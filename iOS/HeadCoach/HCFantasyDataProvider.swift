@@ -68,7 +68,13 @@ class HCFantasyDataProvider{
                         }
                         if let byeWeek = player["ByeWeek"] as? Int{
                             temp.byeWeek = byeWeek
+
                         }
+                        /*
+                        if let adp = player["AverageDraftPosition"] as? {
+                            temp.adp = adp
+                        }
+                        */
                         let realm = try! Realm()
                         try! realm.write{
                             realm.add(temp,update:true)

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		18540B8A336DE7AA4DC83BC5 /* Pods_HeadCoach.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BF8C3817BE05FA3D44A916C /* Pods_HeadCoach.framework */; };
+		B4FAF10F1CB06CD100C130F9 /* HCDraftTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FAF10E1CB06CD100C130F9 /* HCDraftTableViewCell.swift */; };
 		3086D3F11CB1CAF70069BF19 /* HCLoginScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3086D3F01CB1CAF70069BF19 /* HCLoginScreenViewController.swift */; };
 		4802EF6F1CB1A6A700F14FC8 /* HCLeagueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49CE1CA8539B00F2C2F0 /* HCLeagueViewController.swift */; };
 		4802EF711CB2199C00F14FC8 /* HCCreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4802EF701CB2199C00F14FC8 /* HCCreateAccountViewController.swift */; };
@@ -135,6 +136,7 @@
 				B94C49DF1CA8539B00F2C2F0 /* UserDetailTableViewCell.swift */,
 				B94C49D01CA8539B00F2C2F0 /* HCLiveTableViewCell.swift */,
 				B94C49D21CA8539B00F2C2F0 /* HCPlayerDetailCell.swift */,
+				B4FAF10E1CB06CD100C130F9 /* HCDraftTableViewCell.swift */,
 				B9BD66581CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift */,
 				C86B87771CB238D300218C31 /* PlayerListView.swift */,
 			);
@@ -353,6 +355,7 @@
 				B94C49F31CA8539B00F2C2F0 /* HCUser.swift in Sources */,
 				B94C49E01CA8539B00F2C2F0 /* FDPlayer.swift in Sources */,
 				B94C49E11CA8539B00F2C2F0 /* Game.swift in Sources */,
+				B4FAF10F1CB06CD100C130F9 /* HCDraftTableViewCell.swift in Sources */,
 				4802EF711CB2199C00F14FC8 /* HCCreateAccountViewController.swift in Sources */,
 				B96E55F21CA850AB001A4017 /* AppDelegate.swift in Sources */,
 				B94C49FA1CA8539B00F2C2F0 /* UserDetailTableViewCell.swift in Sources */,

@@ -29,6 +29,7 @@ class FDPlayer: Object
     dynamic var byeWeek:Int = 0
     dynamic var firstName:String = ""
     dynamic var lastName:String = ""
+    // dynamic var adp:Float = 0.0
     
     
     override static func primaryKey() -> String?{
