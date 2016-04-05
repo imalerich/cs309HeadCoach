@@ -13,16 +13,39 @@ class HCHeadCoachDataProvider: NSObject {
 
     /// Global singleton instance for this class.
     static let sharedInstance = HCHeadCoachDataProvider()
-    //Name and id of current user
-    struct defaultKeys{
-        static let keyOne = ""
-        static let keyTwo = ""
-    }
 
     /// Use the 'login' parameter to set this property.
     /// Use this property with this data providers calls to
     /// perform actions on behalf of the user.
-    var user = HCUser()
+    var user: HCUser? {
+        get {
+            let id = NSUserDefaults.standardUserDefaults().integerForKey("HC.USER.ID")
+            let name = NSUserDefaults.standardUserDefaults().stringForKey("HC.USER.NAME")
+            let reg_date = NSUserDefaults.standardUserDefaults().integerForKey("HC.USER.REG_DATE")
+
+            if name == nil { return nil }
+            return HCUser(id: id, name: name!, red_date: reg_date)
+        }
+
+        set(newUser) {
+            if newUser == nil { return }
+
+            NSUserDefaults.standardUserDefaults().setValue(newUser!.id,
+                                                           forKey: "HC.USER.ID")
+            NSUserDefaults.standardUserDefaults().setValue(newUser!.name,
+                                                           forKey: "HC.USER.NAME")
+            NSUserDefaults.standardUserDefaults().setValue(newUser!.reg_date,
+                                                           forKey: "HC.USER.REG_DATE")
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
+    }
+
+    /// Returns 'true' if the user is currently logged in.
+    /// When the app starts, if this evaluate to false, we should
+    /// present the login screen to the user.
+    internal func isUserLoggedIn() -> Bool {
+        return user != nil
+    }
 
     /// The root API address for the HeadCoach servince.
     /// http://localhost/ can be used for testing new changes

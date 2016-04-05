@@ -14,8 +14,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
+        // check whether or not we need the user to login
+        let vc = HCHeadCoachDataProvider.sharedInstance.isUserLoggedIn() ?
+            HCLandingViewController() : HCLoginScreenViewController();
+
         // we will not be using any storyboards, so the following sets up the primary (and only window)
-        let nav = UINavigationController(rootViewController: HCLoginScreenViewController())
+        let nav = UINavigationController(rootViewController: vc)
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window?.rootViewController = nav // sets the root view controller for the application
         window?.makeKeyAndVisible()

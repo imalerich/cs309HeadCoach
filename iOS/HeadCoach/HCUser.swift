@@ -24,6 +24,14 @@ class HCUser: CustomStringConvertible {
         return "{\nid: \(id)\nname: \(name)\nreg_date: \(reg_date)\n}\n"
     }
 
+    /// Initializes a user with data stored
+    /// in the NSUserDefaults
+    init(id: Int, name: String, red_date: Int) {
+        self.id = id
+        self.name = name
+        self.reg_date = red_date
+    }
+
     /// Initialize with data retrieved from the 
     /// HeadCoach API.
     init(json: Dictionary<String, AnyObject>) {

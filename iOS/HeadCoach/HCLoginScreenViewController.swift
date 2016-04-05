@@ -34,13 +34,15 @@ class HCLoginScreenViewController: UIViewController{
         createNew.setTitleColor(UIColor.grayColor(), forState: .Normal)
         createNew.layer.borderColor = UIColor.lightGrayColor().CGColor
         createNew.layer.borderWidth = 2
-        createNew.addTarget(self, action: "newAccount:", forControlEvents: UIControlEvents.TouchUpInside)
+        createNew.addTarget(self, action: #selector(HCLoginScreenViewController.newAccount(_:)),
+                            forControlEvents: UIControlEvents.TouchUpInside)
         login.setTitle("Login", forState: .Normal)
         login.setTitleColor(UIColor.grayColor(), forState: .Normal)
         login.layer.borderColor = UIColor.lightGrayColor().CGColor
         login.layer.borderWidth = 2
         login.showsTouchWhenHighlighted = true
-        login.addTarget(self, action: "loginAction:", forControlEvents: UIControlEvents.TouchUpInside)
+        login.addTarget(self, action: #selector(HCLoginScreenViewController.loginAction(_:)),
+                        forControlEvents: UIControlEvents.TouchUpInside)
         userName.snp_makeConstraints { (make) in
             make.centerX.equalTo(self.view.snp_centerX)
             make.centerY.equalTo(self.view.snp_centerY).dividedBy(1.3)
@@ -72,28 +74,19 @@ class HCLoginScreenViewController: UIViewController{
     func loginAction(sender:UIButton!){
         progress.startAnimating()
         login = sender as UIButton
-        UIView.animateWithDuration(0.09,animations: { self.login.transform = CGAffineTransformMakeScale(0.6, 0.6) },completion: { finish in UIView.animateWithDuration(0.09){ self.login.transform = CGAffineTransformIdentity }})
+        UIView.animateWithDuration(0.09,animations: { self.login.transform = CGAffineTransformMakeScale(0.6, 0.6) }, completion: { finish in UIView.animateWithDuration(0.09) { self.login.transform = CGAffineTransformIdentity }})
+
         HCHeadCoachDataProvider.sharedInstance.getUserID(userName.text!) { (error, user) in
             if(error){
-                self.presentViewController(self.alert, animated: true) {
-                    () -> Void in
-                }
+                self.presentViewController(self.alert, animated: true) { () -> Void in }
+
                 self.progress.stopAnimating()
-            }else{
-                self.progress.stopAnimating()
-                let preferences = NSUserDefaults.standardUserDefaults()
-                
-                let currentUser = user?.name
-                preferences.setValue(currentUser, forKey: "currentUser")
-                //  Save to disk
-                let didSave = preferences.synchronize()
-                
-                if !didSave {
-                    //  Couldn't save (I've never seen this happen in real world testing)
-                }
+            } else {
+                HCHeadCoachDataProvider.sharedInstance.user = user!
+
                 let vc = HCLandingViewController()
                 self.navigationController?.pushViewController(vc, animated: true)
-                
+                self.progress.stopAnimating()
             }
         }
     }
