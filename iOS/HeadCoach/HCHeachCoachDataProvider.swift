@@ -14,9 +14,14 @@ class HCHeadCoachDataProvider: NSObject {
     /// Global singleton instance for this class.
     static let sharedInstance = HCHeadCoachDataProvider()
 
-    // -------------------------------------------------------------------------------------
-    // User account management.
-    // -------------------------------------------------------------------------------------
+    /// Private constant for bench related API calls.
+    private let PLAYER_ACTIVE = 0
+    /// Private constant for bench related API calls.
+    private let PLAYER_BENCH = 1
+
+    // ------------------------------------
+    // MARK: Account and League Management.
+    // ------------------------------------
 
     /// Use the 'login' parameter to set this property.
     /// Use this property with this data providers calls to
@@ -44,6 +49,34 @@ class HCHeadCoachDataProvider: NSObject {
         }
     }
 
+    /// The league that the user is signed in to. 
+    /// This value should be used for all calls within the UI that
+    /// need to access a league. This value should ONLY be changed
+    /// from the HCSettingViewController, explicitly by the user.
+    var league: HCLeague? {
+        get {
+            let id = NSUserDefaults.standardUserDefaults().integerForKey("HC.LEAGUE.ID")
+            let name = NSUserDefaults.standardUserDefaults().stringForKey("HC.LEAGUE.NAME")
+            let drafting = NSUserDefaults.standardUserDefaults().integerForKey("HC.LEAGUE.DRAFTING")
+            let users = NSUserDefaults.standardUserDefaults().arrayForKey("HC.LEAGUE.USERS")
+
+            if name == nil { return nil }
+            return HCLeague(id: id, name: name!, drafting_style: drafting, users: users as! [Int])
+        }
+
+        set(newLeague) {
+            NSUserDefaults.standardUserDefaults().setValue(newLeague!.id,
+                                                           forKey: "HC.LEAGUE.ID")
+            NSUserDefaults.standardUserDefaults().setValue(newLeague!.name,
+                                                           forKey: "HC.LEAGUE.NAME")
+            NSUserDefaults.standardUserDefaults().setValue(newLeague!.drafting_style,
+                                                           forKey: "HC.LEAGUE.DRAFTING")
+            NSUserDefaults.standardUserDefaults().setValue(newLeague!.users,
+                                                           forKey: "HC.LEAGUE.USERS")
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
+    }
+
     /// Returns 'true' if the user is currently logged in.
     /// When the app starts, if this evaluate to false, we should
     /// present the login screen to the user.
@@ -60,9 +93,9 @@ class HCHeadCoachDataProvider: NSObject {
         NSUserDefaults.standardUserDefaults().setValue(0, forKey: "HC.USER.REG_DATE")
     }
 
-    // -------------------------------------------------------------------------------------
-    // Network Requests - Utility Methods.
-    // -------------------------------------------------------------------------------------
+    // -------------------------------------
+    // MARK: User related network requests.
+    // -------------------------------------
 
     /// The root API address for the HeadCoach servince.
     /// http://localhost/ can be used for testing new changes
@@ -102,7 +135,29 @@ class HCHeadCoachDataProvider: NSObject {
             }
         }
     }
-    
+
+    /// HeadCoach API call to retrieve all of the
+    /// registered users that are registered with the
+    /// HeadCoach service.
+    internal func getAllUsers(completion: (Bool, [HCUser]) -> Void) {
+        let url = "\(api)/users/get.php"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            var users = [HCUser]()
+            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+                for item in json {
+                    users.append(HCUser(json: item))
+                }
+            }
+
+            // request complete, return all users found in the database
+            completion(users.count == 0, users)
+        }
+    }
+
+    // ---------------------------------------
+    // MARK: League related network requests.
+    // ---------------------------------------
 
     /// Send a request to the server to create a new league in the database.
     /// The service will assign a unique id that can be retrieved with the
@@ -133,25 +188,6 @@ class HCHeadCoachDataProvider: NSObject {
             } else {
                 completion(true, nil)
             }
-        }
-    }
-
-    /// HeadCoach API call to retrieve all of the
-    /// registered users that are registered with the
-    /// HeadCoach service.
-    internal func getAllUsers(completion: (Bool, [HCUser]) -> Void) {
-        let url = "\(api)/users/get.php"
-
-        Alamofire.request(.GET, url).responseJSON { response in
-            var users = [HCUser]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
-                for item in json {
-                    users.append(HCUser(json: item))
-                }
-            }
-
-            // request complete, return all users found in the database
-            completion(users.count == 0, users)
         }
     }
 
@@ -206,6 +242,7 @@ class HCHeadCoachDataProvider: NSObject {
         }
     }
 
+
     /// Creates a list of all the users currently registered to the
     /// HeadCoach Fantasy service.
     internal func getAllUsersForLeague(league: HCLeague, completion: (Bool, [HCUser]) -> Void) {
@@ -223,11 +260,22 @@ class HCHeadCoachDataProvider: NSObject {
         }
     }
 
+    // ----------------------------------------
+    // MARK: Drafting related network requests.
+    // ----------------------------------------
+
     /// Given league, draft the player in that league to the given user.
     /// The user must be a member of the input league and the player must be
     /// undrafted.
     internal func draftPlayerForUser(league: HCLeague, user: HCUser, player: HCPlayer, completion: (Bool) -> Void) {
         let url = "\(api)/draft/draftPlayerToUser.php?user=\(user.id)&league=\(league.id)&player=\(player.id)"
+
+        // check locally that the user_id is set to 0 (undrafted)
+        // the server will do the same, but we would like to fail early if we can
+        if player.user_id == user.id  {
+            completion(false)
+            return
+        }
 
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Dictionary<String, AnyObject> {
@@ -239,8 +287,9 @@ class HCHeadCoachDataProvider: NSObject {
     }
 
     /// Retrieves a list of all players in the given league.
-    internal func getAllPlayersFromLeague(league: HCLeague, completion: (Bool, [HCPlayer]) -> Void) {
-        let url = "\(api)/draft/getAllFromLeague.php?id=\(league.id)"
+    internal func getAllPlayersFromLeague(league: HCLeague,
+                                          completion: (Bool, [HCPlayer]) -> Void) {
+        let url = "\(api)/draft/getAllFromLeague.php?league=\(league.id)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             var players = [HCPlayer]()
@@ -255,8 +304,9 @@ class HCHeadCoachDataProvider: NSObject {
     }
 
     /// Retrieves a list of players that are owned by the given user.
-    internal func getAllPlayersForUserFromLeague(league: HCLeague, user: HCUser, completion: (Bool, [HCPlayer]) -> Void) {
-        let url = "\(api)/draft/getAllFromLeague.php?id=\(league.id)&user=\(user.id)"
+    internal func getAllPlayersForUserFromLeague(league: HCLeague, user: HCUser,
+                                                 completion: (Bool, [HCPlayer]) -> Void) {
+        let url = "\(api)/draft/getAllFromLeague.php?league=\(league.id)&user=\(user.id)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             var players = [HCPlayer]()
@@ -267,6 +317,98 @@ class HCHeadCoachDataProvider: NSObject {
             }
 
             completion(players.count == 0, players)
+        }
+    }
+
+    // Retrieves a list of all the undrafted players in the input league.
+    internal func getUndraftedPlayersInLeague(league: HCLeague, completion: (Bool, [HCPlayer]) -> Void) {
+        let url = "\(api)/draft/getAllFromLeague.php?league=\(league.id)&user=\(0)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            var players = [HCPlayer]()
+            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+                for item in json {
+                    players.append(HCPlayer(json: item))
+                }
+            }
+
+            completion(players.count == 0, players)
+        }
+    }
+
+    /// Moves the current player from the 'active' state to the 'bench' state.
+    /// If the user is currently in the 'bench' state this method will do nothing.
+    /// This method will update the 'isOnBench' property of the input 'player'.
+    internal func movePlayerToBench(player: HCPlayer, league: HCLeague,
+                                    completion: (Bool) -> Void) {
+        movePlayerToFromBench(player, league: league, state: PLAYER_BENCH, completion: completion)
+    }
+
+    /// Moves the current player from the 'bench' state to the 'active' state.
+    /// If the user is currently in the 'active' state this method will do nothing.
+    /// This method will update the 'isOnBench' property of the input 'player'.
+    internal func movePlayerToActive(player: HCPlayer, league: HCLeague,
+                                    completion: (Bool) -> Void) {
+        movePlayerToFromBench(player, league: league, state: PLAYER_ACTIVE, completion: completion)
+    }
+
+    /// Private utility that performs a network request to move a player to
+    /// and from the bench. To perform this action externally, use
+    /// either the movePlayerToBench or movePlayerToActive to help
+    /// keeep code readable.
+    private func movePlayerToFromBench(player: HCPlayer, league: HCLeague,
+                                       state: Int, completion: (Bool) -> Void) {
+        // player is already in the given state
+        if (state == 1) == player.isOnBench {
+            completion(false)
+            return
+        }
+
+        player.isOnBench = (state == 1)
+        let url = "\(api)/draft/movePlayerToFromBench.php?league=\(league.id)&player=\(player.id)" +
+            "&state=\(state)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            if let json = response.result.value as? Dictionary<String, AnyObject> {
+                completion(json["error"] as! Bool)
+            } else {
+                completion(false)
+            }
+        }
+    }
+
+    /// Checks the users current draft and evaluates whether or not it is valid.
+    /// If the users draft is invalid at the time of a scheduled game, they will
+    /// recieve no points and forfeit the game (if the opposing player also has
+    /// an invalid draft the game will be considered a draw).
+    /// The completion block will take the format as follows:
+    ///     Bool - Error: Whether or not the request completed succesfully.
+    ///     Bool - Valid: Whether or not the draft is valid.
+    ///     Dictionay<Position, Int> - remaining: For each 'Position', how many
+    ///         remaining players are required, to be valid, each must be 0
+    ///         with the exception of 'Bench' which may be anywhere between [0, 5]
+    ///     Dictionary<Position, Int> - required: The number of required players in 
+    ///         each position, with the exception of 'Bench' which represents the 
+    ///         maximum numeber of players that may be on the bench at a given time.
+    private func isUserDraftValid(league: HCLeague, user: HCUser,
+                                  completion: (Bool, Bool,
+                                Dictionary<Position, Int>?, Dictionary<Position, Int>?) -> Void) {
+        let url = "\(api)/draft/isUsersDraftValid.php?league=\(league.id)&player=\(user.id)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            if let json = response.result.value as? Dictionary<String, AnyObject> {
+                let err = json["error"] as! Bool
+                let valid = json["valid"] as! Bool
+                let remaining = json["remaining"] as! Dictionary<String, Int>
+                let required = json["required"] as! Dictionary<String, Int>
+
+                completion(err, valid,
+                    HCPositionUtil.dictStringToDictPosition(remaining),
+                    HCPositionUtil.dictStringToDictPosition(required))
+
+            } else {
+                completion(false, false, nil, nil)
+            }
         }
     }
 }

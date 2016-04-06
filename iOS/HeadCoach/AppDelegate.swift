@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window?.rootViewController = nav // sets the root view controller for the application
         window?.makeKeyAndVisible()
+        window?.tintColor = UIColor.footballColor(0.8)
 
         return true
     }
