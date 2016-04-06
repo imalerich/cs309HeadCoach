@@ -83,9 +83,9 @@ class HCHeadCoachDataProvider: NSObject {
         let url = "\(api)/leagues/get.php?name=\(leagueName)"
 
         Alamofire.request(.GET, url).responseJSON { response in
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Dictionary<String, AnyObject> {
                 // there will only be one user for this call
-                let league = HCLeague(json: json[0])
+                let league = HCLeague(json: json)
                 completion(false, league)
             } else {
                 completion(true, nil)

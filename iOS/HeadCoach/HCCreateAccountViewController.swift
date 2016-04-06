@@ -38,7 +38,6 @@ class HCCreateAccountViewController: UIViewController,UITableViewDelegate,UITabl
         createButton.addTarget(self, action: "createAccountAction:", forControlEvents: UIControlEvents.TouchUpInside)
         HCHeadCoachDataProvider.sharedInstance.getAllLeagues { (error, leaguestemp) in
                 self.leagues = leaguestemp
-                print(self.leagues.count)
                 self.tableView.reloadData()
             }
         info.snp_makeConstraints { (make) in
@@ -72,21 +71,13 @@ class HCCreateAccountViewController: UIViewController,UITableViewDelegate,UITabl
         UIView.animateWithDuration(0.09,animations: { self.createButton.transform = CGAffineTransformMakeScale(0.6, 0.6) },completion: { finish in UIView.animateWithDuration(0.09){ self.createButton.transform = CGAffineTransformIdentity }})
                 HCHeadCoachDataProvider.sharedInstance.createNewUser(userName.text!) { (error) in
                 HCHeadCoachDataProvider.sharedInstance.getUserID(self.userName.text!, completion: { (error, user) in
-                HCHeadCoachDataProvider.sharedInstance.getLeagueID(self.leagues[self.tableView.indexPathForSelectedRow!.row].name, completion: { (error, league) in
-                HCHeadCoachDataProvider.sharedInstance.addUserToLeague(user!, league: league!, completion: { (error) in
-                        print(error)
-                    HCHeadCoachDataProvider.sharedInstance.getAllUsersForLeague(league!, completion: { (error, user) in
-                        print(user)
-                    })
+                HCHeadCoachDataProvider.sharedInstance.addUserToLeague(user!, league: self.leagues[(self.tableView.indexPathForSelectedRow?.row)!], completion: { (error) in
                         })
                     })
-                })
-            }
-        
+                }
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("CreateCell", forIndexPath: indexPath)
-        print(leagues[indexPath.row].name)
         cell.textLabel?.text = leagues[indexPath.row].name
         
         return cell
