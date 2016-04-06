@@ -135,22 +135,6 @@ class HCHeadCoachDataProvider: NSObject {
             }
         }
     }
-    internal func getAllLeagues(completion: (Bool, [HCLeague]) -> Void) {
-        let url = "\(api)/leagues/getAllLeagues.php"
-        
-        Alamofire.request(.GET, url).responseJSON { response in
-                var leagues = [HCLeague]()
-                if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
-                    for item in json {
-                        leagues.append(HCLeague(json: item))
-                    }
-                }
-                
-                completion(leagues.count == 0, leagues)
-            }
-        
-       
-    }
 
     /// HeadCoach API call to retrieve all of the
     /// registered users that are registered with the

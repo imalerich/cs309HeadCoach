@@ -68,17 +68,32 @@ class HCCreateAccountViewController: UIViewController,UITableViewDelegate,UITabl
         }
         
     }
-
+    func createAccountAction(sender: UIButton!){
+        UIView.animateWithDuration(0.09,animations: { self.createButton.transform = CGAffineTransformMakeScale(0.6, 0.6) },completion: { finish in UIView.animateWithDuration(0.09){ self.createButton.transform = CGAffineTransformIdentity }})
+                HCHeadCoachDataProvider.sharedInstance.registerUser(userName.text!) { (error) in
+                HCHeadCoachDataProvider.sharedInstance.getUserID(self.userName.text!, completion: { (error, user) in
+                HCHeadCoachDataProvider.sharedInstance.getLeagueID(self.leagues[self.tableView.indexPathForSelectedRow!.row].name, completion: { (error, league) in
+                HCHeadCoachDataProvider.sharedInstance.addUserToLeague(user!, league: league!, completion: { (error) in
+                        print(error)
+                    HCHeadCoachDataProvider.sharedInstance.getAllUsersForLeague(league!, completion: { (error, user) in
+                        print(user)
+                    })
+                        })
+                    })
+                })
+            }
+        
+    }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        // TODO
-
-        return UITableViewCell()
+        let cell = tableView.dequeueReusableCellWithIdentifier("CreateCell", forIndexPath: indexPath)
+        print(leagues[indexPath.row].name)
+        cell.textLabel?.text = leagues[indexPath.row].name
+        
+        return cell
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // TODO
-
-        return 0
+        return leagues.count
     }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
