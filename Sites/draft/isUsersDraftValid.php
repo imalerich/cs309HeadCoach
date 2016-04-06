@@ -92,6 +92,7 @@ foreach ($remaining as $key => $val) {
 echo json_encode(
 	array(
 		// only valid when every available slot is filled
+		"error" => False,
 		"valid" => ($sum == 0),
 		"remaining" => $remaining,
 		"required" => $required

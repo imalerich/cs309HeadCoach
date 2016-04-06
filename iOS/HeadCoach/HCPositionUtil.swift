@@ -10,6 +10,9 @@ import UIKit
 
 /// Enumerated type that describes the possible
 /// positions a player may play.
+/// Note that 'Bench' is not an actual position,
+/// but is included to aid in the call to
+/// check if a users draft is valid.
 enum Position {
     case QuarterBack
     case RunningBack
@@ -17,6 +20,7 @@ enum Position {
     case TightEnd
     case Kicker
     case DefensiveLine
+    case Bench
 }
 
 /// Utility class for converting the
@@ -43,6 +47,9 @@ class HCPositionUtil {
         case .Kicker:
             return "Kicker"
 
+        case .Bench:
+            return "Bench"
+
         default:
             return "Defence"
         }
@@ -67,6 +74,9 @@ class HCPositionUtil {
         case .Kicker:
             return "K"
 
+        case .Bench:
+            return "BENCH"
+
         default:
             return "DL"
         }
@@ -76,24 +86,53 @@ class HCPositionUtil {
     /// corresponding 'Position' value.
     class func stringToPosition(pos: String) -> Position {
         switch pos {
-        case "QB":
+        case "QB", "qb":
             return .QuarterBack
 
-        case "RB":
+        case "RB", "rb":
             return .RunningBack
 
-        case "WR":
+        case "WR", "wr":
             return .WideReceiver
 
-        case "TE":
+        case "TE", "te":
             return .TightEnd
 
-        case "K":
+        case "K", "k":
             return .Kicker
+
+        case "BENCH", "bench":
+            return .Bench
 
         default:
             return .DefensiveLine
         }
+    }
+
+    /// Takes an dictionary of position keys and integer values and
+    /// converts the keys from 'String' to 'Position'.
+    class func dictStringToDictPosition(dict: Dictionary<String, Int>) ->
+            Dictionary<Position, Int> {
+
+        var ret = Dictionary<Position, Int>()
+        for (key, val) in dict {
+            ret[stringToPosition(key)] = val
+        }
+
+        return ret
+    }
+
+    /// Takes an dictionary of position keys and integer values and
+    /// converts the keys from 'Position' to 'String'.
+    class func dictPositionsToDictString(dict: Dictionary<Position, Int>) ->
+            Dictionary<String, Int> {
+
+        var ret = Dictionary<String, Int>()
+        for (key, val) in dict {
+            ret[positionToString(key)] = val
+        }
+
+        return ret
     }
 
     /// Array based implementation of 'positionToString'
