@@ -24,6 +24,30 @@ enum Position {
 /// the 'String' data received from the HeadCoach
 /// service.
 class HCPositionUtil {
+    /// Converts a position to a 'String' that is 
+    /// 'user friendly' enough to be dislpayed on the screen.
+    class func positionToName(pos: Position) -> String {
+        switch pos {
+        case .QuarterBack:
+            return "Quarter Back"
+
+        case .RunningBack:
+            return "Running Back"
+
+        case .WideReceiver:
+            return "Wide Receiver"
+
+        case .TightEnd:
+            return "Tight End"
+
+        case .Kicker:
+            return "Kicker"
+
+        default:
+            return "Defence"
+        }
+    }
+
     /// Converts the input 'Position' to its 
     /// corresponding 'String' value.
     class func positionToString(pos: Position) -> String {
@@ -70,5 +94,25 @@ class HCPositionUtil {
         default:
             return .DefensiveLine
         }
+    }
+
+    /// Array based implementation of 'positionToString'
+    class func positionsToStrings(pos: [Position]) -> [String] {
+        var ret = [String]()
+        for p in pos {
+            ret.append(positionToString(p))
+        }
+
+        return ret
+    }
+
+    /// Array based implementation of 'stringToPosition'
+    class func stringsToPositions(pos: [String]) -> [Position] {
+        var ret = [Position]()
+        for p in pos {
+            ret.append(stringToPosition(p))
+        }
+
+        return ret
     }
 }

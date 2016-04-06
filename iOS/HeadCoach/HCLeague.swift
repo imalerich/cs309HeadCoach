@@ -27,6 +27,17 @@ class HCLeague: CustomStringConvertible {
         return "{\nid: \(id)\nname: \(name)\ndrafting_style: \(drafting_style)\n}\n"
     }
 
+    /// Initializes a league from explicit data.
+    /// This can be used when you need to store a league
+    /// in the NSUserDefaults, as is done by the
+    /// HCHeadCoachDataProvider.
+    init(id: Int, name: String, drafting_style: Int, users: [Int]) {
+        self.id = id
+        self.name = name
+        self.drafting_style = drafting_style
+        self.users = users
+    }
+
     /// Initialize with data retrieved from the
     /// HeadCoach API.
     init(json: Dictionary<String, AnyObject>) {

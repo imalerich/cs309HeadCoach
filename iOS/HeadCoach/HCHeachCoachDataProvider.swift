@@ -44,6 +44,34 @@ class HCHeadCoachDataProvider: NSObject {
         }
     }
 
+    /// The league that the user is signed in to. 
+    /// This value should be used for all calls within the UI that
+    /// need to access a league. This value should ONLY be changed
+    /// from the HCSettingViewController, explicitly by the user.
+    var league: HCLeague? {
+        get {
+            let id = NSUserDefaults.standardUserDefaults().integerForKey("HC.LEAGUE.ID")
+            let name = NSUserDefaults.standardUserDefaults().stringForKey("HC.LEAGUE.NAME")
+            let drafting = NSUserDefaults.standardUserDefaults().integerForKey("HC.LEAGUE.DRAFTING")
+            let users = NSUserDefaults.standardUserDefaults().arrayForKey("HC.LEAGUE.USERS")
+
+            if name == nil { return nil }
+            return HCLeague(id: id, name: name!, drafting_style: drafting, users: users as! [Int])
+        }
+
+        set(newLeague) {
+            NSUserDefaults.standardUserDefaults().setValue(newLeague!.id,
+                                                           forKey: "HC.LEAGUE.ID")
+            NSUserDefaults.standardUserDefaults().setValue(newLeague!.name,
+                                                           forKey: "HC.LEAGUE.NAME")
+            NSUserDefaults.standardUserDefaults().setValue(newLeague!.drafting_style,
+                                                           forKey: "HC.LEAGUE.DRAFTING")
+            NSUserDefaults.standardUserDefaults().setValue(newLeague!.users,
+                                                           forKey: "HC.LEAGUE.USERS")
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
+    }
+
     /// Returns 'true' if the user is currently logged in.
     /// When the app starts, if this evaluate to false, we should
     /// present the login screen to the user.
@@ -258,6 +286,22 @@ class HCHeadCoachDataProvider: NSObject {
     /// Retrieves a list of players that are owned by the given user.
     internal func getAllPlayersForUserFromLeague(league: HCLeague, user: HCUser, completion: (Bool, [HCPlayer]) -> Void) {
         let url = "\(api)/draft/getAllFromLeague.php?id=\(league.id)&user=\(user.id)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            var players = [HCPlayer]()
+            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+                for item in json {
+                    players.append(HCPlayer(json: item))
+                }
+            }
+
+            completion(players.count == 0, players)
+        }
+    }
+
+    // Retrieves a list of all the undrafted players in the input league.
+    internal func getUndraftedPlayersInLeague(league: HCLeague, completion: (Bool, [HCPlayer]) -> Void) {
+        let url = "\(api)/draft/getAllFromLeague.php?id=\(league.id)&user=\(0)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             var players = [HCPlayer]()
