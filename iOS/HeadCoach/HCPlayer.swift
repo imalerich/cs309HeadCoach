@@ -22,7 +22,7 @@ class HCPlayer: NSObject {
     /// The players fantasy data position.
     /// A team must be composed of a set number
     /// of players to fill each required position.
-    internal var position = ""
+    internal var position: Position = .DefensiveLine
 
     /// The players fantasy data position category.
     /// This will either be ST, OFF, or DEF.
@@ -39,8 +39,10 @@ class HCPlayer: NSObject {
         id = Int(json["id"] as! String)!
         name = json["name"] as! String
         user_id = Int(json["user_id"] as! String)!
-        position = json["pos"] as! String
         position_category = json["pos_cat"] as! String
         fantasy_id = Int(json["fd_id"] as! String)!
+
+        let pos = json["pos"] as! String
+        position = HCPositionUtil.stringToPosition(pos)
     }
 }

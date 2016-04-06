@@ -39,6 +39,7 @@
 		B96E55F21CA850AB001A4017 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96E55F11CA850AB001A4017 /* AppDelegate.swift */; };
 		B96E55F91CA850AB001A4017 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B96E55F81CA850AB001A4017 /* Assets.xcassets */; };
 		B96E55FC1CA850AB001A4017 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B96E55FA1CA850AB001A4017 /* LaunchScreen.storyboard */; };
+		B99BA5E81CB49B8E008F50FD /* HCPositionUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99BA5E71CB49B8E008F50FD /* HCPositionUtil.swift */; };
 		B9BD66591CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BD66581CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift */; };
 		B9E731891CB40AFD002C5638 /* HCSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E731881CB40AFD002C5638 /* HCSettingsViewController.swift */; };
 		C808336F1CACCB5D006F8CAC /* HCTradeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C808336E1CACCB5D006F8CAC /* HCTradeDetailViewController.swift */; };
@@ -82,6 +83,7 @@
 		B96E55F81CA850AB001A4017 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B96E55FB1CA850AB001A4017 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B96E55FD1CA850AB001A4017 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B99BA5E71CB49B8E008F50FD /* HCPositionUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPositionUtil.swift; sourceTree = "<group>"; };
 		B9BD66581CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLandingPageDetailCellTableViewCell.swift; sourceTree = "<group>"; };
 		B9E731881CB40AFD002C5638 /* HCSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCSettingsViewController.swift; sourceTree = "<group>"; };
 		C808336E1CACCB5D006F8CAC /* HCTradeDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCTradeDetailViewController.swift; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				B94C49C51CA8539A00F2C2F0 /* FDPlayer.swift */,
 				B94C49CC1CA8539B00F2C2F0 /* HCLeague.swift */,
 				B94C49C61CA8539A00F2C2F0 /* Game.swift */,
+				B99BA5E71CB49B8E008F50FD /* HCPositionUtil.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -355,6 +358,7 @@
 				480FE98D1CB2E6BB00763C1B /* HCLeagueCell.swift in Sources */,
 				B94C49EB1CA8539B00F2C2F0 /* HCLiveTableViewCell.swift in Sources */,
 				B94C49E71CA8539B00F2C2F0 /* HCLeague.swift in Sources */,
+				B99BA5E81CB49B8E008F50FD /* HCPositionUtil.swift in Sources */,
 				B94C49E21CA8539B00F2C2F0 /* GameTableViewDetail.swift in Sources */,
 				B94C49F31CA8539B00F2C2F0 /* HCUser.swift in Sources */,
 				B94C49E01CA8539B00F2C2F0 /* FDPlayer.swift in Sources */,
