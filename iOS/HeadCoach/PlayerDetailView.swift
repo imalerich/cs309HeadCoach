@@ -33,7 +33,6 @@ class PlayerDetailView: UIView {
     
     var tempTradeButton: UIButton!
     
-    
     override init (frame : CGRect) {
         super.init(frame : frame)
         addCustomView()
@@ -368,7 +367,6 @@ class PlayerDetailView: UIView {
             make.right.equalTo(self.snp_right)
         }
     }
-    
     
     override func layoutSubviews(){
         super.layoutSubviews()

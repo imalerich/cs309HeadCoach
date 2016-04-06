@@ -138,7 +138,6 @@ class HCFantasyDataProvider{
         Alamofire.request(.GET, "https://api.fantasydata.net/nfl/v2/JSON/PlayerSeasonStatsByPlayerID/2015/\(id)", headers: headers)
             .responseJSON { response in
                 do{
-                    print(response)
                     let json:NSArray = try NSJSONSerialization.JSONObjectWithData(response.data!, options: NSJSONReadingOptions.MutableContainers) as! NSArray
                     handler(id, json)
                     print("done")

@@ -20,8 +20,8 @@ class PlayerListView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     let loading = UITextView()
     let topBar = UIView()
     let filterLabel = UILabel()
-    var filterButton = UIButton.init(type: UIButtonType.System)
     let sortLabel = UILabel()
+    var filterButton = UIButton.init(type: UIButtonType.System)
     var sortButton = UIButton.init(type: UIButtonType.System)
     let picker = UIPickerView()
     let pickerFilterData = ["All", "QB", "TE"]
@@ -142,9 +142,7 @@ class PlayerListView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             make.left.equalTo(self.snp_left)
             make.right.equalTo(self.snp_right)
             make.bottom.equalTo(self.snp_bottom)
-            make.height.equalTo(self.snp_height).multipliedBy(0.3)
         }
-        
     }
     
     func updateButtonText(sortType: FDPlayer.SortType, filterType: FDPlayer.PositionFilterType){
