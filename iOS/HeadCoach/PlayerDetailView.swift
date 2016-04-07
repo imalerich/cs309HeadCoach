@@ -113,13 +113,13 @@ class PlayerDetailView: UIView {
         personalDetailsContainer.backgroundColor = UIColor.init(red: 0.99, green: 0.99, blue: 0.99, alpha: 1)
         detailContainer.addSubview(personalDetailsContainer)
         
-        personalDetailsLabel = UILabel()
-        personalDetailsLabel.textAlignment = .Center
-        personalDetailsLabel.textColor = UIColor.blackColor()
-        personalDetailsLabel.text = "Personal Details"
-        personalDetailsLabel.font = personalDetailsLabel.font.fontWithSize(12)
-        personalDetailsLabel.sizeToFit()
-        personalDetailsContainer.addSubview(personalDetailsLabel)
+//        personalDetailsLabel = UILabel()
+//        personalDetailsLabel.textAlignment = .Center
+//        personalDetailsLabel.textColor = UIColor.blackColor()
+//        personalDetailsLabel.text = "Personal Details"
+//        personalDetailsLabel.font = personalDetailsLabel.font.fontWithSize(14)
+//        personalDetailsLabel.sizeToFit()
+//        personalDetailsContainer.addSubview(personalDetailsLabel)
         
         circle = UIView()
         addSubview(circle)
@@ -256,7 +256,7 @@ class PlayerDetailView: UIView {
         ageLabel.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
         ageLabel.numberOfLines = 1
         ageLabel.text = "Age"
-        ageLabel.font = ageLabel.font.fontWithSize(14)
+        ageLabel.font = ageLabel.font.fontWithSize(12)
         ageLabel.sizeToFit()
         personalDetailsContainer.addSubview(ageLabel)
         
@@ -264,8 +264,8 @@ class PlayerDetailView: UIView {
         ageText.textAlignment = .Left
         ageText.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
         ageText.numberOfLines = 1
-        ageText.font = ageText.font.fontWithSize(14)
-        ageText.text = 28
+        ageText.font = ageText.font.fontWithSize(12)
+        ageText.text = "28"
         ageText.sizeToFit()
         personalDetailsContainer.addSubview(ageText)
         
@@ -275,7 +275,7 @@ class PlayerDetailView: UIView {
         heightLabel.text = "Height"
         heightLabel.sizeToFit()
         heightLabel.numberOfLines = 1
-        heightLabel.font = heightLabel.font.fontWithSize(numLabel.font.pointSize * 0.8)
+        heightLabel.font = heightLabel.font.fontWithSize(12)
         personalDetailsContainer.addSubview(heightLabel)
         
         weightLabel = UILabel()
@@ -401,38 +401,38 @@ class PlayerDetailView: UIView {
             make.right.equalTo(detailContainer)
             make.height.equalTo(detailContainer).dividedBy(10)
         }
-        personalDetailsLabel.snp_makeConstraints { (make) in
-            make.top.equalTo(personalDetailsContainer).offset(10)
-            make.centerX.equalTo(personalDetailsContainer.snp_centerX)
-        }
+//        personalDetailsLabel.snp_makeConstraints { (make) in
+//            make.top.equalTo(personalDetailsContainer).offset(10)
+//            make.centerX.equalTo(personalDetailsContainer.snp_centerX)
+//        }
         ageLabel.snp_makeConstraints { (make) in
-            make.top.equalTo(personalDetailsLabel.snp_bottom)
             make.left.equalTo(personalDetailsContainer)
             make.width.equalTo(personalDetailsContainer).dividedBy(6)
+            make.centerY.equalTo(personalDetailsContainer.snp_centerY)
         }
         ageText.snp_makeConstraints { (make) in
             make.top.equalTo(ageLabel)
-            make.left.equalTo(ageLabel.snp_right)
-            make.width.equalTo(ageLabel)
-        }
-        heightLabel.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(ageLabel)
-            make.left.equalTo(ageText.snp_right)
-            make.width.equalTo(ageLabel)
-        }
-        heightText.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(heightLabel)
-            make.left.equalTo(heightLabel.snp_right)
+            make.left.equalTo(ageLabel.snp_right).offset(2)
             make.width.equalTo(ageLabel)
         }
         weightLabel.snp_makeConstraints { (make) -> Void in
             make.top.equalTo(ageLabel)
-            make.left.equalTo(heightText.snp_right)
+            make.left.equalTo(ageText.snp_right)
             make.width.equalTo(ageLabel)
         }
         weightText.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(weightLabel)
+            make.left.equalTo(weightLabel.snp_right).offset(2)
+            make.width.equalTo(ageLabel)
+        }
+        heightLabel.snp_makeConstraints { (make) -> Void in
             make.top.equalTo(ageLabel)
-            make.left.equalTo(weightLabel.snp_right)
+            make.left.equalTo(weightText.snp_right)
+            make.width.equalTo(ageLabel)
+        }
+        heightText.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(ageLabel)
+            make.left.equalTo(heightLabel.snp_right).offset(2)
             make.width.equalTo(ageLabel)
         }
         let halfDetail = detailContainer.bounds.height
