@@ -95,7 +95,7 @@ $request->setBody("{body}");
 // Mac OS X will not behave with this
 // if either is not working it's probably
 // this lines fault
-$request->setAdapter('curl');
+// $request->setAdapter('curl');
 
 // send and process the request
 try {
@@ -133,6 +133,76 @@ try {
 } catch (HttpException $e) {
 	echo "Request failed with error $e";
 }
+
+// now that we have created the draft table for this league
+// we need to create a schedule table for this league
+// this table will maintain the schedule of games for the
+// current season
+
+// we will schedule games once per week each Sunday
+// starting September 6th and continuing for 17 weeks
+
+$schedule_table = $_GET["name"] . "_schedule";
+
+// drop the table if it exists, the original league must have been deleted
+$query = "DROP TABLE IF EXISTS {$schedule_table}";
+if (!($result = mysqli_query($db, $query))) {
+	die("Database query failed with errer: " . mysqli_error($db));
+}
+
+$query = "CREATE TABLE " 
+	. $schedule_table
+	. "("
+	. "id INT(11) NOT NULL AUTO_INCREMENT, "
+	. "user_index_0 INT(11) NOT NULL, "
+	. "user_index_1 INT(11) NOT NULL, "
+	. "date INT(11) NOT NULL, "
+	. "score_0 INT(11) NOT NULL DEFAULT 0, "
+	. "score_1 INT(11) NOT NULL DEFAULT 0, "
+	. "PRIMARY KEY (id), "
+	. "INDEX (user_id_0), "
+	. "INDEX (user_id_1) "
+	. ")";
+
+$result = mysqli_query($db, $query);
+
+if (!$result) {
+	die("Database query failed with errer: " . mysqli_error($db));
+}
+
+// loop through each week and set the date for each game
+$year = date("Y") - 1;
+$date = new DateTime( date('Y-m-d', strtotime("september $year first monday")));
+$date->modify("+7 days"); // get the next sunday for the first game
+
+// the current game number, this will be used for round robin determination
+$current_game = 0;
+
+for ($i=0; $i<17; $i++) {
+	$stamp = $date->getTimestamp();
+
+	// generate match making for up to five players
+	// not this does not require that the league to
+	// actually have 5 plaers as they are added
+	// in order from 0 -> 4
+	for ($i=0; $i<2; $i++) {
+		$query  = "INSERT INTO " . $schedule_table .  " (";
+		$query .= "user_index_0, user_index_1, date";
+		$query .= ") VALUES (";
+		$query .= "0, 0, " . $stamp;
+		$query .= ")";
+
+		$result = mysqli_query($db, $query);
+
+		if (!$result) {
+			die("Database query failed with errer: " . mysqli_error($db));
+		}
+	}
+
+	$date->modify("+1 week");
+}
+
+// and now we are done, output the 'error'
 
 echo json_encode(
 	array(
