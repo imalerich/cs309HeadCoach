@@ -19,12 +19,12 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.edgesForExtendedLayout = UIRectEdge.None
+        self.edgesForExtendedLayout = UIRectEdge.Bottom
         detail = PlayerDetailView(frame: view.bounds)
         view.addSubview(detail)
         detail.addCustomView()
         detail.setPlayer(player)
-        detail.tempTradeButton.addTarget(self, action: #selector(HCPlayerMoreDetailController.buttonClicked(_:)), forControlEvents: .TouchUpInside)
+        detail.draftButton.addTarget(self, action: #selector(HCPlayerMoreDetailController.buttonClicked(_:)), forControlEvents: .TouchUpInside)
 //        sendDataRequest()
     }
     
@@ -48,8 +48,12 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
         }
     }
     
+    func requestPlayerStats(playerID: Int){
+        HCFantasyDataProvider.sharedInstance.getPlayerStatsForPlayerID(playerID, handler: PlayerDetailView.setStats(detail))
+    }
+    
     func buttonClicked(sender: AnyObject?) {
-        if sender === detail.tempTradeButton {
+        if sender === detail.draftButton {
             let vc = HCTradeDetailViewController()
             vc.player1 = player
             self.navigationController?.pushViewController(vc, animated: true)

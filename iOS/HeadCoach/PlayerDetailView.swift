@@ -13,6 +13,10 @@ class PlayerDetailView: UIView {
     var circle: UIView!
     var headerLabelContainer: UIView!
     var statsLabelsContainer: UIView!
+    var personalDetailsContainer: UIView!
+    var personalDetailsLabel: UILabel!
+    var ageLabel: UILabel!
+    var ageText: UILabel!
     var heightLabel: UILabel!
     var weightLabel: UILabel!
     var heightText: UILabel!
@@ -22,16 +26,20 @@ class PlayerDetailView: UIView {
     var statusText: UILabel!
     var statusTextContainer: UIView!
     var detailContainer: UIView!
-    var byeWeekLabel: UILabel!
-    var byeWeekText: UILabel!
-    var rankLabel: UILabel!
-    var rankText: UILabel!
-    var weekPtsLabel1: UILabel!
-    var weekPtsLabel2: UILabel!
-    var weekPtsText1: UILabel!
-    var weekPtsText2: UILabel!
+    var stat1Label: UILabel!
+    var stat1Text: UILabel!
+    var stat2Label: UILabel!
+    var stat2Text: UILabel!
+    var stat3Label: UILabel!
+    var stat3Text: UILabel!
+    var stat4Label: UILabel!
+    var stat4Text: UILabel!
+    var stat5Label: UILabel!
+    var stat5Text: UILabel!
+    var stat6Label: UILabel!
+    var stat6Text: UILabel!
     
-    var tempTradeButton: UIButton!
+    var draftButton: UIButton!
     
     override init (frame : CGRect) {
         super.init(frame : frame)
@@ -59,11 +67,25 @@ class PlayerDetailView: UIView {
         heightText.text = player.height
         statusText.text = player.status
         statusTextContainer.backgroundColor = getStatusBackground(player.status)
-        rankText.text = String(arc4random_uniform(100) + 1)
-        byeWeekText.text = String(arc4random_uniform(12) + 1)
-        weekPtsText1.text = String(arc4random_uniform(40)) + " pts."
-        weekPtsText2.text = String(arc4random_uniform(40)) + " pts."
+        stat2Text.text = String(arc4random_uniform(100) + 1)
+        stat1Text.text = String(arc4random_uniform(12) + 1)
+        stat4Label.text = String(arc4random_uniform(40)) + " pts."
+        stat4Text.text = String(arc4random_uniform(40)) + " pts."
         playerImage.load(player.photoURL)
+        setNeedsLayout()
+    }
+    
+    func setStats(id: Int, json: NSArray) -> Void{
+        var passYds: Int = 0
+        var rushYds: Int = 0
+        var tds: Int = 0
+        for item in json{
+            let data = item as! NSDictionary
+            passYds = data["PassingYards"] as! Int
+            rushYds = data["RushingYards"] as! Int
+            tds = data["Touchdowns"] as! Int
+            print("got data")
+        }
         setNeedsLayout()
     }
     
@@ -84,135 +106,205 @@ class PlayerDetailView: UIView {
         detailContainer.layer.masksToBounds = true
         detailContainer.layer.cornerRadius = 4
         detailContainer.layer.borderWidth = 5
-        detailContainer.layer.borderColor = UIColor.init(red: 0.97, green: 0.97, blue: 0.97, alpha: 1).CGColor
+        detailContainer.layer.borderColor = UIColor.init(red: 0.95, green: 0.95, blue: 0.95, alpha: 1).CGColor
         addSubview(detailContainer)
         
+        personalDetailsContainer = UIView()
+        personalDetailsContainer.backgroundColor = UIColor.init(red: 0.99, green: 0.99, blue: 0.99, alpha: 1)
+        detailContainer.addSubview(personalDetailsContainer)
+        
+        personalDetailsLabel = UILabel()
+        personalDetailsLabel.textAlignment = .Center
+        personalDetailsLabel.textColor = UIColor.blackColor()
+        personalDetailsLabel.text = "Personal Details"
+        personalDetailsLabel.font = personalDetailsLabel.font.fontWithSize(12)
+        personalDetailsLabel.sizeToFit()
+        personalDetailsContainer.addSubview(personalDetailsLabel)
+        
         circle = UIView()
-        circle.backgroundColor = UIColor.init(red: 0.97, green: 0.97, blue: 0.97, alpha: 1)
-        circle.layer.masksToBounds = true
-        circle.layer.cornerRadius = 37;
         addSubview(circle)
         
-        headerLabelContainer = UIView();
-        headerLabelContainer.backgroundColor = UIColor.init(red: 0.97, green: 0.97, blue: 0.97, alpha: 1)
+        headerLabelContainer = UIView()
+        headerLabelContainer.backgroundColor = UIColor.init(red: 0.95, green: 0.95, blue: 0.95, alpha: 1)
         headerLabelContainer.layer.masksToBounds = true
         headerLabelContainer.layer.cornerRadius = 4
         addSubview(headerLabelContainer)
         
-        byeWeekLabel = UILabel()
-        byeWeekLabel.textAlignment = .Center
-        byeWeekLabel.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
-        byeWeekLabel.font = byeWeekLabel.font.fontWithSize(14)
-        byeWeekLabel.sizeToFit()
-        byeWeekLabel.text = "Bye Week"
-        detailContainer.addSubview(byeWeekLabel)
+        stat1Label = UILabel()
+        stat1Label.textAlignment = .Center
+        stat1Label.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
+        stat1Label.font = stat1Label.font.fontWithSize(14)
+        stat1Label.sizeToFit()
+        stat1Label.text = "Bye Week"
+        detailContainer.addSubview(stat1Label)
         
-        byeWeekText = UILabel()
-        byeWeekText.textAlignment = .Center
-        byeWeekText.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
-        byeWeekText.font = byeWeekText.font.fontWithSize(14)
-        byeWeekText.sizeToFit()
-        detailContainer.addSubview(byeWeekText)
+        stat1Text = UILabel()
+        stat1Text.textAlignment = .Center
+        stat1Text.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
+        stat1Text.font = stat1Text.font.fontWithSize(14)
+        stat1Text.sizeToFit()
+        stat1Text.text = "13"
+        detailContainer.addSubview(stat1Text)
         
-        rankLabel = UILabel()
-        rankLabel.textAlignment = .Center
-        rankLabel.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
-        rankLabel.font = rankLabel.font.fontWithSize(14)
-        rankLabel.sizeToFit()
-        rankLabel.text = "Rank"
-        detailContainer.addSubview(rankLabel)
+        stat2Label = UILabel()
+        stat2Label.textAlignment = .Center
+        stat2Label.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
+        stat2Label.font = stat2Label.font.fontWithSize(14)
+        stat2Label.sizeToFit()
+        stat2Label.text = "Rank"
+        detailContainer.addSubview(stat2Label)
         
-        rankText = UILabel()
-        rankText.textAlignment = .Center
-        rankText.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
-        rankText.font = rankText.font.fontWithSize(14)
-        rankText.sizeToFit()
-        detailContainer.addSubview(rankText)
+        stat2Text = UILabel()
+        stat2Text.textAlignment = .Center
+        stat2Text.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
+        stat2Text.font = stat2Text.font.fontWithSize(14)
+        stat2Text.sizeToFit()
+        stat2Text.text = "9"
+        detailContainer.addSubview(stat2Text)
         
-        weekPtsLabel1 = UILabel()
-        weekPtsLabel1.textAlignment = .Center
-        weekPtsLabel1.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
-        weekPtsLabel1.font = weekPtsLabel1.font.fontWithSize(14)
-        weekPtsLabel1.sizeToFit()
+        stat3Label = UILabel()
+        stat3Label.textAlignment = .Center
+        stat3Label.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
+        stat3Label.font = stat3Label.font.fontWithSize(14)
+        stat3Label.sizeToFit()
         let random = arc4random_uniform(12)
-        weekPtsLabel1.text = "Week " + String(random)
-        detailContainer.addSubview(weekPtsLabel1)
+        stat3Label.text = "Week " + String(random)
+        detailContainer.addSubview(stat3Label)
         
-        weekPtsLabel2 = UILabel()
-        weekPtsLabel2.textAlignment = .Center
-        weekPtsLabel2.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
-        weekPtsLabel2.font = weekPtsLabel2.font.fontWithSize(14)
-        weekPtsLabel2.sizeToFit()
-        weekPtsLabel2.text = "Week " + String(random+1)
-        detailContainer.addSubview(weekPtsLabel2)
+        stat3Text = UILabel()
+        stat3Text.textAlignment = .Center
+        stat3Text.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
+        stat3Text.font = stat3Text.font.fontWithSize(14)
+        stat3Text.sizeToFit()
+        stat3Text.text = "17 pts"
+        detailContainer.addSubview(stat3Text)
         
-        weekPtsText1 = UILabel()
-        weekPtsText1.textAlignment = .Center
-        weekPtsText1.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
-        weekPtsText1.font = weekPtsText1.font.fontWithSize(14)
-        weekPtsText1.sizeToFit()
-        detailContainer.addSubview(weekPtsText1)
+        stat4Label = UILabel()
+        stat4Label.textAlignment = .Center
+        stat4Label.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
+        stat4Label.font = stat4Label.font.fontWithSize(14)
+        stat4Label.sizeToFit()
+        stat4Label.text = "Week " + String(random+1)
+        detailContainer.addSubview(stat4Label)
         
-        weekPtsText2 = UILabel()
-        weekPtsText2.textAlignment = .Center
-        weekPtsText2.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
-        weekPtsText2.font = weekPtsText2.font.fontWithSize(14)
-        weekPtsText2.sizeToFit()
-        detailContainer.addSubview(weekPtsText2)
+        stat4Text = UILabel()
+        stat4Text.textAlignment = .Center
+        stat4Text.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
+        stat4Text.font = stat4Text.font.fontWithSize(14)
+        stat4Text.sizeToFit()
+        stat4Text.text = "24 pts"
+        detailContainer.addSubview(stat4Text)
+        
+        stat5Label = UILabel()
+        stat5Label.textAlignment = .Center
+        stat5Label.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
+        stat5Label.font = stat5Label.font.fontWithSize(14)
+        stat5Label.sizeToFit()
+        stat5Label.text = "Stat 5"
+        detailContainer.addSubview(stat5Label)
+        
+        stat5Text = UILabel()
+        stat5Text.textAlignment = .Center
+        stat5Text.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
+        stat5Text.font = stat5Text.font.fontWithSize(14)
+        stat5Text.sizeToFit()
+        stat5Text.text = "24 yds"
+        detailContainer.addSubview(stat5Text)
+        
+        stat6Label = UILabel()
+        stat6Label.textAlignment = .Center
+        stat6Label.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
+        stat6Label.font = stat6Label.font.fontWithSize(14)
+        stat6Label.sizeToFit()
+        stat6Label.text = "Stat 6"
+        detailContainer.addSubview(stat6Label)
+        
+        stat6Text = UILabel()
+        stat6Text.textAlignment = .Center
+        stat6Text.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
+        stat6Text.font = stat6Text.font.fontWithSize(14)
+        stat6Text.sizeToFit()
+        stat6Text.text = "235"
+        detailContainer.addSubview(stat6Text)
 
         nameLabel = UILabel()
         nameLabel.textAlignment = .Left
         nameLabel.textColor = UIColor.blackColor()
-        nameLabel.font = nameLabel.font.fontWithSize(16)
+        nameLabel.numberOfLines = 1
+        nameLabel.font = nameLabel.font.fontWithSize(18)
         nameLabel.sizeToFit()
         headerLabelContainer.addSubview(nameLabel)
         
         numLabel = UILabel()
         numLabel.textAlignment = .Left
         numLabel.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
-        numLabel.font = numLabel.font.fontWithSize(14)
+        numLabel.numberOfLines = 1
+        numLabel.font = numLabel.font.fontWithSize(16)
         numLabel.sizeToFit()
         headerLabelContainer.addSubview(numLabel)
         
         teamLabel = UILabel()
         teamLabel.textAlignment = .Left
         teamLabel.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
+        teamLabel.numberOfLines = 1
+        teamLabel.font = teamLabel.font.fontWithSize(16)
         teamLabel.sizeToFit()
-        teamLabel.font = teamLabel.font.fontWithSize(14)
         headerLabelContainer.addSubview(teamLabel)
         
+        ageLabel = UILabel()
+        ageLabel.textAlignment = .Right
+        ageLabel.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
+        ageLabel.numberOfLines = 1
+        ageLabel.text = "Age"
+        ageLabel.font = ageLabel.font.fontWithSize(14)
+        ageLabel.sizeToFit()
+        personalDetailsContainer.addSubview(ageLabel)
+        
+        ageText = UILabel()
+        ageText.textAlignment = .Left
+        ageText.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
+        ageText.numberOfLines = 1
+        ageText.font = ageText.font.fontWithSize(14)
+        ageText.text = 28
+        ageText.sizeToFit()
+        personalDetailsContainer.addSubview(ageText)
+        
         heightLabel = UILabel()
-        heightLabel.textAlignment = .Left
-        heightLabel.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
-        heightLabel.sizeToFit()
+        heightLabel.textAlignment = .Right
+        heightLabel.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
         heightLabel.text = "Height"
-        heightLabel.font = heightLabel.font.fontWithSize(10)
-        headerLabelContainer.addSubview(heightLabel)
+        heightLabel.sizeToFit()
+        heightLabel.numberOfLines = 1
+        heightLabel.font = heightLabel.font.fontWithSize(numLabel.font.pointSize * 0.8)
+        personalDetailsContainer.addSubview(heightLabel)
         
         weightLabel = UILabel()
-        weightLabel.textAlignment = .Left
-        weightLabel.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
-        weightLabel.sizeToFit()
+        weightLabel.textAlignment = .Right
+        weightLabel.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
         weightLabel.text = "Weight"
-        weightLabel.font = weightLabel.font.fontWithSize(10)
-        headerLabelContainer.addSubview(weightLabel)
+        weightLabel.sizeToFit()
+        weightLabel.numberOfLines = 1
+        weightLabel.font = weightLabel.font.fontWithSize(heightLabel.font.pointSize)
+        personalDetailsContainer.addSubview(weightLabel)
         
         weightText = UILabel()
         weightText.textAlignment = .Left
-        weightText.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
+        weightText.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
+        weightText.numberOfLines = 1
         weightText.sizeToFit()
-        weightText.font = weightText.font.fontWithSize(10)
-        headerLabelContainer.addSubview(weightText)
+        weightText.font = weightText.font.fontWithSize(heightLabel.font.pointSize)
+        personalDetailsContainer.addSubview(weightText)
         
         heightText = UILabel()
         heightText.textAlignment = .Left
-        heightText.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
+        heightText.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
+        heightText.numberOfLines = 1
         heightText.sizeToFit()
-        heightText.font = heightText.font.fontWithSize(10)
-        headerLabelContainer.addSubview(heightText)
+        heightText.font = heightText.font.fontWithSize(heightLabel.font.pointSize)
+        personalDetailsContainer.addSubview(heightText)
         
         statusLabel = UILabel()
-        statusLabel.font = statusLabel.font.fontWithSize(10)
+        statusLabel.font = statusLabel.font.fontWithSize(12)
         statusLabel.text = "Status"
         headerLabelContainer.addSubview(statusLabel)
         
@@ -222,32 +314,29 @@ class PlayerDetailView: UIView {
         headerLabelContainer.addSubview(statusTextContainer)
         
         statusText = UILabel()
-        statusText.font = statusText.font.fontWithSize(10)
+        statusText.font = statusText.font.fontWithSize(12)
         statusText.textColor = UIColor.whiteColor()
         headerLabelContainer.addSubview(statusText)
         
-        tempTradeButton = UIButton.init(type: UIButtonType.System)
-        tempTradeButton.setTitle("Trade", forState: UIControlState.Normal)
-        tempTradeButton.titleLabel!.font = tempTradeButton.titleLabel!.font.fontWithSize(14)
-        tempTradeButton.titleLabel!.textAlignment = .Center
-        tempTradeButton.sizeToFit()
-        tempTradeButton.setTitleColor(UIColor.init(red: 0, green: 0, blue: 0.8, alpha: 1), forState: UIControlState.Normal)
-        headerLabelContainer.addSubview(tempTradeButton)
+        draftButton = UIButton.init(type: UIButtonType.System)
+        draftButton.setTitle("Trade", forState: UIControlState.Normal)
+        draftButton.titleLabel!.font = draftButton.titleLabel!.font.fontWithSize(14)
+        draftButton.titleLabel!.textAlignment = .Center
+        draftButton.sizeToFit()
+        draftButton.setTitleColor(UIColor.init(red: 0, green: 0, blue: 0.8, alpha: 1), forState: UIControlState.Normal)
+        headerLabelContainer.addSubview(draftButton)
         
         playerImage = UIImageView()
         playerImage.layer.shadowOffset = CGSize(width: 0, height: -3)
         playerImage.layer.shadowOpacity = 0.5
         playerImage.layer.shadowRadius = 4
-        playerImage.layer.masksToBounds=true
-        playerImage.layer.borderWidth = 1
-        playerImage.layer.borderColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.1 ).CGColor
-        playerImage.layer.cornerRadius = 32
         addSubview(playerImage)
         
         table = UITableView()
         addSubview(table)
         
         setConstraints()
+        setNeedsLayout()
     }
     
     func setConstraints(){
@@ -266,7 +355,7 @@ class PlayerDetailView: UIView {
         headerLabelContainer.snp_makeConstraints { (make) -> Void in
             make.top.equalTo(playerImage.snp_top).inset(5)
             make.bottom.equalTo(playerImage.snp_bottom).inset(5)
-            make.left.equalTo(self.snp_left).inset(40)
+            make.left.equalTo(playerImage.snp_centerX)
             make.right.equalTo(self.snp_right).inset(10)
         }
         nameLabel.snp_makeConstraints { (make) -> Void in
@@ -279,26 +368,15 @@ class PlayerDetailView: UIView {
         }
         teamLabel.snp_makeConstraints { (make) -> Void in
             make.left.equalTo(numLabel.snp_right).offset(5)
-            make.top.equalTo(nameLabel.snp_bottom)
+            make.top.equalTo(numLabel)
+            make.bottom.equalTo(numLabel)
         }
-        weightLabel.snp_makeConstraints { (make) -> Void in
-            make.bottom.equalTo(headerLabelContainer).inset(5)
-            make.left.equalTo(playerImage.snp_right).offset(5)
-        }
-        heightLabel.snp_makeConstraints { (make) -> Void in
-            make.bottom.equalTo(weightLabel.snp_top)
-            make.left.equalTo(playerImage.snp_right).offset(5)
-        }
-        weightText.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(weightLabel.snp_right).offset(5)
-            make.bottom.equalTo(headerLabelContainer).inset(5)
-        }
-        heightText.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(weightText.snp_left)
-            make.bottom.equalTo(weightText.snp_top)
+        statusLabel.snp_makeConstraints { (make) -> Void in
+            make.left.equalTo(nameLabel)
+            make.bottom.equalTo(headerLabelContainer).inset(8)
         }
         statusText.snp_makeConstraints { (make) -> Void in
-            make.right.equalTo(headerLabelContainer).inset(8)
+            make.left.equalTo(statusLabel.snp_right).offset(8)
             make.bottom.equalTo(headerLabelContainer).inset(8)
         }
         statusTextContainer.snp_makeConstraints { (make) -> Void in
@@ -307,59 +385,116 @@ class PlayerDetailView: UIView {
             make.top.equalTo(statusText.snp_top).offset(-2)
             make.bottom.equalTo(statusText.snp_bottom).offset(2)
         }
-        statusLabel.snp_makeConstraints { (make) -> Void in
-            make.right.equalTo(statusText.snp_left).offset(-5)
-            make.bottom.equalTo(headerLabelContainer).inset(8)
-        }
-        tempTradeButton.snp_makeConstraints { (make) in
-            make.bottom.equalTo(statusText.snp_top)
-            make.right.equalTo(headerLabelContainer).inset(8)
+        draftButton.snp_makeConstraints { (make) in
+            make.bottom.equalTo(headerLabelContainer).inset(5)
+            make.right.equalTo(headerLabelContainer).inset(5)
         }
         detailContainer.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(headerLabelContainer.snp_bottom).inset(15)
-            make.left.equalTo(self.snp_left).inset(20)
-            make.right.equalTo(self.snp_right).inset(20)
+            make.top.equalTo(headerLabelContainer.snp_bottom).inset(5)
+            make.left.equalTo(self).inset(20)
+            make.right.equalTo(self).inset(20)
             make.bottom.equalTo(self.snp_bottom).inset(20)
         }
-        byeWeekLabel.snp_makeConstraints { (make) -> Void in
+        personalDetailsContainer.snp_makeConstraints { (make) in
+            make.top.equalTo(detailContainer)
             make.left.equalTo(detailContainer)
-            make.right.equalTo(detailContainer.snp_centerX)
-            make.top.equalTo(headerLabelContainer.snp_bottom).offset(10)
-        }
-        byeWeekText.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(byeWeekLabel)
-            make.right.equalTo(byeWeekLabel)
-            make.top.equalTo(byeWeekLabel.snp_bottom)
-        }
-        rankLabel.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(detailContainer.snp_centerX)
             make.right.equalTo(detailContainer)
-            make.top.equalTo(headerLabelContainer.snp_bottom).offset(10)
+            make.height.equalTo(detailContainer).dividedBy(10)
         }
-        rankText.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(rankLabel)
-            make.right.equalTo(rankLabel)
-            make.top.equalTo(rankLabel.snp_bottom)
+        personalDetailsLabel.snp_makeConstraints { (make) in
+            make.top.equalTo(personalDetailsContainer).offset(10)
+            make.centerX.equalTo(personalDetailsContainer.snp_centerX)
         }
-        weekPtsLabel1.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(byeWeekLabel)
-            make.right.equalTo(byeWeekLabel)
-            make.top.equalTo(byeWeekText.snp_bottom).offset(10)
+        ageLabel.snp_makeConstraints { (make) in
+            make.top.equalTo(personalDetailsLabel.snp_bottom)
+            make.left.equalTo(personalDetailsContainer)
+            make.width.equalTo(personalDetailsContainer).dividedBy(6)
         }
-        weekPtsText1.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(weekPtsLabel1)
-            make.right.equalTo(weekPtsLabel1)
-            make.top.equalTo(weekPtsLabel1.snp_bottom)
+        ageText.snp_makeConstraints { (make) in
+            make.top.equalTo(ageLabel)
+            make.left.equalTo(ageLabel.snp_right)
+            make.width.equalTo(ageLabel)
         }
-        weekPtsLabel2.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(rankLabel)
-            make.right.equalTo(rankLabel)
-            make.top.equalTo(rankText.snp_bottom).offset(10)
+        heightLabel.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(ageLabel)
+            make.left.equalTo(ageText.snp_right)
+            make.width.equalTo(ageLabel)
         }
-        weekPtsText2.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(weekPtsLabel2)
-            make.right.equalTo(weekPtsLabel2)
-            make.top.equalTo(weekPtsLabel2.snp_bottom)
+        heightText.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(heightLabel)
+            make.left.equalTo(heightLabel.snp_right)
+            make.width.equalTo(ageLabel)
+        }
+        weightLabel.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(ageLabel)
+            make.left.equalTo(heightText.snp_right)
+            make.width.equalTo(ageLabel)
+        }
+        weightText.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(ageLabel)
+            make.left.equalTo(weightLabel.snp_right)
+            make.width.equalTo(ageLabel)
+        }
+        let halfDetail = detailContainer.bounds.height
+        stat1Label.snp_makeConstraints { (make) -> Void in
+            make.left.equalTo(detailContainer)
+            make.width.equalTo(detailContainer).dividedBy(3)
+            make.top.equalTo(personalDetailsContainer.snp_bottom).offset(10)
+        }
+        stat1Text.snp_makeConstraints { (make) -> Void in
+            make.left.equalTo(stat1Label)
+            make.right.equalTo(stat1Label)
+            make.top.equalTo(stat1Label.snp_bottom)
+        }
+        stat3Label.snp_makeConstraints { (make) -> Void in
+            make.right.equalTo(detailContainer)
+            make.width.equalTo(detailContainer).dividedBy(3)
+            make.top.equalTo(stat1Label)
+        }
+        stat3Text.snp_makeConstraints { (make) -> Void in
+            make.left.equalTo(stat3Label)
+            make.right.equalTo(stat3Label)
+            make.top.equalTo(stat3Label.snp_bottom)
+        }
+        stat2Label.snp_makeConstraints { (make) -> Void in
+            make.left.equalTo(stat1Label.snp_right)
+            make.right.equalTo(stat3Label.snp_left)
+            make.top.equalTo(stat1Label)
+        }
+        stat2Text.snp_makeConstraints { (make) -> Void in
+            make.left.equalTo(stat2Label)
+            make.right.equalTo(stat2Label)
+            make.top.equalTo(stat2Label.snp_bottom)
+        }
+        stat4Label.snp_makeConstraints { (make) -> Void in
+            make.left.equalTo(stat1Label)
+            make.right.equalTo(stat1Label)
+            make.top.equalTo(stat1Text.snp_bottom).offset(10)
+        }
+        stat4Text.snp_makeConstraints { (make) -> Void in
+            make.left.equalTo(stat4Label)
+            make.right.equalTo(stat4Label)
+            make.top.equalTo(stat4Label.snp_bottom)
+        }
+        stat5Label.snp_makeConstraints { (make) -> Void in
+            make.left.equalTo(stat2Label)
+            make.right.equalTo(stat2Label)
+            make.top.equalTo(stat2Text.snp_bottom).offset(10)
+        }
+        stat5Text.snp_makeConstraints { (make) -> Void in
+            make.left.equalTo(stat5Label)
+            make.right.equalTo(stat5Label)
+            make.top.equalTo(stat5Label.snp_bottom)
+        }
+        stat6Label.snp_makeConstraints { (make) -> Void in
+            make.left.equalTo(stat3Label)
+            make.right.equalTo(stat3Label)
+            make.top.equalTo(stat3Text.snp_bottom).offset(10)
+        }
+        stat6Text.snp_makeConstraints { (make) -> Void in
+            make.left.equalTo(stat6Label)
+            make.right.equalTo(stat6Label)
+            make.top.equalTo(stat6Label.snp_bottom)
         }
         table.snp_makeConstraints { (make) -> Void in
             make.bottom.equalTo(self.snp_bottom)
@@ -370,6 +505,14 @@ class PlayerDetailView: UIView {
     
     override func layoutSubviews(){
         super.layoutSubviews()
-
+        circle.layer.masksToBounds = true
+        circle.layer.borderWidth = 0
+        circle.layer.cornerRadius = circle.bounds.width / 2;
+        circle.backgroundColor = UIColor.init(red: 0.95, green: 0.95, blue: 0.95, alpha: 1)
+        
+        playerImage.layer.masksToBounds=true
+        playerImage.layer.borderWidth = 1
+        playerImage.layer.borderColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.1 ).CGColor
+        playerImage.layer.cornerRadius = playerImage.bounds.width / 2
     }
 }
