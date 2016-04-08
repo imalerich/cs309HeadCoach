@@ -19,6 +19,25 @@ class HCHeadCoachDataProvider: NSObject {
     /// Private constant for bench related API calls.
     private let PLAYER_BENCH = 1
 
+    /// The root API address for the HeadCoach servince.
+    /// http://localhost/ can be used for testing new changes
+    /// to the server. Otherwise the CS309 server should be used.
+    let api =
+        "http://proj-309-08.cs.iastate.edu"
+//        "http://localhost"
+
+    /// When the shared instance is first created,
+    /// send a request to the server to update all of its
+    /// internal schedule data, the server will NOT automatically
+    /// update its data, as it expects this app to give it 
+    /// arbitrary dates for debug purposes
+    override init() {
+        super.init()
+
+        let url = "\(api)/schedule/update.php?week=0"
+        Alamofire.request(.GET, url).responseJSON { response in }
+    }
+
     // ------------------------------------
     // MARK: Account and League Management.
     // ------------------------------------
@@ -96,13 +115,6 @@ class HCHeadCoachDataProvider: NSObject {
     // -------------------------------------
     // MARK: User related network requests.
     // -------------------------------------
-
-    /// The root API address for the HeadCoach servince.
-    /// http://localhost/ can be used for testing new changes
-    /// to the server. Otherwise the CS309 server should be used.
-    let api =
-        "http://proj-309-08.cs.iastate.edu"
-//        "http://localhost"
 
     /// Send a request to the server to create a new user in the database.
     /// The service will assign a unique id that can be retrieved with the
@@ -409,6 +421,44 @@ class HCHeadCoachDataProvider: NSObject {
             } else {
                 completion(false, false, nil, nil)
             }
+        }
+    }
+
+    // ----------------------------------------
+    // MARK: Schedule related network requests.
+    // ----------------------------------------
+
+    /// Retrieves a list of all the games currently available for
+    /// the input league.
+    internal func getFullScheduleForLeague(league: HCLeague,
+                                          completion: (Bool, [HCGameResult]) -> Void) {
+        let params = "league=\(league.id)"
+        getScheduleForLeague(params, completion: completion)
+    }
+
+    /// Retrieves a list of all the games currently available for
+    /// the input league, limited to the games the input user is 
+    /// involved in.
+    internal func getScheduleForUser(league: HCLeague, user: HCUser,
+                                                 completion: (Bool, [HCGameResult]) -> Void) {
+        let params = "league=\(league.id)&user=\(user.id)"
+        getScheduleForLeague(params, completion: completion)
+    }
+
+    /// Utility method that performs the 'getScheduleForLeague' request for the given parameters.
+    /// For use of this method externally use either the 'getFullScheduleForLeague' or the
+    /// 'getScheduleForUser' call.
+    private func getScheduleForLeague(params: String, completion: (Bool, [HCGameResult]) -> Void) {
+        let url = "\(api)/schedule/getScheduleForLeague.php?\(params)"
+        Alamofire.request(.GET, url).responseJSON { response in
+            var games = [HCGameResult]()
+            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+                for item in json {
+                    games.append(HCGameResult(json: item))
+                }
+            }
+
+            completion(games.count == 0, games)
         }
     }
 }

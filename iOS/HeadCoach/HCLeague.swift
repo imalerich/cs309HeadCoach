@@ -22,6 +22,12 @@ class HCLeague: CustomStringConvertible {
     /// Array of HCUsers who particpate in this league.
     internal var users = [Int]()
 
+    /// The current week number for this league.
+    /// Possible values include:
+    ///     0 - Preseason
+    ///     [1-17] - Regular Season
+    internal var week_number = 0
+
     /// String conversion for debug printing.
     var description: String {
         return "{\nid: \(id)\nname: \(name)\ndrafting_style: \(drafting_style)\n}\n"
@@ -44,6 +50,7 @@ class HCLeague: CustomStringConvertible {
         id = Int(json["id"] as! String)!
         name = json["name"] as! String
         drafting_style = Int(json["drafting"] as! String)!
+        week_number = Int(json["week"] as! String)!
 
         for i in 0...4 {
             // add all the users for this league
