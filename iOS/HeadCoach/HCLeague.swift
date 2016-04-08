@@ -46,15 +46,15 @@ class HCLeague: CustomStringConvertible {
 
     /// Initialize with data retrieved from the
     /// HeadCoach API.
-    init(json: Dictionary<String, AnyObject>) {
-        id = Int(json["id"] as! String)!
-        name = json["name"] as! String
-        drafting_style = Int(json["drafting"] as! String)!
-        week_number = Int(json["week"] as! String)!
+    init(json: Dictionary<String, String>) {
+        id = Int(json["id"]!)!
+        name = json["name"]!
+        drafting_style = Int(json["drafting"]!)!
+        week_number = Int(json["week"]!)!
 
         for i in 0...4 {
             // add all the users for this league
-            let user = Int(json["member\(i)"] as! String)!
+            let user = Int(json["member\(i)"]!)!
             if user > 0 {
                 users.append(user)
             }

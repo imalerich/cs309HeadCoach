@@ -123,7 +123,7 @@ class HCHeadCoachDataProvider: NSObject {
         let url = "\(api)/users/get.php?name=\(userName)"
 
         Alamofire.request(.GET, url).responseJSON { response in
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 // set the currently logged in user
                 self.user = HCUser(json: json[0])
                 completion(false, self.user)
@@ -156,7 +156,7 @@ class HCHeadCoachDataProvider: NSObject {
 
         Alamofire.request(.GET, url).responseJSON { response in
             var users = [HCUser]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 for item in json {
                     users.append(HCUser(json: item))
                 }
@@ -193,7 +193,7 @@ class HCHeadCoachDataProvider: NSObject {
         let url = "\(api)/leagues/get.php?name=\(leagueName)"
 
         Alamofire.request(.GET, url).responseJSON { response in
-            if let json = response.result.value as? Dictionary<String, AnyObject> {
+            if let json = response.result.value as? Dictionary<String, String> {
                 // there will only be one user for this call
                 let league = HCLeague(json: json)
                 completion(false, league)
@@ -227,7 +227,7 @@ class HCHeadCoachDataProvider: NSObject {
 
         Alamofire.request(.GET, url).responseJSON { response in
             var leagues = [HCLeague]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 for item in json {
                     leagues.append(HCLeague(json: item))
                 }
@@ -244,7 +244,7 @@ class HCHeadCoachDataProvider: NSObject {
 
         Alamofire.request(.GET, url).responseJSON { response in
             var leagues = [HCLeague]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 for item in json {
                     leagues.append(HCLeague(json: item))
                 }
@@ -262,7 +262,7 @@ class HCHeadCoachDataProvider: NSObject {
 
         Alamofire.request(.GET, url).responseJSON { response in
             var users = [HCUser]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 for item in json {
                     users.append(HCUser(json: item))
                 }
@@ -305,7 +305,7 @@ class HCHeadCoachDataProvider: NSObject {
 
         Alamofire.request(.GET, url).responseJSON { response in
             var players = [HCPlayer]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 for item in json {
                     players.append(HCPlayer(json: item))
                 }
@@ -322,7 +322,7 @@ class HCHeadCoachDataProvider: NSObject {
 
         Alamofire.request(.GET, url).responseJSON { response in
             var players = [HCPlayer]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 for item in json {
                     players.append(HCPlayer(json: item))
                 }
@@ -338,7 +338,7 @@ class HCHeadCoachDataProvider: NSObject {
 
         Alamofire.request(.GET, url).responseJSON { response in
             var players = [HCPlayer]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 for item in json {
                     players.append(HCPlayer(json: item))
                 }
@@ -452,13 +452,29 @@ class HCHeadCoachDataProvider: NSObject {
         let url = "\(api)/schedule/getScheduleForLeague.php?\(params)"
         Alamofire.request(.GET, url).responseJSON { response in
             var games = [HCGameResult]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 for item in json {
                     games.append(HCGameResult(json: item))
                 }
             }
 
             completion(games.count == 0, games)
+        }
+    }
+
+    /// Gets the users current statistics for the current league.
+    /// The object retrieved through the completion block will contain
+    /// the users current rank, total score through the league, 
+    /// and the total number of games that player has played.
+    /// The numeber of wins/loses/draws is also included in the HCUserStats object.
+    internal func getUserStats(user: HCUser, league: HCLeague, completion: (HCUserStats?) -> Void) {
+        let url = "\(api)/schedule/getUserStats.php?league=\(league)&user=\(user)"
+        Alamofire.request(.GET, url).responseJSON { response in
+            if let json = response.result.value as? Dictionary<String, String> {
+                completion(HCUserStats(user: user, json: json))
+            }
+
+            completion(nil);
         }
     }
 }

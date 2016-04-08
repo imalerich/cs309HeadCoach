@@ -41,15 +41,15 @@ class HCPlayer: NSObject {
 
     /// Initialize with data retrieved from the
     /// HeadCoach API.
-    init(json: Dictionary<String, AnyObject>) {
-        id = Int(json["id"] as! String)!
-        name = json["name"] as! String
-        user_id = Int(json["user_id"] as! String)!
-        position_category = json["pos_cat"] as! String
-        fantasy_id = Int(json["fd_id"] as! String)!
-        isOnBench = Int(json["on_bench"] as! String)! == 1
+    init(json: Dictionary<String, String>) {
+        id = Int(json["id"]!)!
+        name = json["name"]!
+        user_id = Int(json["user_id"]!)!
+        position_category = json["pos_cat"]!
+        fantasy_id = Int(json["fd_id"]!)!
+        isOnBench = Int(json["on_bench"]!)! == 1
 
-        let pos = json["pos"] as! String
+        let pos = json["pos"]!
         position = HCPositionUtil.stringToPosition(pos)
     }
 }

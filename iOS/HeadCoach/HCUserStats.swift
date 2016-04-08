@@ -10,4 +10,47 @@ import UIKit
 
 class HCUserStats: NSObject {
 
+    /// The id for the user whos stats we have retrieved.
+    /// If you would like to use this user for further API calls
+    /// use the 'init(id: Int)' initializer of the HCUser class
+    /// to create a user to pass to the HCHeadCoachDataProvider.
+    internal var user = HCUser()
+
+    /// The current rank of this user in the league.
+    /// The default value of 0 has no meaning (ie. unranked).
+    /// The range of this value may be anywhere from [1-5]
+    /// 1 being the highest rank, and 5 being in last place.
+    internal var rank = 0
+
+    /// The total score for this player across all
+    /// of their games.
+    internal var total_score = 0
+
+    /// Total number of wins for this user.
+    internal var wins = 0
+
+    /// Total number of loses for this user.
+    internal var loses = 0
+
+    /// Total number of draws for this user.
+    internal var draws = 0
+
+    /// Computes the total number of games by adding
+    /// the number of wins, loses, and draws.
+    internal var games: Int {
+        get {
+            return wins + loses + draws
+        }
+    }
+
+    /// Initializes this class with data retrieved from the
+    /// 'getUserStats' call from the HCHeadCoachDataProvider.
+    init(user: HCUser, json: Dictionary<String, String>) {
+        self.user = user
+        rank = Int(json["rank"]!)!
+        total_score = Int(json["score"]!)!
+        wins = Int(json["wins"]!)!
+        loses = Int(json["loses"]!)!
+        draws = Int(json["draws"]!)!
+    }
 }

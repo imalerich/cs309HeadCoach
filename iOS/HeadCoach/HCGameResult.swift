@@ -42,16 +42,16 @@ class HCGameResult: CustomStringConvertible {
 
     /// Initializes an HCGameResult with data returned
     /// by the HeadCoach API.
-    init(json: Dictionary<String, AnyObject>) {
-        id = Int(json["id"] as! String)!
-        let user0 = Int(json["user_id_0"] as! String)!
-        let user1 = Int(json["user_id_1"] as! String)!
+    init(json: Dictionary<String, String>) {
+        id = Int(json["id"]!)!
+        let user0 = Int(json["user_id_0"]!)!
+        let user1 = Int(json["user_id_1"]!)!
         users = (user0, user1)
-        let score0 = Int(json["score_0"] as! String)!
-        let score1 = Int(json["score_1"] as! String)!
+        let score0 = Int(json["score_0"]!)!
+        let score1 = Int(json["score_1"]!)!
         scores = (score0, score1)
-        week = Int(json["week"] as! String)!
-        completed = Int(json["completed"] as! String)! == 1
+        week = Int(json["week"]!)!
+        completed = Int(json["completed"]!)! == 1
     }
 
     /// Creates an empty game result, any API call will fail
