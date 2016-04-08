@@ -68,13 +68,26 @@ class HCCreateAccountViewController: UIViewController,UITableViewDelegate,UITabl
         
     }
     func createAccountAction(sender: UIButton!){
-        UIView.animateWithDuration(0.09,animations: { self.createButton.transform = CGAffineTransformMakeScale(0.6, 0.6) },completion: { finish in UIView.animateWithDuration(0.09){ self.createButton.transform = CGAffineTransformIdentity }})
-                HCHeadCoachDataProvider.sharedInstance.registerUser(userName.text!) { (error) in
-                HCHeadCoachDataProvider.sharedInstance.getUserID(self.userName.text!, completion: { (error, user) in
-                HCHeadCoachDataProvider.sharedInstance.addUserToLeague(user!, league: self.leagues[(self.tableView.indexPathForSelectedRow?.row)!], completion: { (error) in
-                        })
-                    })
+        UIView.animateWithDuration(0.09, animations: {
+            self.createButton.transform = CGAffineTransformMakeScale(0.6, 0.6) },
+        completion: { finish in
+            UIView.animateWithDuration(0.09) {
+                self.createButton.transform = CGAffineTransformIdentity }
+        })
+
+        let dp = HCHeadCoachDataProvider.sharedInstance
+        dp.registerUser(userName.text!) { (error) in
+            dp.getUserID(self.userName.text!, completion: { (error, user) in
+                // we need a valid row to have a valid league
+                let ip = self.tableView.indexPathForSelectedRow
+                if ip == nil { return }
+
+                if ip!.row < self.leagues.count {
+                    let league = self.leagues[ip!.row]
+                    dp.addUserToLeague(user!, league: league, completion: { (error) in })
                 }
+            })
+        }
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("CreateCell", forIndexPath: indexPath)
