@@ -41,8 +41,8 @@ class HCHeadCoachDataProvider: NSObject {
     override init() {
         super.init()
 
-        let url = "\(api)/schedule/update.php?week=5"
-        Alamofire.request(.GET, url).responseJSON { response in }
+//        let url = "\(api)/schedule/update.php?week=5"
+//        Alamofire.request(.GET, url).responseJSON { response in }
 
         // make sure the curent league data is up to date
         if league != nil && league?.name != nil {
