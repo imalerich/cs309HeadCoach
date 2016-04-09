@@ -38,6 +38,7 @@
 		B94C49F81CA8539B00F2C2F0 /* TradeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49DD1CA8539B00F2C2F0 /* TradeDetailView.swift */; };
 		B94C49F91CA8539B00F2C2F0 /* UserDetailCollectionItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49DE1CA8539B00F2C2F0 /* UserDetailCollectionItemView.swift */; };
 		B94C49FA1CA8539B00F2C2F0 /* UserDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49DF1CA8539B00F2C2F0 /* UserDetailTableViewCell.swift */; };
+		B95496421CB84CBF00AA9F01 /* HCSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B95496411CB84CBF00AA9F01 /* HCSetupViewController.swift */; };
 		B96E55F21CA850AB001A4017 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96E55F11CA850AB001A4017 /* AppDelegate.swift */; };
 		B96E55F91CA850AB001A4017 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B96E55F81CA850AB001A4017 /* Assets.xcassets */; };
 		B96E55FC1CA850AB001A4017 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B96E55FA1CA850AB001A4017 /* LaunchScreen.storyboard */; };
@@ -82,6 +83,7 @@
 		B94C49DD1CA8539B00F2C2F0 /* TradeDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeDetailView.swift; sourceTree = "<group>"; };
 		B94C49DE1CA8539B00F2C2F0 /* UserDetailCollectionItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailCollectionItemView.swift; sourceTree = "<group>"; };
 		B94C49DF1CA8539B00F2C2F0 /* UserDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailTableViewCell.swift; sourceTree = "<group>"; };
+		B95496411CB84CBF00AA9F01 /* HCSetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCSetupViewController.swift; sourceTree = "<group>"; };
 		B96E55EE1CA850AB001A4017 /* HeadCoach.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeadCoach.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B96E55F11CA850AB001A4017 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B96E55F81CA850AB001A4017 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 				4802EF701CB2199C00F14FC8 /* HCCreateAccountViewController.swift */,
 				C808336E1CACCB5D006F8CAC /* HCTradeDetailViewController.swift */,
 				B9E731881CB40AFD002C5638 /* HCSettingsViewController.swift */,
+				B95496411CB84CBF00AA9F01 /* HCSetupViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -378,6 +381,7 @@
 				B94C49FA1CA8539B00F2C2F0 /* UserDetailTableViewCell.swift in Sources */,
 				B94C49E41CA8539B00F2C2F0 /* HCFantasyDataProvider.swift in Sources */,
 				B94C49F81CA8539B00F2C2F0 /* TradeDetailView.swift in Sources */,
+				B95496421CB84CBF00AA9F01 /* HCSetupViewController.swift in Sources */,
 				B94C49F91CA8539B00F2C2F0 /* UserDetailCollectionItemView.swift in Sources */,
 				B94C49ED1CA8539B00F2C2F0 /* HCPlayerDetailCell.swift in Sources */,
 				C808336F1CACCB5D006F8CAC /* HCTradeDetailViewController.swift in Sources */,

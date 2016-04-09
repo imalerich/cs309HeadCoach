@@ -17,35 +17,70 @@ class HCCreateAccountViewController: UIViewController,UITableViewDelegate,UITabl
     let createButton = UIButton()
     let userName = UITextField()
     var leagues:[HCLeague] = []
+
+    let back = UIButton()
+
+    var pageController: HCSetupViewController? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.whiteColor()
+        self.view.backgroundColor = UIColor.clearColor()
         self.view.addSubview(info)
         self.view.addSubview(tableView)
         self.view.addSubview(createButton)
         self.view.addSubview(userName)
+        self.view.addSubview(back)
+
+        back.setTitle("Back", forState: .Normal)
+        back.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        back.addTarget(self, action: #selector(self.backToLogin(_:)), forControlEvents: .TouchUpInside)
+
+        userName.placeholder = "username"
+        userName.textColor = UIColor.whiteColor()
+        userName.backgroundColor = UIColor(white: 0.0, alpha: 0.1)
+        userName.layer.borderColor = UIColor(white: 1.0, alpha: 0.4).CGColor
+        userName.textAlignment = .Center
+        userName.layer.cornerRadius = 25
+        userName.layer.borderWidth = 1
+        userName.clipsToBounds = true
+
         tableView.delegate = self
         tableView.dataSource = self
-        userName.placeholder = "username"
-        info.numberOfLines = 0
         tableView.registerClass(HCLeagueCell.classForCoder(), forCellReuseIdentifier: "CreateCell")
+        tableView.backgroundColor = UIColor.clearColor()
+        tableView.separatorStyle = .None
+
+        info.numberOfLines = 0
         info.text = "Enter a unique username and select a league to join"
+        info.textAlignment = .Center
+        info.textColor = UIColor.whiteColor()
+
         createButton.setTitle("Create Account", forState: .Normal)
-        createButton.layer.borderColor = UIColor.lightGrayColor().CGColor
-        createButton.layer.borderWidth = 2
-        createButton.setTitleColor(UIColor.lightGrayColor(), forState: .Normal)
-        createButton.addTarget(self, action: "createAccountAction:", forControlEvents: UIControlEvents.TouchUpInside)
+        createButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        createButton.addTarget(self, action: #selector(self.createAccountAction(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        createButton.backgroundColor = UIColor.footballColor(1.3)
+        createButton.layer.cornerRadius = 25
+        createButton.addTouchEvents()
+
         HCHeadCoachDataProvider.sharedInstance.getAllLeagues { (error, leaguestemp) in
-                self.leagues = leaguestemp
-                self.tableView.reloadData()
-            }
+            self.leagues = leaguestemp
+            self.tableView.reloadData()
+        }
+
+        back.snp_makeConstraints { (make) in
+            make.left.equalTo(self.view.snp_left)
+            make.top.equalTo(self.view.snp_top).offset(20)
+            make.width.equalTo(80)
+            make.height.equalTo(40)
+        }
+
         info.snp_makeConstraints { (make) in
             make.centerX.equalTo(self.view.snp_centerX)
-            make.top.lessThanOrEqualTo(100)
+            make.top.lessThanOrEqualTo(80)
             make.height.equalTo(50)
             make.width.equalTo(200)
         }
+
         userName.snp_makeConstraints { (make) in
             make.left.equalTo(info.snp_left)
             make.top.equalTo(info.snp_bottom)
@@ -59,11 +94,12 @@ class HCCreateAccountViewController: UIViewController,UITableViewDelegate,UITabl
             make.height.equalTo(300)
             make.width.equalTo(200)
         }
+
         createButton.snp_makeConstraints { (make) in
             make.centerX.equalTo(userName.snp_centerX)
             make.top.equalTo(tableView.snp_bottom)
             make.height.equalTo(50)
-            make.width.equalTo(150)
+            make.width.equalTo(200)
         }
         
     }
@@ -102,6 +138,12 @@ class HCCreateAccountViewController: UIViewController,UITableViewDelegate,UITabl
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 50
+    }
+    
+    func backToLogin(sender:UIButton!){
+        pageController?.pagevc.setViewControllers([(pageController?.login)!],
+                                           direction: UIPageViewControllerNavigationDirection.Reverse,
+                                           animated: true, completion: nil)
     }
     
 }

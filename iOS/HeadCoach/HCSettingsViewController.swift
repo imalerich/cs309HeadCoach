@@ -169,15 +169,19 @@ class HCSettingsViewController: UIViewController, UITableViewDelegate, UITableVi
             make.edges.equalTo(view)
         }
 
+        NSNotificationCenter.defaultCenter().addObserver(self.tableView, selector: #selector(UITableView.reloadData),
+                                                         name: HCHeadCoachDataProvider.UserDidLogin, object: nil)
+
         // load the users current leagues, then reload the table view
         // when they are ready
-        HCHeadCoachDataProvider.sharedInstance.getAllLeaguesForUser(
-            HCHeadCoachDataProvider.sharedInstance.user!) { (err, leagues) in
+        if let user = HCHeadCoachDataProvider.sharedInstance.user {
+            HCHeadCoachDataProvider.sharedInstance.getAllLeaguesForUser(user) { (err, leagues) in
                 if !err {
                     self.usersLeagues = leagues
                     self.tableView.reloadData()
                 }
             }
+        }
     }
 
     // ----------------------------------------
@@ -246,13 +250,13 @@ class HCSettingsViewController: UIViewController, UITableViewDelegate, UITableVi
             case 2:
                 let btnCell = cell as! HCButtonCell
                 if let _ = HCHeadCoachDataProvider.sharedInstance.user {
-                    btnCell.btn.setTitle("Logout", forState: .Normal)
+                    btnCell.btn.setTitle("Change User", forState: .Normal)
                 } else {
                     btnCell.btn.setTitle("Login", forState: .Normal)
                 }
 
                 btnCell.btn.addTarget(self,
-                                      action: #selector(HCSettingsViewController.logoutUser),
+                                      action: #selector(HCSettingsViewController.changeUser),
                                       forControlEvents: .TouchUpInside)
                 break
 
@@ -320,10 +324,12 @@ class HCSettingsViewController: UIViewController, UITableViewDelegate, UITableVi
         }
     }
 
-    internal func logoutUser() {
+    internal func changeUser() {
         HCHeadCoachDataProvider.sharedInstance.logoutUser()
         self.tableView.reloadRowsAtIndexPaths(
             [NSIndexPath(forRow: 1, inSection: 0), NSIndexPath(forRow: 2, inSection: 0)],
                                               withRowAnimation: .Automatic)
+
+        navigationController!.presentViewController(HCSetupViewController(), animated: false, completion: nil)
     }
 }

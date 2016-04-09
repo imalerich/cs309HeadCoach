@@ -19,6 +19,10 @@ class HCHeadCoachDataProvider: NSObject {
     /// Private constant for bench related API calls.
     private let PLAYER_BENCH = 1
 
+    /// Name for the notification sent out when the user
+    /// login changes.
+    static let UserDidLogin = "UserDidLogin"
+
     /// The root API address for the HeadCoach servince.
     /// http://localhost/ can be used for testing new changes
     /// to the server. Otherwise the CS309 server should be used.
@@ -65,6 +69,8 @@ class HCHeadCoachDataProvider: NSObject {
             NSUserDefaults.standardUserDefaults().setValue(newUser!.reg_date,
                                                            forKey: "HC.USER.REG_DATE")
             NSUserDefaults.standardUserDefaults().synchronize()
+
+            NSNotificationCenter.defaultCenter().postNotificationName(HCHeadCoachDataProvider.UserDidLogin, object: self)
         }
     }
 
@@ -125,11 +131,14 @@ class HCHeadCoachDataProvider: NSObject {
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Array<Dictionary<String, String>> {
                 // set the currently logged in user
-                self.user = HCUser(json: json[0])
-                completion(false, self.user)
-            } else {
-                completion(true, nil)
+                if json.count > 0 {
+                    self.user = HCUser(json: json[0])
+                    completion(false, self.user)
+                    return
+                }
             }
+
+            completion(true, nil)
         }
     }
 
