@@ -15,6 +15,8 @@ class HCLandingPageDetailCellTableViewCell: UITableViewCell {
 
     /// Content view for the cell, the rest will be a border around the cell
     let dataView = UIView()
+    /// The week the game took place.
+    let week = UITextView()
     /// Player0 detail view
     let player0 = HCPlayerMatchView()
     /// Player1 detail view
@@ -28,6 +30,11 @@ class HCLandingPageDetailCellTableViewCell: UITableViewCell {
         dataView.layer.cornerRadius = 2
         dataView.clipsToBounds = true
 
+        week.backgroundColor = UIColor.clearColor()
+        week.textColor = UIColor(white: 0.3, alpha: 1.0)
+        week.font = UIFont.systemFontOfSize(16, weight: UIFontWeightLight)
+        week.textAlignment = .Center
+
         addSubview(dataView)
         dataView.snp_makeConstraints(closure: { make in
             make.left.equalTo(self.snp_left).offset(OFFSET)
@@ -36,9 +43,37 @@ class HCLandingPageDetailCellTableViewCell: UITableViewCell {
             make.bottom.equalTo(self.snp_bottom)
         })
 
+        let weekContainer = UIView()
+        weekContainer.backgroundColor = UIColor(white: 0.86, alpha: 1.0)
+        dataView.addSubview(weekContainer)
+        weekContainer.snp_makeConstraints { (make) in
+            make.left.equalTo(dataView.snp_left).offset(-36)
+            make.width.equalTo(dataView.snp_height)
+            make.centerY.equalTo(dataView.snp_centerY)
+            make.height.equalTo(40)
+        }
+
+        // add a small bottom border to this view
+        let right = UIView()
+        right.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
+        weekContainer.addSubview(right)
+        right.snp_makeConstraints { (make) in
+            make.right.equalTo(weekContainer.snp_right)
+            make.top.equalTo(weekContainer.snp_top)
+            make.bottom.equalTo(weekContainer.snp_bottom)
+            make.width.equalTo(1)
+        }
+
+        weekContainer.addSubview(week)
+        week.snp_makeConstraints { (make) in
+            make.edges.equalTo(weekContainer)
+        }
+
+        weekContainer.transform = CGAffineTransformMakeRotation(-CGFloat(M_PI/2))
+
         dataView.addSubview(player0)
         player0.snp_makeConstraints { (make) in
-            make.left.equalTo(dataView.snp_left)
+            make.left.equalTo(dataView.snp_left).offset(40)
             make.right.equalTo(dataView.snp_right)
             make.top.equalTo(dataView.snp_top)
             make.height.equalTo(dataView.snp_height).dividedBy(2)
@@ -46,7 +81,7 @@ class HCLandingPageDetailCellTableViewCell: UITableViewCell {
 
         dataView.addSubview(player1)
         player1.snp_makeConstraints { (make) in
-            make.left.equalTo(dataView.snp_left)
+            make.left.equalTo(dataView.snp_left).offset(40)
             make.right.equalTo(dataView.snp_right)
             make.bottom.equalTo(dataView.snp_bottom)
             make.height.equalTo(dataView.snp_height).dividedBy(2)
@@ -58,6 +93,11 @@ class HCLandingPageDetailCellTableViewCell: UITableViewCell {
     internal func setGame(game: HCGameResult) {
         player0.setUserAndScore(game.scores.0, user: game.users.0)
         player1.setUserAndScore(game.scores.1, user: game.users.1)
+
+        player0.setWinner(game.scores.0 > game.scores.1)
+        player1.setWinner(game.scores.1 > game.scores.0)
+
+        week.text = "Week \(game.week)"
     }
 
     // this shit is required

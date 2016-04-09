@@ -17,6 +17,8 @@ class HCPlayerMatchView: UIView {
     let rank = UILabel()
     /// Name to display for this view.
     let nameLabel = UILabel()
+    /// A little star icon that will show up next to the winners score.
+    let win = UIImageView()
     /// Player score label, this label will be right alligned
     /// but in line with the nameLabel.
     let score = UILabel()
@@ -43,6 +45,10 @@ class HCPlayerMatchView: UIView {
         }
     }
 
+    internal func setWinner(winner: Bool) {
+        win.hidden = !winner
+    }
+
     internal func createViews() {
         rank.font = UIFont.systemFontOfSize(14, weight: UIFontWeightLight)
         rank.textColor = UIColor.whiteColor()
@@ -55,6 +61,9 @@ class HCPlayerMatchView: UIView {
         nameLabel.font = UIFont.systemFontOfSize(18, weight: UIFontWeightLight)
         nameLabel.textColor = UIColor(white: 0.2, alpha: 1.0)
         nameLabel.text = ""
+
+        win.image = UIImage(named: "win")
+        win.contentMode = .ScaleAspectFill
 
         score.font = UIFont.systemFontOfSize(18)
         score.textColor = UIColor.blackColor()
@@ -85,6 +94,14 @@ class HCPlayerMatchView: UIView {
             make.right.equalTo(snp_right).offset(-OFFSET)
             make.top.equalTo(snp_top)
             make.bottom.equalTo(snp_bottom)
+        }
+
+        addSubview(win)
+        win.snp_makeConstraints { (make) in
+            make.width.equalTo(20)
+            make.height.equalTo(20)
+            make.centerY.equalTo(snp_centerY)
+            make.right.equalTo(score.snp_left)
         }
 
         // add a small bottom border to this view
