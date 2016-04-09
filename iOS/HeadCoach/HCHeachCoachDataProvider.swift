@@ -116,6 +116,11 @@ class HCHeadCoachDataProvider: NSObject {
         NSUserDefaults.standardUserDefaults().setValue(0, forKey: "HC.USER.ID")
         NSUserDefaults.standardUserDefaults().setValue(nil, forKey: "HC.USER.NAME")
         NSUserDefaults.standardUserDefaults().setValue(0, forKey: "HC.USER.REG_DATE")
+
+        NSUserDefaults.standardUserDefaults().setValue(0, forKey: "HC.LEAGUE.ID")
+        NSUserDefaults.standardUserDefaults().setValue(nil, forKey: "HC.LEAGUE.NAME")
+        NSUserDefaults.standardUserDefaults().setValue(0, forKey: "HC.LEAGUE.DRAFTING")
+        NSUserDefaults.standardUserDefaults().setValue(nil, forKey: "HC.LEAGUE.USERS")
     }
 
     // -------------------------------------

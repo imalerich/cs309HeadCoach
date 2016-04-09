@@ -330,6 +330,6 @@ class HCSettingsViewController: UIViewController, UITableViewDelegate, UITableVi
             [NSIndexPath(forRow: 1, inSection: 0), NSIndexPath(forRow: 2, inSection: 0)],
                                               withRowAnimation: .Automatic)
 
-        navigationController!.presentViewController(HCSetupViewController(), animated: false, completion: nil)
+        navigationController!.presentViewController(HCSetupViewController(), animated: true, completion: nil)
     }
 }

@@ -10,11 +10,12 @@ import UIKit
 
 class HCSetupViewController: UIViewController {
 
-    let DISTANCE = CGFloat(40)
-    let DURATION = NSTimeInterval(10)
+    let DISTANCE = CGFloat(80)
+    let DURATION = NSTimeInterval(20)
 
     let login = HCLoginScreenViewController()
     let newAccount = HCCreateAccountViewController()
+    let joinLeague = HCJoinLeagueViewController()
 
     let pagevc = UIPageViewController(transitionStyle: UIPageViewControllerTransitionStyle.Scroll,
                                    navigationOrientation: UIPageViewControllerNavigationOrientation.Horizontal,
@@ -35,6 +36,7 @@ class HCSetupViewController: UIViewController {
 
         login.pageController = self
         newAccount.pageController = self
+        joinLeague.pageController = self
 
         pagevc.setViewControllers([login],
                            direction: UIPageViewControllerNavigationDirection.Forward,

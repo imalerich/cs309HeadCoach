@@ -113,13 +113,18 @@ class HCLoginScreenViewController: UIViewController{
         HCHeadCoachDataProvider.sharedInstance.getUserID(userName.text!) { (error, user) in
             if(error){
                 self.presentViewController(self.alert, animated: true) { () -> Void in }
-
                 self.progress.stopAnimating()
             } else {
                 HCHeadCoachDataProvider.sharedInstance.user = user!
 
-                self.pageController?.dismissViewControllerAnimated(true, completion: nil)
-                self.progress.stopAnimating()
+                HCHeadCoachDataProvider.sharedInstance.getAllLeaguesForUser(user!, completion: { (err, leagues) in
+                    if leagues.count > 0 {
+                        HCHeadCoachDataProvider.sharedInstance.league = leagues[0]
+                    }
+
+                    self.pageController?.dismissViewControllerAnimated(true, completion: nil)
+                    self.progress.stopAnimating()
+                })
             }
         }
     }
