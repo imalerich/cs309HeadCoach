@@ -50,7 +50,7 @@ class HCSetupViewController: UIViewController {
     func addBackground() {
         background0.image = UIImage(named: "Stadium_0")
         background0.contentMode = .ScaleAspectFill
-        background1.alpha = 1.0
+        background0.alpha = 1.0
 
         pagevc.view.insertSubview(background0, atIndex: 0)
         background0.snp_makeConstraints { (make) in
@@ -84,6 +84,9 @@ class HCSetupViewController: UIViewController {
     func animateBackground(direction: CGFloat) {
         let background = direction > 0 ? background0 : background1
         let other = direction > 0 ? background1 : background0
+
+        background.alpha = 1.0
+        other.alpha = 0.0
 
         UIView.animateWithDuration(DURATION, animations: {
             let trans = CGAffineTransformMakeTranslation(direction * self.DISTANCE, 0)

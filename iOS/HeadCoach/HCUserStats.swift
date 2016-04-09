@@ -10,7 +10,7 @@ import UIKit
 
 class HCUserStats: NSObject {
 
-    /// The id for the user whos stats we have retrieved.
+    /// The id for the user whos stats we have retrieved
     /// If you would like to use this user for further API calls
     /// use the 'init(id: Int)' initializer of the HCUser class
     /// to create a user to pass to the HCHeadCoachDataProvider.
@@ -45,12 +45,12 @@ class HCUserStats: NSObject {
 
     /// Initializes this class with data retrieved from the
     /// 'getUserStats' call from the HCHeadCoachDataProvider.
-    init(user: HCUser, json: Dictionary<String, String>) {
+    init(user: HCUser, json: Dictionary<String, Int>) {
         self.user = user
-        rank = Int(json["rank"]!)!
-        total_score = Int(json["score"]!)!
-        wins = Int(json["wins"]!)!
-        loses = Int(json["loses"]!)!
-        draws = Int(json["draws"]!)!
+        rank = json["rank"]!
+        total_score = json["score"]!
+        wins = json["wins"]!
+        loses = json["loses"]!
+        draws = json["draws"]!
     }
 }

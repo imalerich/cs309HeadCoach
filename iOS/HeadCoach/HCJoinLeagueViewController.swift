@@ -146,8 +146,11 @@ class HCJoinLeagueViewController: UIViewController, UITableViewDataSource, UITab
             displayError("Please enter a valid name.")
         }
 
+        let loading = HCLoadingView(info: "Creating your League\n(this may take a while).")
+        loading.present(self.view, animated: true)
         let name = createName.text!.stringByReplacingOccurrencesOfString(" ", withString: "_")
         HCHeadCoachDataProvider.sharedInstance.registerLeague(name) { (err) in
+            loading.dismiss(true)
             self.createName.text = ""
             if err {
                 self.displayError("A league already exists with that name!")
