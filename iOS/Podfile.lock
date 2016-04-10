@@ -1,5 +1,6 @@
 PODS:
   - Alamofire (3.3.1)
+  - BetweenKit (2.0.1)
   - ImageLoader (0.8.9)
   - Realm (0.98.6):
     - Realm/Headers (= 0.98.6)
@@ -10,12 +11,14 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (~> 3.0)
+  - BetweenKit (~> 2.0.1)
   - ImageLoader
   - RealmSwift
   - SnapKit
 
 SPEC CHECKSUMS:
   Alamofire: 369bc67b6f5ac33ded3648d7bd21c5bfb91c2ecc
+  BetweenKit: 89edc0c6dd96eb33ea02c097bb99a9b1c14880f0
   ImageLoader: 7a26b4e248aa4cae7df322449ddb109bcfba9f09
   Realm: 44803f35418c5d89b27825a564247fcd190de37e
   RealmSwift: c7239c52c83f8c43525a5269ba7be1694da33afc
