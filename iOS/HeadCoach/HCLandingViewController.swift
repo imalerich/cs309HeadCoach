@@ -155,6 +155,7 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
     /// This view will be pushed on the current navigation controller.
     func openUserDetailView() {
         let vc = HCUserDetailViewController()
+        vc.user = HCHeadCoachDataProvider.sharedInstance.user!.name
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
