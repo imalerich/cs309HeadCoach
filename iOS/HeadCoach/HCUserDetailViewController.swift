@@ -13,8 +13,8 @@ import Foundation
 
 class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewDelegate,UITableViewDataSource {
     
-    let bench = UITableView();
-    let active = UITableView();
+    var bench = UITableView();
+    var active = UITableView();
     var gestureCoordinator = I3GestureCoordinator.init()
 
     var testarray:NSMutableArray = ["a","b","c","d"]
@@ -42,14 +42,14 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
             //            make.width.equalTo(self.view).multipliedBy(0.5)
         }
         active.registerClass(HCLeagueCell.classForCoder(), forCellReuseIdentifier: "test1")
-        bench.registerClass(HCLeagueCell.classForCoder(), forCellReuseIdentifier: "test3")
+        bench.registerClass(HCLeagueCell.classForCoder(), forCellReuseIdentifier: "test1")
         gestureCoordinator.renderDelegate = I3BasicRenderDelegate.init()
         gestureCoordinator.dragDataSource = self
         
-        active.delegate = self
         active.dataSource = self
         bench.dataSource = self
         bench.delegate = self
+        active.delegate = self
         
     
     }
@@ -68,14 +68,16 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
     func canItemFrom(from: NSIndexPath!, beRearrangedWithItemAt to: NSIndexPath!, inCollection collection: UIView!) -> Bool {
         return true
     }
-    
     func canItemAt(from: NSIndexPath!, fromCollection: UIView!, beDroppedAtPoint at: CGPoint, onCollection toCollection: UIView!) -> Bool {
         return true
     }
     
-    func canItemAt(from: NSIndexPath!, beDeletedFromCollection collection: UIView!, atPoint to: CGPoint) -> Bool {
+    func canItemAt(from: NSIndexPath!, fromCollection: UIView!, beDroppedTo to: NSIndexPath!, onCollection toCollection: UIView!) -> Bool {
+        print("flasjf;aldsfhsadflhasjfjah;df")
         return true
     }
+    
+    
     
     func deleteItemAt(at: NSIndexPath!, inCollection collection: UIView!) {
         let fromTable = collection as! UITableView
@@ -105,7 +107,7 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         
         let fromDataset = self.dataForCollection(fromTable) as NSMutableArray
         let toDataset = self.dataForCollection(toTable) as NSMutableArray
-        let dropDatum = fromDataset.objectAtIndex(from.row) as! NSNumber
+        let dropDatum = fromDataset.objectAtIndex(from.row)
         
         fromDataset.removeObjectAtIndex(from.row)
         toDataset.insertObject(dropDatum, atIndex: to.row)
@@ -116,17 +118,19 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if(tableView.isEqual(self.active)){
+        
             let cell = tableView.dequeueReusableCellWithIdentifier("test1", forIndexPath: indexPath) as UITableViewCell
-            cell.textLabel?.text = self.testarray[indexPath.row] as? String
+            cell.textLabel?.text = self.dataForCollection(tableView)[indexPath.row] as! String
             cell.textLabel?.textColor = UIColor.blackColor()
             return cell
-        }else{
-            let cell = tableView.dequeueReusableCellWithIdentifier("test3", forIndexPath: indexPath) as UITableViewCell
-            cell.textLabel?.text = self.testarray2[indexPath.row] as? String
-            cell.textLabel?.textColor = UIColor.blackColor()
-            return cell
-        }
+       
+    }
+    
+    func dropItemAt(from: NSIndexPath!, fromCollection: UIView!, toPoint to: CGPoint, onCollection toCollection: UIView!) {
+        
+        let index = NSIndexPath(forItem: self.dataForCollection(toCollection).count, inSection: 0)
+        
+        self.dropItemAt(from, fromCollection: fromCollection, toItemAt: index, toCollection: toCollection)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
