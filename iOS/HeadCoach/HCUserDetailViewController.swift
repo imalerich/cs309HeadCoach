@@ -13,8 +13,9 @@ import Foundation
 
 class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewDelegate,UITableViewDataSource {
     
-    var bench = UITableView();
-    var active = UITableView();
+    var bench = UITableView()
+    var active = UITableView()
+    let container = UIView()
     var gestureCoordinator = I3GestureCoordinator.init()
 
     var testarray:NSMutableArray = ["a","b","c","d"]
@@ -22,25 +23,40 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.addSubview(active)
-        self.view.addSubview(bench)
-        gestureCoordinator = I3GestureCoordinator.basicGestureCoordinatorFromViewController(self, withCollections: [self.active,self.bench], withRecognizer: UILongPressGestureRecognizer.init())
-        active.snp_makeConstraints { (make) in
-            make.top.equalTo(self.view)
-            make.left.equalTo(self.view.snp_left)
+        self.automaticallyAdjustsScrollViewInsets = false
+        self.view.addSubview(container)
+        view.backgroundColor = UIColor.whiteColor()
+        active.backgroundColor = UIColor.redColor()
+        bench.backgroundColor = UIColor.greenColor()
+        container.snp_makeConstraints { (make) in
+            make.height.equalTo(350)
+            make.left.right.equalTo(self.view)
             make.bottom.equalTo(self.view.snp_bottom)
-            make.width.equalTo(self.view.snp_width).multipliedBy(0.5)
+            make.centerX.equalTo(self.view.snp_centerX)
+        
+        }
+        self.container.addSubview(active)
+
+        container.backgroundColor = UIColor.blueColor()
+        active.snp_makeConstraints { (make) in
+            make.height.equalTo(350)
+            make.left.equalTo(self.container)
+            make.bottom.equalTo(self.container)
+            make.width.equalTo(150)
             //            make.height.equalTo(self.view)
             //            make.width.equalTo(self.view).multipliedBy(0.5)
         }
+        self.container.addSubview(bench)
+
         bench.snp_makeConstraints { (make) in
-            make.top.equalTo(self.view)
-            make.right.equalTo(self.view.snp_right)
-            make.bottom.equalTo(self.active.snp_bottom)
-            make.left.equalTo(self.active.snp_right)
+            make.height.equalTo(350)
+            make.right.equalTo(self.container)
+            make.bottom.equalTo(self.container)
+            make.width.equalTo(150)
             //            make.height.equalTo(self.view)
             //            make.width.equalTo(self.view).multipliedBy(0.5)
         }
+        gestureCoordinator = I3GestureCoordinator.basicGestureCoordinatorFromViewController(self, withCollections:[self.active,self.bench], withRecognizer: UILongPressGestureRecognizer.init())
         active.registerClass(HCLeagueCell.classForCoder(), forCellReuseIdentifier: "test1")
         bench.registerClass(HCLeagueCell.classForCoder(), forCellReuseIdentifier: "test1")
         gestureCoordinator.renderDelegate = I3BasicRenderDelegate.init()
@@ -122,6 +138,9 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
             let cell = tableView.dequeueReusableCellWithIdentifier("test1", forIndexPath: indexPath) as UITableViewCell
             cell.textLabel?.text = self.dataForCollection(tableView)[indexPath.row] as! String
             cell.textLabel?.textColor = UIColor.blackColor()
+            cell.separatorInset = UIEdgeInsetsZero
+            cell.layoutMargins = UIEdgeInsetsZero
+            cell.preservesSuperviewLayoutMargins = false
             return cell
        
     }
