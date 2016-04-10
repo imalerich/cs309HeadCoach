@@ -44,6 +44,7 @@
 		B9E731891CB40AFD002C5638 /* HCSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E731881CB40AFD002C5638 /* HCSettingsViewController.swift */; };
 		C808336F1CACCB5D006F8CAC /* HCTradeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C808336E1CACCB5D006F8CAC /* HCTradeDetailViewController.swift */; };
 		C86B87781CB238D300218C31 /* PlayerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C86B87771CB238D300218C31 /* PlayerListView.swift */; };
+		C89B056A1CBAA2B0007EE6C3 /* GameStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B05691CBAA2B0007EE6C3 /* GameStatView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +89,7 @@
 		B9E731881CB40AFD002C5638 /* HCSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCSettingsViewController.swift; sourceTree = "<group>"; };
 		C808336E1CACCB5D006F8CAC /* HCTradeDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCTradeDetailViewController.swift; sourceTree = "<group>"; };
 		C86B87771CB238D300218C31 /* PlayerListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerListView.swift; sourceTree = "<group>"; };
+		C89B05691CBAA2B0007EE6C3 /* GameStatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +146,7 @@
 				B9BD66581CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift */,
 				480FE98C1CB2E6BB00763C1B /* HCLeagueCell.swift */,
 				C86B87771CB238D300218C31 /* PlayerListView.swift */,
+				C89B05691CBAA2B0007EE6C3 /* GameStatView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -355,6 +358,7 @@
 				B94C49F71CA8539B00F2C2F0 /* PlayerTableViewCell.swift in Sources */,
 				B94C49EE1CA8539B00F2C2F0 /* HCPlayerDetailViewController.swift in Sources */,
 				B94C49E81CA8539B00F2C2F0 /* HCLeagueTableViewCell.swift in Sources */,
+				C89B056A1CBAA2B0007EE6C3 /* GameStatView.swift in Sources */,
 				480FE98D1CB2E6BB00763C1B /* HCLeagueCell.swift in Sources */,
 				B94C49EB1CA8539B00F2C2F0 /* HCLiveTableViewCell.swift in Sources */,
 				B94C49E71CA8539B00F2C2F0 /* HCLeague.swift in Sources */,
