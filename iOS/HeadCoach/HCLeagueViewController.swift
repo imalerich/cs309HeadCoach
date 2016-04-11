@@ -13,7 +13,7 @@ import ImageLoader
 
 class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
 {
-    var list:[HCUser] = []
+    var list = [HCUser]()
     let tableView = UITableView()
     let image = UIImageView()
     
@@ -23,21 +23,22 @@ class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableView
         tableView.dataSource = self
         tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
         tableView.separatorColor = UIColor.grayColor()
-        title = "Elite_Haxors"
+
         self.view.addSubview(tableView)
         self.tableView.registerClass(HCLeagueTableViewCell.classForCoder(), forCellReuseIdentifier: "LeagueCell")
         self.tableView.snp_makeConstraints { (make) -> Void in
             make.edges.equalTo(self.view)
         }
-            HCHeadCoachDataProvider.sharedInstance.getAllUsers({ (error, users) in
-                print(error)
-                print(users.count)
+
+        let dp = HCHeadCoachDataProvider.sharedInstance
+        if let league = dp.league {
+            title = league.name
+            
+            dp.getAllUsersForLeague(league, completion: { (err, users) in
                 self.list = users
                 self.tableView.reloadData()
             })
-        
-        
-        
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

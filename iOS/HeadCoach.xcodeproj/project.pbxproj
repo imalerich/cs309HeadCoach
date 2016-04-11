@@ -46,6 +46,8 @@
 		B9BD66591CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BD66581CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift */; };
 		B9E731891CB40AFD002C5638 /* HCSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E731881CB40AFD002C5638 /* HCSettingsViewController.swift */; };
 		B9FC9B631CB8A10E00DF61A2 /* HCJoinLeagueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FC9B621CB8A10E00DF61A2 /* HCJoinLeagueViewController.swift */; };
+		B9FF59041CB9595B00033C12 /* HCLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FF59031CB9595B00033C12 /* HCLoadingView.swift */; };
+		B9FF59061CB9671A00033C12 /* HCPlayerMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FF59051CB9671A00033C12 /* HCPlayerMatchView.swift */; };
 		C808336F1CACCB5D006F8CAC /* HCTradeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C808336E1CACCB5D006F8CAC /* HCTradeDetailViewController.swift */; };
 		C86B87781CB238D300218C31 /* PlayerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C86B87771CB238D300218C31 /* PlayerListView.swift */; };
 /* End PBXBuildFile section */
@@ -94,6 +96,8 @@
 		B9BD66581CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLandingPageDetailCellTableViewCell.swift; sourceTree = "<group>"; };
 		B9E731881CB40AFD002C5638 /* HCSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCSettingsViewController.swift; sourceTree = "<group>"; };
 		B9FC9B621CB8A10E00DF61A2 /* HCJoinLeagueViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCJoinLeagueViewController.swift; sourceTree = "<group>"; };
+		B9FF59031CB9595B00033C12 /* HCLoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLoadingView.swift; sourceTree = "<group>"; };
+		B9FF59051CB9671A00033C12 /* HCPlayerMatchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPlayerMatchView.swift; sourceTree = "<group>"; };
 		C808336E1CACCB5D006F8CAC /* HCTradeDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCTradeDetailViewController.swift; sourceTree = "<group>"; };
 		C86B87771CB238D300218C31 /* PlayerListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -154,6 +158,8 @@
 				B9BD66581CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift */,
 				480FE98C1CB2E6BB00763C1B /* HCLeagueCell.swift */,
 				C86B87771CB238D300218C31 /* PlayerListView.swift */,
+				B9FF59031CB9595B00033C12 /* HCLoadingView.swift */,
+				B9FF59051CB9671A00033C12 /* HCPlayerMatchView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -363,6 +369,7 @@
 				B94C49F61CA8539B00F2C2F0 /* PlayerDetailView.swift in Sources */,
 				B94C49F51CA8539B00F2C2F0 /* HCUtil.swift in Sources */,
 				B94C49EA1CA8539B00F2C2F0 /* HCLiveGameViewController.swift in Sources */,
+				B9FF59041CB9595B00033C12 /* HCLoadingView.swift in Sources */,
 				C86B87781CB238D300218C31 /* PlayerListView.swift in Sources */,
 				B937D5F81CB7602F005FFE79 /* HCUserStats.swift in Sources */,
 				B94C49F71CA8539B00F2C2F0 /* PlayerTableViewCell.swift in Sources */,
@@ -388,6 +395,7 @@
 				B95496421CB84CBF00AA9F01 /* HCSetupViewController.swift in Sources */,
 				B94C49F91CA8539B00F2C2F0 /* UserDetailCollectionItemView.swift in Sources */,
 				B94C49ED1CA8539B00F2C2F0 /* HCPlayerDetailCell.swift in Sources */,
+				B9FF59061CB9671A00033C12 /* HCPlayerMatchView.swift in Sources */,
 				C808336F1CACCB5D006F8CAC /* HCTradeDetailViewController.swift in Sources */,
 				B9BD66591CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift in Sources */,
 				3086D3F11CB1CAF70069BF19 /* HCLoginScreenViewController.swift in Sources */,

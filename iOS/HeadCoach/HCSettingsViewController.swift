@@ -171,13 +171,25 @@ class HCSettingsViewController: UIViewController, UITableViewDelegate, UITableVi
 
         NSNotificationCenter.defaultCenter().addObserver(self.tableView, selector: #selector(UITableView.reloadData),
                                                          name: HCHeadCoachDataProvider.UserDidLogin, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.loadLeagues),
+                                                         name: HCHeadCoachDataProvider.UserDidLogin, object: nil)
 
+        loadLeagues()
+    }
+
+    /// Loads the leagues for the given user, then reloads the table
+    /// view once those leagues have been obtained.
+    /// @objc is needed to be accessible to selectors.
+    @objc private func loadLeagues() {
         // load the users current leagues, then reload the table view
         // when they are ready
         if let user = HCHeadCoachDataProvider.sharedInstance.user {
             HCHeadCoachDataProvider.sharedInstance.getAllLeaguesForUser(user) { (err, leagues) in
                 if !err {
                     self.usersLeagues = leagues
+                    self.tableView.reloadData()
+                } else {
+                    self.usersLeagues = [HCLeague]()
                     self.tableView.reloadData()
                 }
             }

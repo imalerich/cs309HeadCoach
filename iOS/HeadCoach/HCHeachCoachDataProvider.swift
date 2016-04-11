@@ -22,13 +22,16 @@ class HCHeadCoachDataProvider: NSObject {
     /// Name for the notification sent out when the user
     /// login changes.
     static let UserDidLogin = "UserDidLogin"
+    /// Name for the notification sent out when the 'league'
+    /// property is updated.
+    static let LeagueDidUpdate = "LeagueDidUpdate"
 
     /// The root API address for the HeadCoach servince.
     /// http://localhost/ can be used for testing new changes
     /// to the server. Otherwise the CS309 server should be used.
     let api =
-        "http://proj-309-08.cs.iastate.edu"
-//        "http://localhost"
+//        "http://proj-309-08.cs.iastate.edu"
+        "http://localhost"
 
     /// When the shared instance is first created,
     /// send a request to the server to update all of its
@@ -38,8 +41,15 @@ class HCHeadCoachDataProvider: NSObject {
     override init() {
         super.init()
 
-        let url = "\(api)/schedule/update.php?week=0"
-        Alamofire.request(.GET, url).responseJSON { response in }
+//        let url = "\(api)/schedule/update.php?week=5"
+//        Alamofire.request(.GET, url).responseJSON { response in }
+
+        // make sure the curent league data is up to date
+        if league != nil && league?.name != nil {
+            getLeagueID((league?.name)!, completion: { (err, league) in
+                self.league = league
+            })
+        }
     }
 
     // ------------------------------------
@@ -84,9 +94,10 @@ class HCHeadCoachDataProvider: NSObject {
             let name = NSUserDefaults.standardUserDefaults().stringForKey("HC.LEAGUE.NAME")
             let drafting = NSUserDefaults.standardUserDefaults().integerForKey("HC.LEAGUE.DRAFTING")
             let users = NSUserDefaults.standardUserDefaults().arrayForKey("HC.LEAGUE.USERS")
+            let week = NSUserDefaults.standardUserDefaults().integerForKey("HC.LEAGUE.WEEK")
 
             if name == nil { return nil }
-            return HCLeague(id: id, name: name!, drafting_style: drafting, users: users as! [Int])
+            return HCLeague(id: id, name: name!, drafting_style: drafting, users: users as! [Int], week: week)
         }
 
         set(newLeague) {
@@ -98,7 +109,11 @@ class HCHeadCoachDataProvider: NSObject {
                                                            forKey: "HC.LEAGUE.DRAFTING")
             NSUserDefaults.standardUserDefaults().setValue(newLeague!.users,
                                                            forKey: "HC.LEAGUE.USERS")
+            NSUserDefaults.standardUserDefaults().setValue(newLeague!.week_number,
+                                                           forKey: "HC.LEAGUE.WEEK")
             NSUserDefaults.standardUserDefaults().synchronize()
+
+            NSNotificationCenter.defaultCenter().postNotificationName(HCHeadCoachDataProvider.LeagueDidUpdate, object: self)
         }
     }
 
@@ -466,7 +481,7 @@ class HCHeadCoachDataProvider: NSObject {
         let url = "\(api)/schedule/getScheduleForLeague.php?\(params)"
         Alamofire.request(.GET, url).responseJSON { response in
             var games = [HCGameResult]()
-            if let json = response.result.value as? Array<Dictionary<String, String>> {
+            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
                 for item in json {
                     games.append(HCGameResult(json: item))
                 }
@@ -482,9 +497,9 @@ class HCHeadCoachDataProvider: NSObject {
     /// and the total number of games that player has played.
     /// The numeber of wins/loses/draws is also included in the HCUserStats object.
     internal func getUserStats(user: HCUser, league: HCLeague, completion: (HCUserStats?) -> Void) {
-        let url = "\(api)/schedule/getUserStats.php?league=\(league)&user=\(user)"
+        let url = "\(api)/schedule/getUserStats.php?league=\(league.id)&user=\(user.id)"
         Alamofire.request(.GET, url).responseJSON { response in
-            if let json = response.result.value as? Dictionary<String, String> {
+            if let json = response.result.value as? Dictionary<String, Int> {
                 completion(HCUserStats(user: user, json: json))
             }
 
