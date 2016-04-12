@@ -16,8 +16,9 @@ class HCPositionMenu : UIView {
     var position = Position.All
     let OFFSET = 16
     
-    init(){
-        super.init(frame: CGRectMake(0,0,0,0))
+    override init(frame: CGRect){
+        // TODO - do I need to change this frame?
+        super.init(frame: frame)
         self.clipsToBounds = true
         backgroundColor = UIColor.footballColor(1.0)
         
@@ -39,19 +40,19 @@ class HCPositionMenu : UIView {
     internal func layoutViews(){
         addSubview(label)
         label.snp_makeConstraints { (make) in
-            make.left.equalTo(snp_left).offset(OFFSET)
+            make.left.equalTo(snp_left)
             make.centerY.equalTo(snp_centerY)
             make.width.equalTo(snp_width).multipliedBy(0.66)
-            make.height.equalTo(snp_height).offset(-OFFSET)
-            make.right.equalTo(snp_right).multipliedBy(0.66).offset(-OFFSET)
+            make.height.equalTo(snp_height)
+            make.right.equalTo(snp_right).multipliedBy(0.66)
         }
         
         addSubview(button)
         button.snp_makeConstraints { (make) in
-            make.left.equalTo(snp_right).multipliedBy(0.66).offset(OFFSET)
-            make.right.equalTo(snp_right).offset(-OFFSET)
-            make.width.equalTo(snp_width).dividedBy(3.0)
-            make.height.equalTo(snp_height).offset(-OFFSET)
+            make.left.equalTo(label.snp_right)
+            make.right.equalTo(snp_right)
+            make.width.equalTo(snp_width).multipliedBy(0.33)
+            make.height.equalTo(snp_height)
             make.centerY.equalTo(snp_centerY)
         }
     }
