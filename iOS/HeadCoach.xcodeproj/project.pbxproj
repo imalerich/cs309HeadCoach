@@ -160,6 +160,8 @@
 				B9BD66581CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift */,
 				480FE98C1CB2E6BB00763C1B /* HCLeagueCell.swift */,
 				C86B87771CB238D300218C31 /* PlayerListView.swift */,
+				B9FF59031CB9595B00033C12 /* HCLoadingView.swift */,
+				B9FF59051CB9671A00033C12 /* HCPlayerMatchView.swift */,
 				C89B05691CBAA2B0007EE6C3 /* GameStatView.swift */,
 			);
 			name = Views;

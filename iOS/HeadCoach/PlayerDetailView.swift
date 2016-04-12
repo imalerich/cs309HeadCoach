@@ -15,7 +15,8 @@ class PlayerDetailView: UIView {
     var statsLabelsContainer: UIView!
     var personalDetailsContainer: UIView!
     var personalDetailsLabel: UILabel!
-    var gameTable: UITableView!
+    
+    var gameTable = UITableView()
     var statusLabel: UILabel!
     var statusText: UILabel!
     var statusTextContainer: UIView!
@@ -157,7 +158,6 @@ class PlayerDetailView: UIView {
         stat1Label.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
         stat1Label.font = stat1Label.font.fontWithSize(15)
         stat1Label.sizeToFit()
-        stat1Label.text = "Bye Week"
         stat1Container.addSubview(stat1Label)
         
         stat1Text = UILabel()
@@ -165,7 +165,6 @@ class PlayerDetailView: UIView {
         stat1Text.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
         stat1Text.font = stat1Text.font.fontWithSize(14)
         stat1Text.sizeToFit()
-        stat1Text.text = "13"
         stat1Container.addSubview(stat1Text)
         
         stat2Container = UIView()
@@ -176,7 +175,6 @@ class PlayerDetailView: UIView {
         stat2Label.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
         stat2Label.font = stat2Label.font.fontWithSize(15)
         stat2Label.sizeToFit()
-        stat2Label.text = "Rank"
         stat2Container.addSubview(stat2Label)
         
         stat2Text = UILabel()
@@ -184,7 +182,6 @@ class PlayerDetailView: UIView {
         stat2Text.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
         stat2Text.font = stat2Text.font.fontWithSize(14)
         stat2Text.sizeToFit()
-        stat2Text.text = "9"
         stat2Container.addSubview(stat2Text)
         
         stat3Container = UIView()
@@ -196,7 +193,6 @@ class PlayerDetailView: UIView {
         stat3Label.font = stat3Label.font.fontWithSize(15)
         stat3Label.sizeToFit()
         let random = arc4random_uniform(12)
-        stat3Label.text = "Week " + String(random)
         stat3Container.addSubview(stat3Label)
         
         stat3Text = UILabel()
@@ -204,7 +200,6 @@ class PlayerDetailView: UIView {
         stat3Text.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
         stat3Text.font = stat3Text.font.fontWithSize(14)
         stat3Text.sizeToFit()
-        stat3Text.text = "17 pts"
         stat3Container.addSubview(stat3Text)
         
         stat4Container = UIView()
@@ -215,7 +210,6 @@ class PlayerDetailView: UIView {
         stat4Label.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
         stat4Label.font = stat4Label.font.fontWithSize(15)
         stat4Label.sizeToFit()
-        stat4Label.text = "Week " + String(random+1)
         stat4Container.addSubview(stat4Label)
         
         stat4Text = UILabel()
@@ -223,7 +217,6 @@ class PlayerDetailView: UIView {
         stat4Text.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
         stat4Text.font = stat4Text.font.fontWithSize(14)
         stat4Text.sizeToFit()
-        stat4Text.text = "24 pts"
         stat4Container.addSubview(stat4Text)
         
         stat5Container = UIView()
@@ -234,7 +227,6 @@ class PlayerDetailView: UIView {
         stat5Label.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
         stat5Label.font = stat5Label.font.fontWithSize(15)
         stat5Label.sizeToFit()
-        stat5Label.text = "Stat 5"
         stat5Container.addSubview(stat5Label)
         
         stat5Text = UILabel()
@@ -242,7 +234,6 @@ class PlayerDetailView: UIView {
         stat5Text.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
         stat5Text.font = stat5Text.font.fontWithSize(14)
         stat5Text.sizeToFit()
-        stat5Text.text = "24 yds"
         stat5Container.addSubview(stat5Text)
         
         stat6Container = UIView()
@@ -253,7 +244,6 @@ class PlayerDetailView: UIView {
         stat6Label.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
         stat6Label.font = stat6Label.font.fontWithSize(15)
         stat6Label.sizeToFit()
-        stat6Label.text = "Stat 6"
         stat6Container.addSubview(stat6Label)
         
         stat6Text = UILabel()
@@ -261,7 +251,6 @@ class PlayerDetailView: UIView {
         stat6Text.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
         stat6Text.font = stat6Text.font.fontWithSize(14)
         stat6Text.sizeToFit()
-        stat6Text.text = "235"
         stat6Container.addSubview(stat6Text)
 
         nameLabel = UILabel()
@@ -376,6 +365,12 @@ class PlayerDetailView: UIView {
         gameDetail5 = GameStatView()
         gameDetailLabels.setTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
         gameDetailContainer.addSubview(gameDetail5)
+        
+        gameTable.registerClass(GameTableViewDetail.self, forCellReuseIdentifier: "game")
+        gameTable.dataSource = delegate
+        gameTable.delegate = delegate
+        gameTable.hidden = true
+        bottom.addSubview(gameTable)
         
         statCatPicker.dataSource = delegate
         statCatPicker.delegate = delegate
@@ -628,6 +623,12 @@ class PlayerDetailView: UIView {
             make.top.equalTo(gameDetail4.snp_bottom)
             make.height.equalTo(gameDetailLabels)
         }
+        gameTable.snp_makeConstraints { (make) in
+            make.left.equalTo(bottom)
+            make.right.equalTo(bottom)
+            make.bottom.equalTo(bottom)
+            make.top.equalTo(moreGamesButton.snp_bottom)
+        }
         statCatPicker.snp_makeConstraints { (make) in
             make.bottom.equalTo(self)
             make.left.equalTo(self)
@@ -648,19 +649,32 @@ class PlayerDetailView: UIView {
         playerImage.layer.cornerRadius = playerImage.bounds.width / 2
     }
     
-    func setOverviewData(stat1Label: String, stat1Text: String, stat2Label: String, stat2Text: String, stat3Label: String, stat3Text: String, stat4Label: String, stat4Text: String, stat5Label: String, stat5Text:String, stat6Label: String, stat6Text: String){
+    func setOverviewStatData(stat1Label: String, stat1Text: String?, stat2Label: String, stat2Text: String?, stat3Label: String, stat3Text: String?, stat4Label: String, stat4Text: String?, stat5Label: String, stat5Text:String?, stat6Label: String, stat6Text: String?){
         self.stat1Label.text = stat1Label
-        self.stat1Text.text = stat1Text
+        self.stat1Text.text = stat1Text == nil ? "-" : stat1Text
         self.stat2Label.text = stat2Label
-        self.stat2Text.text = stat2Text
+        self.stat2Text.text = stat2Text == nil ? "-" : stat2Text
         self.stat3Label.text = stat3Label
-        self.stat3Text.text = stat3Text
+        self.stat3Text.text = stat3Text == nil ? "-" : stat3Text
         self.stat4Label.text = stat4Label
-        self.stat4Text.text = stat4Text
+        self.stat4Text.text = stat4Text == nil ? "-" : stat4Text
         self.stat5Label.text = stat5Label
-        self.stat5Text.text = stat5Text
-        self.stat6Label.text = stat6Text
-        self.stat6Text.text = stat6Text
+        self.stat5Text.text = stat5Text == nil ? "-" : stat5Text
+        self.stat6Label.text = stat6Label
+        self.stat6Text.text = stat6Text == nil ? "-" : stat6Text
+    }
+    
+    func setOverviewGameData(forGameStatView gameStatViewNum: Int, game: Game){
+        var gsv: GameStatView!
+        switch(gameStatViewNum){
+        case 1: gsv = gameDetail1
+        case 2: gsv = gameDetail2
+        case 3: gsv = gameDetail3
+        case 4: gsv = gameDetail4
+        case 5: gsv = gameDetail5
+        default: gsv = gameDetail1
+        }
+        gsv.setGame(game)
     }
     
     func buttonClicked(sender: AnyObject?) {
@@ -758,6 +772,7 @@ class PlayerDetailView: UIView {
             self.moreGamesButton.hidden = false
             UIView.animateWithDuration(0.5, animations: {
                 self.statTableContainer.alpha = 0.0
+                self.gameTable.alpha = 0.0
                 self.moreGamesButton.alpha = 1.0
                 self.moreStatsButton.alpha = 1.0
                 self.statCatButton.alpha = 0.0
@@ -766,6 +781,7 @@ class PlayerDetailView: UIView {
                 self.personalDetailsLabel.text = "Overview"
                 }, completion: { b in
                     if(b){
+                        self.gameTable.hidden = true
                         self.statTableContainer.hidden = true
                     }
             })
@@ -779,9 +795,11 @@ class PlayerDetailView: UIView {
                 make.bottom.equalTo(detailContainer)
                 make.top.equalTo(personalDetailsContainer.snp_bottom)
             })
+            gameTable.hidden = false
             UIView.animateWithDuration(0.5, animations: {
                 self.statTableContainer.alpha = 0.0
                 self.moreStatsButton.alpha = 0.0
+                self.gameTable.alpha = 1.0
                 }, completion: { b in
                     if(b){
                         self.statTableContainer.hidden = true
@@ -799,7 +817,7 @@ class PlayerDetailView: UIView {
     
     func setUpTableView(initialCategory: String, delegate: HCPlayerMoreDetailController){
         statCatButton.setTitle(initialCategory, forState: UIControlState.Normal)
-        statTable.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        statTable.registerClass(UITableViewCell.self, forCellReuseIdentifier: "stat")
         statTable.delegate = delegate
         statTable.dataSource = delegate
         statTable.setNeedsLayout()

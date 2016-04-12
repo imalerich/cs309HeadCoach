@@ -50,7 +50,6 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
         detail.snp_makeConstraints { (make) in
             make.edges.equalTo(view)
         }
-        detail.draftButton.addTarget(detail, action: #selector(HCPlayerMoreDetailController.buttonClicked(_:)), forControlEvents: .TouchUpInside)
         requestPlayerStats(fdplayer.id)
         requestGameData()
     }
@@ -58,33 +57,31 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
     func requestGameData(){
         self.games = [Game]()
         for index in 0...20{
-            let headers = ["Ocp-Apim-Subscription-Key" : "fa953b83a78d44a1b054b0afbbdff57e"]
-            let url = "http://api.fantasydata.net/nfl/v2/JSON/PlayerGameStatsByPlayerID/2015/" + String(index) + "/" + String(fdplayer.id)
-            print(url)
-            Alamofire.request(.GET, url, headers: headers)
-                .responseJSON{response in
-                    switch response.result {
-                    case .Success(let JSON):
-                        let data = JSON as! Dictionary<String, AnyObject>
-                        let game = Game(json: data)
-                        self.games.append(game)
-                    case .Failure(let error):
-                        print("Request failed with error: \(error)")
-                    }
+            HCFantasyDataProvider.sharedInstance.getGameData(forWeek: index, forPlayer: fdplayer.id, handler: HCPlayerMoreDetailController.handleGameResponse(self))
+        }
+
+    }
+
+    func handleGameResponse(index: Int, data: Dictionary<String, AnyObject>){
+        let game = Game(json: data)
+        self.games.append(game)
+        self.games = games.sort { (g1, g2) -> Bool in
+            if g1.week > g2.week{
+                return true
+            }else{
+                return false
             }
         }
+        for i in 0...4 {
+            if(i < games.count){
+                self.detail.setOverviewGameData(forGameStatView: i, game: games[i])
+            }
+        }
+        detail.gameTable.reloadData()
     }
-    
+
     func requestPlayerStats(playerID: Int){
         HCFantasyDataProvider.sharedInstance.getPlayerStatsForPlayerID(playerID, handler: HCPlayerMoreDetailController.parseStatisticalData(self))
-    }
-    
-    func buttonClicked(sender: AnyObject?) {
-        if sender === detail.draftButton {
-            let vc = HCTradeDetailViewController()
-            vc.player1 = fdplayer
-            self.navigationController?.pushViewController(vc, animated: true)
-        }
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -95,28 +92,35 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
         if(tableView === detail.statTable){
             return statsForCategory(currentCat).count
         }
-        else{ return 1 }
+        else{ return games.count }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("cell") as UITableViewCell!
-        if (cell != nil)
-        {
-            cell = UITableViewCell(style: UITableViewCellStyle.Value1,
-                                   reuseIdentifier:"cell")
+        if(tableView === detail.statTable){
+            var cell = tableView.dequeueReusableCellWithIdentifier("stat") as UITableViewCell!
+            if (cell != nil)
+            {
+                cell = UITableViewCell(style: UITableViewCellStyle.Value1,
+                                       reuseIdentifier:"stat")
+            }
+            let stat = statistics[currentCat]
+            if(stat!.count > 0){
+                cell.textLabel!.text = statsForCategory(currentCat)[indexPath.row]
+                cell.detailTextLabel!.text = stat![statsForCategory(currentCat)[indexPath.row]]
+                cell.backgroundColor = UIColor.whiteColor()
+                cell.setNeedsLayout()
+            }
+            return cell
         }
-        let stat = statistics[currentCat]
-        if(stat!.count > 0){
-            cell.textLabel!.text = statsForCategory(currentCat)[indexPath.row]
-            cell.detailTextLabel!.text = stat![statsForCategory(currentCat)[indexPath.row]]
-            cell.backgroundColor = UIColor.whiteColor()
-            cell.setNeedsLayout()
+        else{
+            var cell = tableView.dequeueReusableCellWithIdentifier("game") as! GameTableViewDetail
+            cell.game = games[indexPath.row]
+            return cell
         }
-        return cell
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 30
+        return UITableViewAutomaticDimension
     }
     
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
@@ -190,6 +194,10 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
         if let g = json["FieldGoalsMade"]{
             generalStats.append("Field Goals Made")
             general.updateValue(String(g as! Int), forKey: "Field Goals Made")
+        }
+        if let g = json["Fumbles"]{
+            generalStats.append("Fumbles")
+            general.updateValue(String(g as! Int), forKey: "Fumbles")
         }
         statistics.updateValue(general, forKey: "General")
         print("general " + String(general.count))
@@ -444,6 +452,7 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
         
         currentCat = statPickerData[0]
         detail.setUpTableView(statPickerData[0], delegate: self)
+        detail.setOverviewStatData("Played", stat1Text: general["Games Played"], stat2Label: "Started", stat2Text: general["Games Started"], stat3Label: "Activated", stat3Text: general["Games Activated"], stat4Label: "Touchdowns", stat4Text: scoring["Touchdowns"], stat5Label: "Tackles", stat5Text: def["Tackles"], stat6Label: "Fumbles", stat6Text: general["Fumbles"])
     }
     
 }

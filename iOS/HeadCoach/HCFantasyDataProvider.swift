@@ -240,16 +240,16 @@ class HCFantasyDataProvider{
         }
     }
     
-    func getGameData(forWeek week: Int, forPlayer playerId: Int, handler: (Dictionary<String, AnyObject>) -> Void){
+    func getGameData(forWeek week: Int, forPlayer playerId: Int, handler: (Int, Dictionary<String, AnyObject>) -> Void){
         let headers = ["Ocp-Apim-Subscription-Key" : "fa953b83a78d44a1b054b0afbbdff57e"]
-        let url = "http://api.fantasydata.net/nfl/v2/JSON/PlayerGameStatsByPlayerID/2015/" + String(week) + "/" + String(playerId)
+        let url = "http://api.fantasydata.net/nfl/v2/JSON/PlayerGameStatsByPlayerID/2015/\(String(week))/\(String(playerId))"
         print(url)
         Alamofire.request(.GET, url, headers: headers)
             .responseJSON{response in
                 switch response.result {
                 case .Success(let JSON):
                     let data = JSON as! Dictionary<String, AnyObject>
-                    handler(data)
+                    handler(week, data)
                     
                 case .Failure(let error):
                     print("Week \(week) game data request failed with error: \(error)")

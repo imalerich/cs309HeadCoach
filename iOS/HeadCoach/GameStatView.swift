@@ -10,7 +10,8 @@ class GameStatView: UIView {
     var started: UILabel!
     
     func setGame(game: Game){
-        week.text = String(game.week)
+        setTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5))
+        week.text = String(game.week!)
         opp.text = game.opp
         points.text = String(32.20)
         started.text = game.started

@@ -51,6 +51,7 @@ class Game{
     }
     
     init(json: Dictionary<String, AnyObject>){
+        print(json)
         if let e = json["Week"] as? Int{
             self.week = e
         }
