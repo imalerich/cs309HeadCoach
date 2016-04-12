@@ -9,38 +9,36 @@
 import Foundation
 import SnapKit
 
-class HCLeagueTableViewCell: UITableViewCell
-{
-    let userImage = UIImageView()
-    let userName = UILabel()
-    
+class HCLeagueTableViewCell: UITableViewCell {
+
+    /// UI Offset parameter.
+    let OFFSET = 8
+
+    /// Content view for the cell, the rest will be a border around the cell
+    let dataView = UIView()
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.backgroundColor = UIColor.whiteColor()
-        self.addSubview(userImage)
-        self.addSubview(userName)
-        userImage.layer.cornerRadius = 15
-        userImage.layer.masksToBounds = true
-        userImage.layer.borderColor = UIColor.blackColor().CGColor
-        userImage.layer.borderWidth = 2
-        //TODO add actual images
-        userImage.load("https://yt3.ggpht.com/-9JtIWfELi1A/AAAAAAAAAAI/AAAAAAAAAAA/sY8X2YGMGjU/s900-c-k-no/photo.jpg")
-        userImage.snp_makeConstraints { (make) in
-            make.left.lessThanOrEqualTo(5)
-            make.size.equalTo(CGSizeMake(50, 50))
-            make.top.lessThanOrEqualTo(5)
-        }
-        userName.snp_makeConstraints { (make) in
-            make.left.equalTo(userImage.snp_left)
-            make.top.equalTo(userImage.snp_bottom)
-            
-        }
-        
-       
- 
-        
+        backgroundColor = UIColor.clearColor()
+
+        dataView.backgroundColor = UIColor.whiteColor()
+        dataView.layer.cornerRadius = 2
+        dataView.clipsToBounds = true
+        addSubview(dataView)
+        dataView.snp_makeConstraints(closure: { make in
+            make.left.equalTo(self.snp_left).offset(OFFSET)
+            make.right.equalTo(self.snp_right).offset(-OFFSET)
+            make.top.equalTo(self.snp_top).offset(OFFSET)
+            make.bottom.equalTo(self.snp_bottom)
+        })
     }
 
+    /// Setup this cell for the given user.
+    internal func setUser(user: HCUser) {
+        //
+    }
+
+    // This shit is required.
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

@@ -24,7 +24,7 @@ class HCLandingPageDetailCellTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = UIColor(white: 0.2, alpha: 0.0)
+        backgroundColor = UIColor.clearColor()
 
         dataView.backgroundColor = UIColor.whiteColor()
         dataView.layer.cornerRadius = 2
