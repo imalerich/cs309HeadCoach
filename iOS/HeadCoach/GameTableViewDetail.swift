@@ -16,8 +16,8 @@ class GameTableViewDetail: UITableViewCell {
         didSet{
             if let g = game{
                 weekLabel.text = "Week " + String(g.week)
-                oppLabel.text = "vs. " + g.opp
-                howLabel.text = "at " + g.homeOrAway
+                oppLabel.text = "vs. " + g.opp!
+                howLabel.text = "at " + g.homeOrAway!
                 passLabel.text = "Passed " + String(g.passYds) + "yds"
                 recLabel.text = "Rec'd " + String(g.recYds) + "yds"
                 //

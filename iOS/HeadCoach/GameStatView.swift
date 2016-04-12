@@ -87,4 +87,10 @@ class GameStatView: UIView {
         }
     }
 
+    func setTextColor(color: UIColor){
+        week.textColor = color
+        opp.textColor = color
+        points.textColor = color
+        started.textColor = color
+    }
 }

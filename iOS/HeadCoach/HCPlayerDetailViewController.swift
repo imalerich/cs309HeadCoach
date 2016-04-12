@@ -74,8 +74,7 @@ class HCPlayerDetailViewController: UIViewController, UITextViewDelegate, UITabl
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         playerListView.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        let vc = HCPlayerMoreDetailController()
-        vc.player = players[indexPath.row]
+        let vc = HCPlayerMoreDetailController(forFDPlayer: players[indexPath.row])
         self.navigationController?.pushViewController(vc, animated: true)
     }
     

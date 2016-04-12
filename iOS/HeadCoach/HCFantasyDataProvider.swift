@@ -89,6 +89,81 @@ class HCFantasyDataProvider{
         }
     }
     
+    func getPlayerDetailsForPlayerID(pid: Int, handler: (FDPlayer)->Void){
+        // Using Mitch's subscription key
+        let headers = ["Ocp-Apim-Subscription-Key": "fa953b83a78d44a1b054b0afbbdff57e"]
+        Alamofire.request(.GET, "https://api.fantasydata.net/nfl/v2/JSON/Player/\(pid)", headers: headers)
+            .responseJSON { response in
+                do{
+                    let json:NSArray = try NSJSONSerialization.JSONObjectWithData(response.data!, options: NSJSONReadingOptions.MutableContainers) as! NSArray
+                    for items in json{
+                        let player = items as! NSDictionary
+                        let temp = FDPlayer()
+                        if let name = player["Name"] as? String{
+                            temp.name = name
+                        }
+                        if let fname = player["FirstName"] as? String{
+                            temp.firstName = fname
+                        }
+                        if let lname = player["LastName"] as? String{
+                            temp.lastName = lname
+                        }
+                        if let photoURL = player["PhotoUrl"] as? String{
+                            temp.photoURL = photoURL
+                        }
+                        if let id = player["PlayerID"] as? Int{
+                            temp.id = id
+                        }
+                        if let team = player["Team"] as? String{
+                            temp.team = team
+                        }
+                        if let position = player["Position"] as? String{
+                            temp.position = position
+                        }
+                        if let number = player["Number"] as? Int{
+                            temp.number = number
+                        }
+                        if let height = player["Height"] as? String{
+                            temp.height = height
+                        }
+                        if let weight = player["Weight"] as? Int{
+                            temp.weight = weight
+                        }
+                        if let status = player["CurrentStatus"] as? String{
+                            temp.status = status
+                        }
+                        if let fantasyPosition = player["FantasyPosition"] as? String{
+                            temp.fantasyPosition = fantasyPosition
+                        }
+                        if let age = player["Age"] as? Int{
+                            temp.age = age
+                        }
+                        if let byeWeek = player["ByeWeek"] as? Int{
+                            temp.byeWeek = byeWeek
+                        }
+                        if let byeWeek = player["ByeWeek"] as? Int{
+                            temp.byeWeek = byeWeek
+                            
+                        }
+                        /*
+                         if let adp = player["AverageDraftPosition"] as? {
+                         temp.adp = adp
+                         }
+                         */
+                        let realm = try! Realm()
+                        try! realm.write{
+                            realm.add(temp,update:true)
+                        }
+                        handler(temp)
+                    }
+                    
+                }catch let caught{
+                    print(caught)
+                }
+                
+        }
+    }
+    
     func getTeamsForSeason(season : Int){
         // Using Joe's subscription key
         let headers = ["Ocp-Apim-Subscription-Key": "2ae4d2ad88ae486e8dd3004e4259e2f1"]
@@ -162,6 +237,23 @@ class HCFantasyDataProvider{
                     }
                 }
                 
+        }
+    }
+    
+    func getGameData(forWeek week: Int, forPlayer playerId: Int, handler: (Dictionary<String, AnyObject>) -> Void){
+        let headers = ["Ocp-Apim-Subscription-Key" : "fa953b83a78d44a1b054b0afbbdff57e"]
+        let url = "http://api.fantasydata.net/nfl/v2/JSON/PlayerGameStatsByPlayerID/2015/" + String(week) + "/" + String(playerId)
+        print(url)
+        Alamofire.request(.GET, url, headers: headers)
+            .responseJSON{response in
+                switch response.result {
+                case .Success(let JSON):
+                    let data = JSON as! Dictionary<String, AnyObject>
+                    handler(data)
+                    
+                case .Failure(let error):
+                    print("Week \(week) game data request failed with error: \(error)")
+                }
         }
     }
     

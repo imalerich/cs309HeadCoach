@@ -3,19 +3,9 @@ import Foundation
 import UIKit
 import SnapKit
 
-class PlayerDetailView: UIView, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource  {
+class PlayerDetailView: UIView {
     
-    let statPickerData = ["General", "Scoring", "Passing", "Receiving", "Defense", "Rushing", "Kicking", "Punting"]
-    var generalStats: [String]!
-    var scoringStats: [String]!
-    var passingStats: [String]!
-    var receivingStats: [String]!
-    var defensiveStats: [String]!
-    var rushStats: [String]!
-    var kickStats: [String]!
-    var puntStats: [String]!
-    var games: [Game]!
-    @IBOutlet var playerImage: UIImageView!
+    var playerImage: UIImageView!
     var nameLabel: UILabel!
     var teamLabel: UILabel!
     var numLabel: UILabel!
@@ -65,21 +55,19 @@ class PlayerDetailView: UIView, UITableViewDelegate, UITableViewDataSource, UIPi
     var gameDetail3: GameStatView!
     var gameDetail4: GameStatView!
     var gameDetail5: GameStatView!
-    var currentCat: String!
     var currentSheetVisibility: SheetVisibility!
     
-    var statistics: Dictionary<String, Dictionary<String, String>>!
-    
     var draftButton: UIButton!
-
-    override init (frame : CGRect) {
-        super.init(frame : frame)
-        statistics = Dictionary<String, Dictionary<String, String>>()
-        currentSheetVisibility = SheetVisibility.Mid
-    }
     
-    convenience init () {
-        self.init(frame:CGRectZero)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    convenience init (player: FDPlayer, delegate: HCPlayerMoreDetailController) {
+        self.init(frame : CGRectZero)
+        addCustomView(delegate)
+        setPlayer(player)
+        currentSheetVisibility = SheetVisibility.Mid
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -97,311 +85,9 @@ class PlayerDetailView: UIView, UITableViewDelegate, UITableViewDataSource, UIPi
         numLabel.text = "#" + String(player.number)
         statusText.text = player.status
         statusTextContainer.backgroundColor = getStatusBackground(player.status)
-        stat2Text.text = String(arc4random_uniform(100) + 1)
-        stat1Text.text = String(arc4random_uniform(12) + 1)
-        stat4Label.text = String(arc4random_uniform(40)) + " pts."
-        stat4Text.text = String(arc4random_uniform(40)) + " pts."
         playerImage.load(player.photoURL)
         setNeedsLayout()
         
-    }
-    
-    func setStatisticalData(json: Dictionary<String, AnyObject>) {
-        statistics = Dictionary<String, Dictionary<String, String>>()
-        
-        var general = Dictionary<String, String>()
-        generalStats = [String]()
-        if let g = json["Played"]{
-            generalStats.append("Games Played")
-            general.updateValue(String(g as! Int), forKey: "Games Played")
-        }
-        if let g = json["Started"]{
-            generalStats.append("Games Started")
-            general.updateValue(String(g as! Int), forKey: "Games Started")
-        }
-        if let g = json["Activated"]{
-            generalStats.append("Games Activated")
-            general.updateValue(String(g as! Int), forKey: "Games Activated")
-        }
-        if let g = json["Tackles"]{
-            generalStats.append("Tackles")
-            general.updateValue(String(g as! Int), forKey: "Tackles")
-        }
-        if let g = json["Touchdowns"]{
-            generalStats.append("Touchdowns")
-            general.updateValue(String(g as! Int), forKey: "Touchdowns")
-        }
-        if let g = json["FieldGoalsMade"]{
-            generalStats.append("Field Goals Made")
-            general.updateValue(String(g as! Int), forKey: "Field Goals Made")
-        }
-        statistics.updateValue(general, forKey: "General")
-        print("general " + String(general.count))
-        
-        var scoring = Dictionary<String, String>()
-        scoringStats = [String]()
-        if let s = json["Touchdowns"]{
-            scoringStats.append("Touchdowns")
-            scoring.updateValue(String(s as! Int), forKey: "Touchdowns")
-        }
-        if let s = json["FieldGoalsAttempted"]{
-            scoringStats.append("Field Goals Attempted")
-            scoring.updateValue(String(s as! Int), forKey: "Field Goals Attempted")
-        }
-        if let s = json["FieldGoalsMade"]{
-            scoringStats.append("Field Goals Made")
-            scoring.updateValue(String(s as! Int), forKey: "Field Goals Made")
-        }
-        if let s = json["FieldGoalsLongestMade"]{
-            scoringStats.append("Longest Field Goal")
-            scoring.updateValue(String(s as! Int), forKey: "Longest Field Goal")
-        }
-        if let s = json["ExtraPointsMade"]{
-            scoringStats.append("Extra Points Made")
-            scoring.updateValue(String(s as! Int), forKey: "Extra Points Made")
-        }
-        if let s = json["FieldGoalsMade0to19"]{
-            scoringStats.append("Field Goals 0-19 yds.")
-            scoring.updateValue(String(s as! Int), forKey: "Field Goals 0-19 yds.")
-        }
-        if let s = json["FieldGoalsMade20to29"]{
-            scoringStats.append("Field Goals 20-29 yds.")
-            scoring.updateValue(String(s as! Int), forKey: "Field Goals 20-29 yds.")
-        }
-        if let s = json["FieldGoalsMade30to39"]{
-            scoringStats.append("Field Goals 30-39 yds.")
-            scoring.updateValue(String(s as! Int), forKey: "Field Goals 30-39 yds.")
-        }
-        if let s = json["FieldGoalsMade40to49"]{
-            scoringStats.append("Field Goals 40-49 yds.")
-            scoring.updateValue(String(s as! Int), forKey: "Field Goals 40-49 yds.")
-        }
-        if let s = json["FieldGoalsMade50Plus"]{
-            scoringStats.append("Field Goals 50+ yds.")
-            scoring.updateValue(String(s as! Int), forKey: "Field Goals 50+ yds.")
-        }
-        statistics.updateValue(scoring, forKey: "Scoring")
-        
-        var passing = Dictionary<String, String>()
-        passingStats = [String]()
-        if let p1 = json["PassingAttempts"]{
-            passingStats.append("Pass Attempts")
-            passing.updateValue(String(p1 as! Int), forKey: "Pass Attempts")
-        }
-        if let p1 = json["PassingCompletions"]{
-            passingStats.append("Pass Completions")
-            passing.updateValue(String(p1 as! Int), forKey: "Pass Completions")
-        }
-        if let p1 = json["PassingCompletionPercentage"]{
-            passingStats.append("Pass Completion %")
-            passing.updateValue(String(p1 as! Float), forKey: "Pass Completion %")
-        }
-        if let p1 = json["PassingTouchdowns"]{
-            passingStats.append("Passing Touchdowns")
-            passing.updateValue(String(p1 as! Int), forKey: "Passing Touchdowns")
-        }
-        if let p1 = json["PassingYards"]{
-            passingStats.append("Passing Yards")
-            passing.updateValue(String(p1 as! Int), forKey: "Passing Yards")
-        }
-        if let p1 = json["PassingYardsPerAttempts"]{
-            passingStats.append("Passing Yards/Attempt")
-            passing.updateValue(String(p1 as! Float), forKey: "Passing Yards/Attempt")
-        }
-        if let p1 = json["PassingYardsPerCompletion"]{
-            passingStats.append("Passing Yards/Completion")
-            passing.updateValue(String(p1 as! Float), forKey: "Passing Yards/Completion")
-        }
-        if let p1 = json["PassingInterceptions"]{
-            passingStats.append("Passing Interceptions")
-            passing.updateValue(String(p1 as! Int), forKey: "Passing Interceptions")
-        }
-        if let p1 = json["PassingRating"]{
-            passingStats.append("Passing Rating")
-            passing.updateValue(String(p1 as! Float), forKey: "Passing Rating")
-        }
-        if let p1 = json["PassingLong"]{
-            passingStats.append("Longest Pass")
-            passing.updateValue(String(p1 as! Int), forKey: "Longest Pass")
-        }
-        if let p1 = json["PassingSacks"]{
-            passingStats.append("Passing Sacks")
-            passing.updateValue(String(p1 as! Int), forKey: "Passing Sacks")
-        }
-        if let p1 = json["TwoPointConversionPasses"]{
-            passingStats.append("2pt Conversion Passes")
-            passing.updateValue(String(p1 as! Int), forKey: "2pt Conversion Passes")
-        }
-        statistics.updateValue(passing, forKey: "Passing")
-        
-        var rec = Dictionary<String, String>()
-        receivingStats = [String]()
-        if let r = json["ReceivingYards"]{
-            receivingStats.append("Receiving Yards")
-            rec.updateValue(String(r as! Int), forKey: "Receiving Yards")
-        }
-        if let r = json["ReceivingYardsPerReception"]{
-            receivingStats.append("Receiving Yards/Reception")
-            rec.updateValue(String(r as! Int), forKey: "Receiving Yards/Reception")
-        }
-        if let r = json["ReceivingTouchdowns"]{
-            receivingStats.append("Receiving Touchdowns")
-            rec.updateValue(String(r as! Int), forKey: "Receiving Touchdowns")
-        }
-        if let r = json["ReceivingLong"]{
-            receivingStats.append("Longest Reception")
-            rec.updateValue(String(r as! Int), forKey: "Longest Reception")
-        }
-        statistics.updateValue(rec, forKey: "Receiving")
-        
-        var def = Dictionary<String, String>()
-        defensiveStats = [String]()
-        if let d = json["Tackles"]{
-            defensiveStats.append("Tackles")
-            def.updateValue(String(d as! Int), forKey: "Tackles")
-        }
-        if let d = json["SoloTackles"]{
-            defensiveStats.append("Solo Tackles")
-            def.updateValue(String(d as! Int), forKey: "Solo Tackles")
-        }
-        if let d = json["AssistedTackles"]{
-            defensiveStats.append("Assisted Tackles")
-            def.updateValue(String(d as! Int), forKey: "Assisted Tackles")
-        }
-        if let d = json["Sacks"]{
-            defensiveStats.append("Sacks")
-            def.updateValue(String(d as! Int), forKey: "Sacks")
-        }
-        if let d = json["PassesDefended"]{
-            defensiveStats.append("Passes Defended")
-            def.updateValue(String(d as! Int), forKey: "Passes Defended")
-        }
-        if let d = json["BlockedKicks"]{
-            defensiveStats.append("Blocked Kicks")
-            def.updateValue(String(d as! Int), forKey: "Blocked Kicks")
-        }
-        if let d = json["OffensiveSnapsPlayed"]{
-            defensiveStats.append("Off. Snaps Played")
-            def.updateValue(String(d as! Int), forKey: "Off. Snaps Played")
-        }
-        if let d = json["DefensiveSnapsPlayed"]{
-            defensiveStats.append("Def. Snaps Played")
-            def.updateValue(String(d as! Int), forKey: "Def. Snaps Played")
-        }
-        if let d = json["SpecialTeamsSnapsPlayed"]{
-            defensiveStats.append("Special Snaps Played")
-            def.updateValue(String(d as! Int), forKey: "Tackles")
-        }
-        if let d = json["OffensiveTeamSnaps"]{
-            defensiveStats.append("Off. Team Snaps")
-            def.updateValue(String(d as! Int), forKey: "Off. Team Snaps")
-        }
-        if let d = json["DefensiveTeamSnaps"]{
-            defensiveStats.append("Def. Team Snaps")
-            def.updateValue(String(d as! Int), forKey: "Def. Team Snaps")
-        }
-        if let d = json["SpecialTeamSnaps"]{
-            defensiveStats.append("Special Team Snaps")
-            def.updateValue(String(d as! Int), forKey: "Special Team Snaps")
-        }
-        statistics.updateValue(def, forKey: "Defense")
-        
-        var rush = Dictionary<String, String>()
-        rushStats = [String]()
-        if let r = json["RushingAttempts"]{
-            rushStats.append("Rush Attempts")
-            rush.updateValue(String(r as! Int), forKey: "Rushing Attempts")
-        }
-        if let r = json["RushingYardsPerAttempts"]{
-            rushStats.append("Rush Yards/Attempt")
-            rush.updateValue(String(r as! Float), forKey: "Rushing Yards/Attempt")
-        }
-        if let r = json["RushingTouchdowns"]{
-            rushStats.append("Rush Touchdowns")
-            rush.updateValue(String(r as! Int), forKey: "Rushing Touchdowns")
-        }
-        if let r = json["RushingLong"]{
-            rushStats.append("Longest Rush")
-            rush.updateValue(String(r as! Int), forKey: "Longest Rush")
-        }
-        statistics.updateValue(rush, forKey: "Rushing")
-        
-        var kick = Dictionary<String, String>()
-        kickStats = [String]()
-        if let k = json["KickReturns"]{
-            kickStats.append("Kick Returns")
-            kick.updateValue(String(k as! Int), forKey: "Kick Returns")
-        }
-        if let k = json["KickReturnYards"]{
-            kickStats.append("Kick Return Yards")
-            kick.updateValue(String(k as! Int), forKey: "Kick Return Yards")
-        }
-        if let k = json["KickReturnYardsPerAttempt"]{
-            kickStats.append("Kick Return Yds/Attempt")
-            kick.updateValue(String(k as! Float), forKey: "Kick Return Yds/Attempt")
-        }
-        if let k = json["KickReturnTouchdowns"]{
-            kickStats.append("Kick Return Touchdowns")
-            kick.updateValue(String(k as! Int), forKey: "Kick Return Touchdowns")
-        }
-        if let k = json["KickReturnLong"]{
-            kickStats.append("Longest Kick Return")
-            kick.updateValue(String(k as! Int), forKey: "Longest Kick Return")
-        }
-        statistics.updateValue(kick, forKey: "Kicking")
-        
-        var punt = Dictionary<String, String>()
-        puntStats = [String]()
-        if let p = json["Punts"]{
-            puntStats.append("Punts")
-            punt.updateValue(String(p as! Int), forKey: "Punts")
-        }
-        if let p = json["PuntYards"]{
-            puntStats.append("Punt Yds")
-            punt.updateValue(String(p as! Int), forKey: "Punt Yds")
-        }
-        if let p = json["PuntAverage"]{
-            puntStats.append("Punt Avg")
-            punt.updateValue(String(p as! Int), forKey: "Punt Avg")
-        }
-        if let p = json["PuntReturns"]{
-            puntStats.append("Returns")
-            punt.updateValue(String(p as! Int), forKey: "Returns")
-        }
-        if let p = json["PuntReturnYards"]{
-            puntStats.append("Return Yards")
-            punt.updateValue(String(p as! Int), forKey: "Return Yards")
-        }
-        if let p = json["PuntReturnYardsPerAttempt"]{
-            puntStats.append("Return Yards/Attempt")
-            punt.updateValue(String(p as! Float), forKey: "Return Yards/Attempt")
-        }
-        if let p = json["PuntReturnTouchdowns"]{
-            puntStats.append("Return Touchdowns")
-            punt.updateValue(String(p as! Int), forKey: "Return Touchdowns")
-        }
-        if let p = json["PuntReturnLong"]{
-            puntStats.append("Longest Return")
-            punt.updateValue(String(p as! Int), forKey: "Longest Return")
-        }
-        statistics.updateValue(punt, forKey: "Punting")
-        
-        setUpTableView()
-        print("omg parsed")
-    }
-    
-    func setStats(id: Int, json: NSArray) -> Void{
-        var passYds: Int = 0
-        var rushYds: Int = 0
-        var tds: Int = 0
-        for item in json{
-            let data = item as! NSDictionary
-            passYds = data["PassingYards"] as! Int
-            rushYds = data["RushingYards"] as! Int
-            tds = data["Touchdowns"] as! Int
-            print("got data")
-        }
-        setNeedsLayout()
     }
     
     func getStatusBackground(status: String) -> UIColor{
@@ -413,7 +99,7 @@ class PlayerDetailView: UIView, UITableViewDelegate, UITableViewDataSource, UIPi
         }
     }
     
-    func addCustomView(){
+    func addCustomView(delegate: HCPlayerMoreDetailController){
         backgroundColor = UIColor.init(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
         
         detailContainer = UIView()
@@ -455,7 +141,6 @@ class PlayerDetailView: UIView, UITableViewDelegate, UITableViewDataSource, UIPi
         personalDetailsContainer.addSubview(statCatLabel)
         
         statCatButton = UIButton.init(type: UIButtonType.System)
-        statCatButton.setTitle(statPickerData[0], forState: UIControlState.Normal)
         statCatButton.titleLabel!.font = statCatButton.titleLabel!.font.fontWithSize(12)
         statCatButton.sizeToFit()
         statCatButton.hidden = true
@@ -669,25 +354,31 @@ class PlayerDetailView: UIView, UITableViewDelegate, UITableViewDataSource, UIPi
         gameDetailLabels.opp.text = "Opp"
         gameDetailLabels.points.text = "Pts"
         gameDetailLabels.started.text = "Started"
+        gameDetailLabels.setTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5))
         gameDetailContainer.addSubview(gameDetailLabels)
         
         gameDetail1 = GameStatView()
+        gameDetailLabels.setTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
         gameDetailContainer.addSubview(gameDetail1)
         
         gameDetail2 = GameStatView()
+        gameDetailLabels.setTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
         gameDetailContainer.addSubview(gameDetail2)
         
         gameDetail3 = GameStatView()
+        gameDetailLabels.setTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
         gameDetailContainer.addSubview(gameDetail3)
         
         gameDetail4 = GameStatView()
+        gameDetailLabels.setTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
         gameDetailContainer.addSubview(gameDetail4)
         
         gameDetail5 = GameStatView()
+        gameDetailLabels.setTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
         gameDetailContainer.addSubview(gameDetail5)
         
-        statCatPicker.dataSource = self
-        statCatPicker.delegate = self
+        statCatPicker.dataSource = delegate
+        statCatPicker.delegate = delegate
         statCatPicker.hidden = true
         addSubview(statCatPicker)
 //        table = UITableView()
@@ -944,6 +635,61 @@ class PlayerDetailView: UIView, UITableViewDelegate, UITableViewDataSource, UIPi
         }
     }
     
+    override func layoutSubviews(){
+        super.layoutSubviews()
+        circle.layer.masksToBounds = true
+        circle.layer.borderWidth = 0
+        circle.layer.cornerRadius = circle.bounds.width / 2;
+        circle.backgroundColor = UIColor.init(red: 0.95, green: 0.95, blue: 0.95, alpha: 1)
+        
+        playerImage.layer.masksToBounds=true
+        playerImage.layer.borderWidth = 1
+        playerImage.layer.borderColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.1 ).CGColor
+        playerImage.layer.cornerRadius = playerImage.bounds.width / 2
+    }
+    
+    func setOverviewData(stat1Label: String, stat1Text: String, stat2Label: String, stat2Text: String, stat3Label: String, stat3Text: String, stat4Label: String, stat4Text: String, stat5Label: String, stat5Text:String, stat6Label: String, stat6Text: String){
+        self.stat1Label.text = stat1Label
+        self.stat1Text.text = stat1Text
+        self.stat2Label.text = stat2Label
+        self.stat2Text.text = stat2Text
+        self.stat3Label.text = stat3Label
+        self.stat3Text.text = stat3Text
+        self.stat4Label.text = stat4Label
+        self.stat4Text.text = stat4Text
+        self.stat5Label.text = stat5Label
+        self.stat5Text.text = stat5Text
+        self.stat6Label.text = stat6Text
+        self.stat6Text.text = stat6Text
+    }
+    
+    func buttonClicked(sender: AnyObject?) {
+        if sender === moreGamesButton {
+            if(currentSheetVisibility == SheetVisibility.Full){
+                updateSheet(SheetVisibility.Mid)
+            }else if(currentSheetVisibility == SheetVisibility.Mid){
+                updateSheet(SheetVisibility.Full)
+            }
+        }else if sender === moreStatsButton{
+            if(currentSheetVisibility == SheetVisibility.Mid){
+                updateSheet(SheetVisibility.Gone)
+            }else if(currentSheetVisibility == SheetVisibility.Gone){
+                updateSheet(SheetVisibility.Mid)
+            }
+        }else if sender === statCatButton{
+            showPicker()
+        }
+    }
+    
+    func showPicker(){
+        if(statCatPicker.hidden == true){
+            statCatPicker.hidden = false
+            UIView.animateWithDuration(0.5, animations: {
+                self.statCatPicker.alpha = 1.0
+            })
+        }
+    }
+    
     func updateSheet(newVisibility: SheetVisibility){
         switch(newVisibility){
         case SheetVisibility.Gone:
@@ -1051,128 +797,12 @@ class PlayerDetailView: UIView, UITableViewDelegate, UITableViewDataSource, UIPi
         }
     }
     
-    func statsForCategory(cat: String) ->[String]{
-        switch(cat){
-            case "General": return generalStats
-            case "Scoring": return scoringStats
-            case "Passing": return passingStats
-            case "Receiving": return receivingStats
-            case "Defense": return defensiveStats
-            case "Rushing": return rushStats
-            case "Kicking": return kickStats
-            case "Punting": return puntStats
-        default: return generalStats
-        }
-    }
-    
-    func setUpTableView(){
-        currentCat = statPickerData[0]
-        statCatButton.setTitle(currentCat, forState: UIControlState.Normal)
+    func setUpTableView(initialCategory: String, delegate: HCPlayerMoreDetailController){
+        statCatButton.setTitle(initialCategory, forState: UIControlState.Normal)
         statTable.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        statTable.delegate = self
-        statTable.dataSource = self
+        statTable.delegate = delegate
+        statTable.dataSource = delegate
         statTable.setNeedsLayout()
-    }
-    
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(tableView === statTable){
-            return statsForCategory(currentCat).count
-        }
-        else{ return 1 }
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("cell") as UITableViewCell!
-        if (cell != nil)
-        {
-            cell = UITableViewCell(style: UITableViewCellStyle.Value1,
-                                   reuseIdentifier:"cell")
-        }
-        let stat = statistics[currentCat]
-        if(stat!.count > 0){
-        cell.textLabel!.text = statsForCategory(currentCat)[indexPath.row]
-        cell.detailTextLabel!.text = stat![statsForCategory(currentCat)[indexPath.row]]
-        cell.backgroundColor = UIColor.whiteColor()
-        cell.setNeedsLayout()
-        }
-        return cell
-    }
-    
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 30
-    }
-    
-    override func layoutSubviews(){
-        super.layoutSubviews()
-        circle.layer.masksToBounds = true
-        circle.layer.borderWidth = 0
-        circle.layer.cornerRadius = circle.bounds.width / 2;
-        circle.backgroundColor = UIColor.init(red: 0.95, green: 0.95, blue: 0.95, alpha: 1)
-        
-        playerImage.layer.masksToBounds=true
-        playerImage.layer.borderWidth = 1
-        playerImage.layer.borderColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.1 ).CGColor
-        playerImage.layer.cornerRadius = playerImage.bounds.width / 2
-    }
-    
-    func buttonClicked(sender: AnyObject?) {
-        if sender === moreGamesButton {
-            if(currentSheetVisibility == SheetVisibility.Full){
-                updateSheet(SheetVisibility.Mid)
-            }else if(currentSheetVisibility == SheetVisibility.Mid){
-                updateSheet(SheetVisibility.Full)
-            }
-        }else if sender === moreStatsButton{
-            if(currentSheetVisibility == SheetVisibility.Mid){
-                updateSheet(SheetVisibility.Gone)
-            }else if(currentSheetVisibility == SheetVisibility.Gone){
-                updateSheet(SheetVisibility.Mid)
-            }
-        }else if sender === statCatButton{
-            showPicker()
-        }
-    }
-    
-    func showPicker(){
-        if(statCatPicker.hidden == true){
-            statCatPicker.hidden = false
-            UIView.animateWithDuration(0.5, animations: { 
-                self.statCatPicker.alpha = 1.0
-            })
-        }
-    }
-    
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return statPickerData.capacity
-    }
-    
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        currentCat = statPickerData[row]
-        statCatButton.setTitle(currentCat, forState: UIControlState.Normal)
-        statTable.reloadData()
-        UIView.animateWithDuration(0.5, animations: {
-            self.statCatPicker.alpha = 0.0
-            }, completion: { b in
-                if(b){
-                    self.statCatPicker.hidden = true
-                }
-        })
-    }
-    
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return statPickerData[row]
-    }
-    
-    func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        return NSAttributedString(string: statPickerData[row])
-    }
-    
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-        return 1
     }
     
     enum SheetVisibility: Int{
