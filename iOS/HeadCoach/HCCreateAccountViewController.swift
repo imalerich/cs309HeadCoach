@@ -10,94 +10,116 @@ import Foundation
 import SnapKit
 import RealmSwift
 
-class HCCreateAccountViewController: UIViewController,UITableViewDelegate,UITableViewDataSource{
+class HCCreateAccountViewController: UIViewController {
     
     let info = UILabel()
-    let tableView = UITableView()
     let createButton = UIButton()
     let userName = UITextField()
-    var leagues:[HCLeague] = []
+
+    let back = UIButton()
+
+    var pageController: HCSetupViewController? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.whiteColor()
+        self.view.backgroundColor = UIColor.clearColor()
         self.view.addSubview(info)
-        self.view.addSubview(tableView)
         self.view.addSubview(createButton)
         self.view.addSubview(userName)
-        tableView.delegate = self
-        tableView.dataSource = self
+        self.view.addSubview(back)
+
+        back.setTitle("Back", forState: .Normal)
+        back.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        back.addTarget(self, action: #selector(self.backToLogin(_:)), forControlEvents: .TouchUpInside)
+
         userName.placeholder = "username"
+        userName.textColor = UIColor.whiteColor()
+        userName.backgroundColor = UIColor(white: 0.0, alpha: 0.1)
+        userName.layer.borderColor = UIColor(white: 1.0, alpha: 0.4).CGColor
+        userName.textAlignment = .Center
+        userName.layer.cornerRadius = 25
+        userName.layer.borderWidth = 1
+        userName.clipsToBounds = true
+
         info.numberOfLines = 0
-        tableView.registerClass(HCLeagueCell.classForCoder(), forCellReuseIdentifier: "CreateCell")
-        info.text = "Enter a unique username and select a league to join"
+        info.text = "Enter your desired Head Coach account name."
+        info.textAlignment = .Center
+        info.textColor = UIColor.whiteColor()
+
         createButton.setTitle("Create Account", forState: .Normal)
-        createButton.layer.borderColor = UIColor.lightGrayColor().CGColor
-        createButton.layer.borderWidth = 2
-        createButton.setTitleColor(UIColor.lightGrayColor(), forState: .Normal)
-        createButton.addTarget(self, action: "createAccountAction:", forControlEvents: UIControlEvents.TouchUpInside)
-        HCHeadCoachDataProvider.sharedInstance.getAllLeagues { (error, leaguestemp) in
-                self.leagues = leaguestemp
-                print(self.leagues.count)
-                self.tableView.reloadData()
-            }
-        info.snp_makeConstraints { (make) in
-            make.centerX.equalTo(self.view.snp_centerX)
-            make.top.lessThanOrEqualTo(100)
-            make.height.equalTo(50)
-            make.width.equalTo(200)
+        createButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        createButton.addTarget(self, action: #selector(self.createAccountAction(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        createButton.backgroundColor = UIColor.footballColor(1.3)
+        createButton.layer.cornerRadius = 25
+        createButton.addTouchEvents()
+
+        back.snp_makeConstraints { (make) in
+            make.left.equalTo(self.view.snp_left)
+            make.top.equalTo(self.view.snp_top).offset(20)
+            make.width.equalTo(80)
+            make.height.equalTo(40)
         }
+
         userName.snp_makeConstraints { (make) in
-            make.left.equalTo(info.snp_left)
-            make.top.equalTo(info.snp_bottom)
+            make.centerX.equalTo(self.view.snp_centerX)
+            make.centerY.equalTo(self.view.snp_centerY)
             make.height.equalTo(50)
             make.width.equalTo(200)
         }
-       
-        tableView.snp_makeConstraints { (make) in
-            make.centerX.equalTo(userName.snp_centerX)
-            make.top.equalTo(userName.snp_bottom)
-            make.height.equalTo(300)
-            make.width.equalTo(200)
+
+        info.snp_makeConstraints { (make) in
+            make.bottom.equalTo(userName.snp_top).offset(-32)
+            make.height.equalTo(50)
+            make.left.equalTo(userName.snp_left)
+            make.right.equalTo(userName.snp_right)
         }
+
         createButton.snp_makeConstraints { (make) in
-            make.centerX.equalTo(userName.snp_centerX)
-            make.top.equalTo(tableView.snp_bottom)
+            make.top.equalTo(userName.snp_bottom).offset(32)
             make.height.equalTo(50)
-            make.width.equalTo(150)
+            make.left.equalTo(userName.snp_left)
+            make.right.equalTo(userName.snp_right)
         }
-        
+
     }
     func createAccountAction(sender: UIButton!){
-        UIView.animateWithDuration(0.09,animations: { self.createButton.transform = CGAffineTransformMakeScale(0.6, 0.6) },completion: { finish in UIView.animateWithDuration(0.09){ self.createButton.transform = CGAffineTransformIdentity }})
-                HCHeadCoachDataProvider.sharedInstance.registerUser(userName.text!) { (error) in
-                HCHeadCoachDataProvider.sharedInstance.getUserID(self.userName.text!, completion: { (error, user) in
-                HCHeadCoachDataProvider.sharedInstance.getLeagueID(self.leagues[self.tableView.indexPathForSelectedRow!.row].name, completion: { (error, league) in
-                HCHeadCoachDataProvider.sharedInstance.addUserToLeague(user!, league: league!, completion: { (error) in
-                        print(error)
-                    HCHeadCoachDataProvider.sharedInstance.getAllUsersForLeague(league!, completion: { (error, user) in
-                        print(user)
-                    })
-                        })
-                    })
-                })
+        if userName.text?.characters.count == 0 {
+            let alert = UIAlertController(title: "Error",
+                                          message: "Please enter a desired username",
+                                          preferredStyle: .Alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default, handler: nil))
+            presentViewController(alert, animated: true, completion: nil)
+
+            return
+        }
+
+        let dp = HCHeadCoachDataProvider.sharedInstance
+        dp.registerUser(userName.text!) { (error) in
+            if error {
+                let alert = UIAlertController(title: "Error",
+                                              message: "Account name already exists.",
+                                              preferredStyle: .Alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
+
+                return
             }
-        
-    }
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("CreateCell", forIndexPath: indexPath)
-        print(leagues[indexPath.row].name)
-        cell.textLabel?.text = leagues[indexPath.row].name
-        
-        return cell
+
+            dp.getUserID(self.userName.text!, completion: { (error, user) in
+                dp.user = user
+                self.pageController?.pagevc.setViewControllers([(self.pageController?.joinLeague)!],
+                    direction: UIPageViewControllerNavigationDirection.Forward,
+                    animated: true, completion: nil)
+            })
+        }
     }
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return leagues.count
-    }
-
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 50
+    /// Pushes the original login view controller as the active view
+    /// in the UIPageViewController responsible for managing login.
+    func backToLogin(sender:UIButton!){
+        pageController?.pagevc.setViewControllers([(pageController?.login)!],
+                                           direction: UIPageViewControllerNavigationDirection.Reverse,
+                                           animated: true, completion: nil)
     }
     
 }

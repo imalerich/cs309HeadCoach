@@ -24,6 +24,15 @@ class HCUser: CustomStringConvertible {
         return "{\nid: \(id)\nname: \(name)\nreg_date: \(reg_date)\n}\n"
     }
 
+    /// Initializes a bare user using only an id.
+    /// This should only be used for passing to API
+    /// calls, as the 'name' and 'reg_date' will be invalid.
+    /// If you do not need these properties, this 'user' will
+    /// valid for all API calls.
+    init(id: Int) {
+        self.id = id
+    }
+
     /// Initializes a user with data stored
     /// in the NSUserDefaults
     init(id: Int, name: String, red_date: Int) {
@@ -34,10 +43,10 @@ class HCUser: CustomStringConvertible {
 
     /// Initialize with data retrieved from the 
     /// HeadCoach API.
-    init(json: Dictionary<String, AnyObject>) {
-        id = Int(json["id"] as! String)!
-        name = json["user_name"] as! String
-        reg_date = Int(json["reg_date"] as! String)!
+    init(json: Dictionary<String, String>) {
+        id = Int(json["id"]!)!
+        name = json["user_name"]!
+        reg_date = Int(json["reg_date"]!)!
     }
 
     /// Creates an empty user, any API call will fail

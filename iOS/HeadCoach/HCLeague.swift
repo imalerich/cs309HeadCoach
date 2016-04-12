@@ -22,6 +22,12 @@ class HCLeague: CustomStringConvertible {
     /// Array of HCUsers who particpate in this league.
     internal var users = [Int]()
 
+    /// The current week number for this league.
+    /// Possible values include:
+    ///     0 - Preseason
+    ///     [1-17] - Regular Season
+    internal var week_number = 0
+
     /// String conversion for debug printing.
     var description: String {
         return "{\nid: \(id)\nname: \(name)\ndrafting_style: \(drafting_style)\n}\n"
@@ -31,23 +37,25 @@ class HCLeague: CustomStringConvertible {
     /// This can be used when you need to store a league
     /// in the NSUserDefaults, as is done by the
     /// HCHeadCoachDataProvider.
-    init(id: Int, name: String, drafting_style: Int, users: [Int]) {
+    init(id: Int, name: String, drafting_style: Int, users: [Int], week: Int) {
         self.id = id
         self.name = name
         self.drafting_style = drafting_style
         self.users = users
+        self.week_number = week
     }
 
     /// Initialize with data retrieved from the
     /// HeadCoach API.
-    init(json: Dictionary<String, AnyObject>) {
-        id = Int(json["id"] as! String)!
-        name = json["name"] as! String
-        drafting_style = Int(json["drafting"] as! String)!
+    init(json: Dictionary<String, String>) {
+        id = Int(json["id"]!)!
+        name = json["name"]!
+        drafting_style = Int(json["drafting"]!)!
+        week_number = Int(json["week"]!)!
 
         for i in 0...4 {
             // add all the users for this league
-            let user = Int(json["member\(i)"] as! String)!
+            let user = Int(json["member\(i)"]!)!
             if user > 0 {
                 users.append(user)
             }

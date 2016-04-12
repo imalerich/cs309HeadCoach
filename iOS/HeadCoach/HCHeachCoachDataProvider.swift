@@ -19,6 +19,39 @@ class HCHeadCoachDataProvider: NSObject {
     /// Private constant for bench related API calls.
     private let PLAYER_BENCH = 1
 
+    /// Name for the notification sent out when the user
+    /// login changes.
+    static let UserDidLogin = "UserDidLogin"
+    /// Name for the notification sent out when the 'league'
+    /// property is updated.
+    static let LeagueDidUpdate = "LeagueDidUpdate"
+
+    /// The root API address for the HeadCoach servince.
+    /// http://localhost/ can be used for testing new changes
+    /// to the server. Otherwise the CS309 server should be used.
+    let api =
+//        "http://proj-309-08.cs.iastate.edu"
+        "http://localhost"
+
+    /// When the shared instance is first created,
+    /// send a request to the server to update all of its
+    /// internal schedule data, the server will NOT automatically
+    /// update its data, as it expects this app to give it 
+    /// arbitrary dates for debug purposes
+    override init() {
+        super.init()
+
+//        let url = "\(api)/schedule/update.php?week=5"
+//        Alamofire.request(.GET, url).responseJSON { response in }
+
+        // make sure the curent league data is up to date
+        if league != nil && league?.name != nil {
+            getLeagueID((league?.name)!, completion: { (err, league) in
+                self.league = league
+            })
+        }
+    }
+
     // ------------------------------------
     // MARK: Account and League Management.
     // ------------------------------------
@@ -46,6 +79,8 @@ class HCHeadCoachDataProvider: NSObject {
             NSUserDefaults.standardUserDefaults().setValue(newUser!.reg_date,
                                                            forKey: "HC.USER.REG_DATE")
             NSUserDefaults.standardUserDefaults().synchronize()
+
+            NSNotificationCenter.defaultCenter().postNotificationName(HCHeadCoachDataProvider.UserDidLogin, object: self)
         }
     }
 
@@ -59,9 +94,10 @@ class HCHeadCoachDataProvider: NSObject {
             let name = NSUserDefaults.standardUserDefaults().stringForKey("HC.LEAGUE.NAME")
             let drafting = NSUserDefaults.standardUserDefaults().integerForKey("HC.LEAGUE.DRAFTING")
             let users = NSUserDefaults.standardUserDefaults().arrayForKey("HC.LEAGUE.USERS")
+            let week = NSUserDefaults.standardUserDefaults().integerForKey("HC.LEAGUE.WEEK")
 
             if name == nil { return nil }
-            return HCLeague(id: id, name: name!, drafting_style: drafting, users: users as! [Int])
+            return HCLeague(id: id, name: name!, drafting_style: drafting, users: users as! [Int], week: week)
         }
 
         set(newLeague) {
@@ -73,7 +109,11 @@ class HCHeadCoachDataProvider: NSObject {
                                                            forKey: "HC.LEAGUE.DRAFTING")
             NSUserDefaults.standardUserDefaults().setValue(newLeague!.users,
                                                            forKey: "HC.LEAGUE.USERS")
+            NSUserDefaults.standardUserDefaults().setValue(newLeague!.week_number,
+                                                           forKey: "HC.LEAGUE.WEEK")
             NSUserDefaults.standardUserDefaults().synchronize()
+
+            NSNotificationCenter.defaultCenter().postNotificationName(HCHeadCoachDataProvider.LeagueDidUpdate, object: self)
         }
     }
 
@@ -91,18 +131,16 @@ class HCHeadCoachDataProvider: NSObject {
         NSUserDefaults.standardUserDefaults().setValue(0, forKey: "HC.USER.ID")
         NSUserDefaults.standardUserDefaults().setValue(nil, forKey: "HC.USER.NAME")
         NSUserDefaults.standardUserDefaults().setValue(0, forKey: "HC.USER.REG_DATE")
+
+        NSUserDefaults.standardUserDefaults().setValue(0, forKey: "HC.LEAGUE.ID")
+        NSUserDefaults.standardUserDefaults().setValue(nil, forKey: "HC.LEAGUE.NAME")
+        NSUserDefaults.standardUserDefaults().setValue(0, forKey: "HC.LEAGUE.DRAFTING")
+        NSUserDefaults.standardUserDefaults().setValue(nil, forKey: "HC.LEAGUE.USERS")
     }
 
     // -------------------------------------
     // MARK: User related network requests.
     // -------------------------------------
-
-    /// The root API address for the HeadCoach servince.
-    /// http://localhost/ can be used for testing new changes
-    /// to the server. Otherwise the CS309 server should be used.
-    let api =
-        "http://proj-309-08.cs.iastate.edu"
-//        "http://localhost"
 
     /// Send a request to the server to create a new user in the database.
     /// The service will assign a unique id that can be retrieved with the
@@ -111,13 +149,16 @@ class HCHeadCoachDataProvider: NSObject {
         let url = "\(api)/users/get.php?name=\(userName)"
 
         Alamofire.request(.GET, url).responseJSON { response in
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 // set the currently logged in user
-                self.user = HCUser(json: json[0])
-                completion(false, self.user)
-            } else {
-                completion(true, nil)
+                if json.count > 0 {
+                    self.user = HCUser(json: json[0])
+                    completion(false, self.user)
+                    return
+                }
             }
+
+            completion(true, nil)
         }
     }
 
@@ -144,7 +185,7 @@ class HCHeadCoachDataProvider: NSObject {
 
         Alamofire.request(.GET, url).responseJSON { response in
             var users = [HCUser]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 for item in json {
                     users.append(HCUser(json: item))
                 }
@@ -181,9 +222,9 @@ class HCHeadCoachDataProvider: NSObject {
         let url = "\(api)/leagues/get.php?name=\(leagueName)"
 
         Alamofire.request(.GET, url).responseJSON { response in
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Dictionary<String, String> {
                 // there will only be one user for this call
-                let league = HCLeague(json: json[0])
+                let league = HCLeague(json: json)
                 completion(false, league)
             } else {
                 completion(true, nil)
@@ -215,7 +256,7 @@ class HCHeadCoachDataProvider: NSObject {
 
         Alamofire.request(.GET, url).responseJSON { response in
             var leagues = [HCLeague]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 for item in json {
                     leagues.append(HCLeague(json: item))
                 }
@@ -232,7 +273,7 @@ class HCHeadCoachDataProvider: NSObject {
 
         Alamofire.request(.GET, url).responseJSON { response in
             var leagues = [HCLeague]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 for item in json {
                     leagues.append(HCLeague(json: item))
                 }
@@ -250,7 +291,7 @@ class HCHeadCoachDataProvider: NSObject {
 
         Alamofire.request(.GET, url).responseJSON { response in
             var users = [HCUser]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 for item in json {
                     users.append(HCUser(json: item))
                 }
@@ -293,7 +334,7 @@ class HCHeadCoachDataProvider: NSObject {
 
         Alamofire.request(.GET, url).responseJSON { response in
             var players = [HCPlayer]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 for item in json {
                     players.append(HCPlayer(json: item))
                 }
@@ -310,7 +351,7 @@ class HCHeadCoachDataProvider: NSObject {
 
         Alamofire.request(.GET, url).responseJSON { response in
             var players = [HCPlayer]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 for item in json {
                     players.append(HCPlayer(json: item))
                 }
@@ -326,7 +367,7 @@ class HCHeadCoachDataProvider: NSObject {
 
         Alamofire.request(.GET, url).responseJSON { response in
             var players = [HCPlayer]()
-            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+            if let json = response.result.value as? Array<Dictionary<String, String>> {
                 for item in json {
                     players.append(HCPlayer(json: item))
                 }
@@ -409,6 +450,60 @@ class HCHeadCoachDataProvider: NSObject {
             } else {
                 completion(false, false, nil, nil)
             }
+        }
+    }
+
+    // ----------------------------------------
+    // MARK: Schedule related network requests.
+    // ----------------------------------------
+
+    /// Retrieves a list of all the games currently available for
+    /// the input league.
+    internal func getFullScheduleForLeague(league: HCLeague,
+                                          completion: (Bool, [HCGameResult]) -> Void) {
+        let params = "league=\(league.id)"
+        getScheduleForLeague(params, completion: completion)
+    }
+
+    /// Retrieves a list of all the games currently available for
+    /// the input league, limited to the games the input user is 
+    /// involved in.
+    internal func getScheduleForUser(league: HCLeague, user: HCUser,
+                                                 completion: (Bool, [HCGameResult]) -> Void) {
+        let params = "league=\(league.id)&user=\(user.id)"
+        getScheduleForLeague(params, completion: completion)
+    }
+
+    /// Utility method that performs the 'getScheduleForLeague' request for the given parameters.
+    /// For use of this method externally use either the 'getFullScheduleForLeague' or the
+    /// 'getScheduleForUser' call.
+    private func getScheduleForLeague(params: String, completion: (Bool, [HCGameResult]) -> Void) {
+        let url = "\(api)/schedule/getScheduleForLeague.php?\(params)"
+        Alamofire.request(.GET, url).responseJSON { response in
+            var games = [HCGameResult]()
+            if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
+                for item in json {
+                    games.append(HCGameResult(json: item))
+                }
+            }
+
+            completion(games.count == 0, games)
+        }
+    }
+
+    /// Gets the users current statistics for the current league.
+    /// The object retrieved through the completion block will contain
+    /// the users current rank, total score through the league, 
+    /// and the total number of games that player has played.
+    /// The numeber of wins/loses/draws is also included in the HCUserStats object.
+    internal func getUserStats(user: HCUser, league: HCLeague, completion: (HCUserStats?) -> Void) {
+        let url = "\(api)/schedule/getUserStats.php?league=\(league.id)&user=\(user.id)"
+        Alamofire.request(.GET, url).responseJSON { response in
+            if let json = response.result.value as? Dictionary<String, Int> {
+                completion(HCUserStats(user: user, json: json))
+            }
+
+            completion(nil);
         }
     }
 }

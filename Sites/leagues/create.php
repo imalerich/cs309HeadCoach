@@ -9,7 +9,7 @@ if (mysqli_connect_errno()) {
 	);
 }
 
-// header("Content-Type: applicaeion/json");
+header("Content-Type: application/json");
 require_once 'HTTP/Request2.php';
 
 // check and make sure all required parameters are present
@@ -95,7 +95,7 @@ $request->setBody("{body}");
 // Mac OS X will not behave with this
 // if either is not working it's probably
 // this lines fault
-$request->setAdapter('curl');
+// $request->setAdapter('curl');
 
 // send and process the request
 try {
@@ -131,9 +131,47 @@ try {
 	}
 
 } catch (HttpException $e) {
-	echo "Request failed with error $e";
+	die("Request failed with error $e");
 }
 
+// now that we have created the draft table for this league
+// we need to create a schedule table for this league
+// this table will maintain the schedule of games for the
+// current season
+
+// we will schedule games once per week each Sunday
+// starting September 6th and continuing for 17 weeks
+
+$schedule_table = $_GET["name"] . "_schedule";
+
+// drop the table if it exists, the original league must have been deleted
+$query = "DROP TABLE IF EXISTS {$schedule_table}";
+if (!($result = mysqli_query($db, $query))) {
+	die("Database query failed with errer: " . mysqli_error($db));
+}
+
+$query = "CREATE TABLE " 
+	. $schedule_table
+	. "("
+	. "id INT(11) NOT NULL AUTO_INCREMENT, "
+	. "user_id_0 INT(11) NOT NULL, "
+	. "user_id_1 INT(11) NOT NULL, "
+	. "week INT(11) NOT NULL, "
+	. "score_0 INT(11) NOT NULL DEFAULT 0, "
+	. "score_1 INT(11) NOT NULL DEFAULT 0, "
+	. "completed INT(1) NOT NULL DEFAULT 0, "
+	. "PRIMARY KEY (id), "
+	. "INDEX (user_id_0), "
+	. "INDEX (user_id_1) "
+	. ")";
+
+$result = mysqli_query($db, $query);
+
+if (!$result) {
+	die("Database query failed with errer: " . mysqli_error($db));
+}
+
+// finished without error
 echo json_encode(
 	array(
 		"error" => False
