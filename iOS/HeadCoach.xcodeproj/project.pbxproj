@@ -12,6 +12,7 @@
 		4802EF6F1CB1A6A700F14FC8 /* HCLeagueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49CE1CA8539B00F2C2F0 /* HCLeagueViewController.swift */; };
 		4802EF711CB2199C00F14FC8 /* HCCreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4802EF701CB2199C00F14FC8 /* HCCreateAccountViewController.swift */; };
 		480FE98D1CB2E6BB00763C1B /* HCLeagueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480FE98C1CB2E6BB00763C1B /* HCLeagueCell.swift */; };
+		B47ACD0F1CBCA7AC00F3D52E /* HCPlayerListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47ACD0E1CBCA7AC00F3D52E /* HCPlayerListViewController.swift */; };
 		B4FAF10F1CB06CD100C130F9 /* HCDraftTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FAF10E1CB06CD100C130F9 /* HCDraftTableViewCell.swift */; };
 		B937D5F61CB74722005FFE79 /* HCGameResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B937D5F51CB74722005FFE79 /* HCGameResult.swift */; };
 		B937D5F81CB7602F005FFE79 /* HCUserStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = B937D5F71CB7602F005FFE79 /* HCUserStats.swift */; };
@@ -59,6 +60,7 @@
 		4802EF701CB2199C00F14FC8 /* HCCreateAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCCreateAccountViewController.swift; sourceTree = "<group>"; };
 		480FE98C1CB2E6BB00763C1B /* HCLeagueCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLeagueCell.swift; sourceTree = "<group>"; };
 		7BF8C3817BE05FA3D44A916C /* Pods_HeadCoach.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HeadCoach.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B47ACD0E1CBCA7AC00F3D52E /* HCPlayerListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPlayerListViewController.swift; sourceTree = "<group>"; };
 		B4FAF10E1CB06CD100C130F9 /* HCDraftTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCDraftTableViewCell.swift; sourceTree = "<group>"; };
 		B937D5F51CB74722005FFE79 /* HCGameResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCGameResult.swift; sourceTree = "<group>"; };
 		B937D5F71CB7602F005FFE79 /* HCUserStats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCUserStats.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 				B9E731881CB40AFD002C5638 /* HCSettingsViewController.swift */,
 				B95496411CB84CBF00AA9F01 /* HCSetupViewController.swift */,
 				B9FC9B621CB8A10E00DF61A2 /* HCJoinLeagueViewController.swift */,
+				B47ACD0E1CBCA7AC00F3D52E /* HCPlayerListViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -389,6 +392,7 @@
 				4802EF711CB2199C00F14FC8 /* HCCreateAccountViewController.swift in Sources */,
 				B9E731891CB40AFD002C5638 /* HCSettingsViewController.swift in Sources */,
 				B96E55F21CA850AB001A4017 /* AppDelegate.swift in Sources */,
+				B47ACD0F1CBCA7AC00F3D52E /* HCPlayerListViewController.swift in Sources */,
 				B94C49FA1CA8539B00F2C2F0 /* UserDetailTableViewCell.swift in Sources */,
 				B94C49E41CA8539B00F2C2F0 /* HCFantasyDataProvider.swift in Sources */,
 				B94C49F81CA8539B00F2C2F0 /* TradeDetailView.swift in Sources */,
