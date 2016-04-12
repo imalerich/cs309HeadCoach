@@ -14,6 +14,7 @@ import RealmSwift
 class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let tableView = UITableView()
+    let menu = HCPositionMenu()
     var undraftedPlayers : [(HCPlayer)] = []
     var displayedPlayers : [(HCPlayer)] = []
     // TODO - rely on position selected in Position Menu
