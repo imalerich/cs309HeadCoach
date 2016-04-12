@@ -30,8 +30,8 @@ class HCHeadCoachDataProvider: NSObject {
     /// http://localhost/ can be used for testing new changes
     /// to the server. Otherwise the CS309 server should be used.
     let api =
-//        "http://proj-309-08.cs.iastate.edu"
-        "http://localhost"
+        "http://proj-309-08.cs.iastate.edu"
+  //      "http://localhost"
 
     /// When the shared instance is first created,
     /// send a request to the server to update all of its

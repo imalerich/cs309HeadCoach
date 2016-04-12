@@ -45,6 +45,9 @@ class FDPlayer: Object
         case All = "All"
         case QB = "QB"
         case TE = "TE"
+        case RB = "RB"
+        case WR = "WR"
+        case K = "K"
     }
     
     
