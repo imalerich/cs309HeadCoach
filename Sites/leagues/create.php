@@ -9,7 +9,7 @@ if (mysqli_connect_errno()) {
 	);
 }
 
-header("Content-Type: application/json");
+// header("Content-Type: application/json");
 require_once 'HTTP/Request2.php';
 
 // check and make sure all required parameters are present
@@ -87,7 +87,7 @@ if (!$result) {
 $request = new HTTP_Request2("https://api.fantasydata.net/nfl/v2/JSON/Players");
 $url = $request->getUrl();
 
-$headers = array("Ocp-Apim-Subscription-Key" => "fa953b83a78d44a1b054b0afbbdff57e");
+$headers = array("Ocp-Apim-Subscription-Key" => "2b7828ede774479883ac80def76b4d45");
 $request->setHeader($headers);
 $request->setMethod(HTTP_Request2::METHOD_GET);
 $request->setBody("{body}");

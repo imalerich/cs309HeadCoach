@@ -32,7 +32,7 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
         edgesForExtendedLayout = .None
 
         // do not actually use purple here
-        menu.backgroundColor = UIColor.purpleColor()
+        menu.backgroundColor = UIColor.footballColor(1.0)
 
         if menu.position == Position.All {
             displayedPlayers = undraftedPlayers
@@ -82,5 +82,14 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 60
+    }
+
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        // TODO
+        // Here, and only here, make a network request to create an FDPlayer from 
+        // the fantasy_id, right now the Fantasy Data provider gets all fd players, 
+        // it will need a call to only get one, as our new design does not require all of them
+        // as we get all of them from my data provider
+        // once this network request is done, you can pass it into davors view to view that player
     }
 }

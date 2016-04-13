@@ -49,6 +49,5 @@ class FDPlayer: Object
         case WR = "WR"
         case K = "K"
     }
-    
-    
+
 }

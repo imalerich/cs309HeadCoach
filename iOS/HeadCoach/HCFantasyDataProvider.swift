@@ -13,10 +13,12 @@ import Alamofire
 class HCFantasyDataProvider{
     static let sharedInstance = HCFantasyDataProvider()
     typealias ServiceInstance = (String) -> Void
+
+    let key = "2b7828ede774479883ac80def76b4d45"
     
     func getPlayerDetails(onCompletion: ServiceInstance){
         // Using Mitch's subscription key
-        let headers = ["Ocp-Apim-Subscription-Key": "fa953b83a78d44a1b054b0afbbdff57e"]
+        let headers = ["Ocp-Apim-Subscription-Key": key]
         Alamofire.request(.GET, "https://api.fantasydata.net/nfl/v2/JSON/Players", headers: headers)
             .responseJSON { response in
                 do{
@@ -91,7 +93,7 @@ class HCFantasyDataProvider{
     
     func getTeamsForSeason(season : Int){
         // Using Joe's subscription key
-        let headers = ["Ocp-Apim-Subscription-Key": "2ae4d2ad88ae486e8dd3004e4259e2f1"]
+        let headers = ["Ocp-Apim-Subscription-Key": key]
         Alamofire.request(.GET, "https://api.fantasydata.net/nfl/v2/JSON/Teams/\(season)", headers: headers)
             .responseJSON { response in
                 do{
@@ -114,7 +116,7 @@ class HCFantasyDataProvider{
     
     func getPlayerStatsForPlayerID(id : Int){
         // Using Joe's subscription key
-        let headers = ["Ocp-Apim-Subscription-Key": "2ae4d2ad88ae486e8dd3004e4259e2f1"]
+        let headers = ["Ocp-Apim-Subscription-Key": key]
         Alamofire.request(.GET, "https://api.fantasydata.net/nfl/v2/XML/PlayerSeasonStatsByPlayerID/2015/\(id)", headers: headers)
             .responseJSON { response in
                 do{
@@ -134,7 +136,7 @@ class HCFantasyDataProvider{
     
     func getPlayerStatsForPlayerID(id : Int, handler: (Int, NSArray) -> Void){
         // Using Joe's subscription key
-        let headers = ["Ocp-Apim-Subscription-Key": "fa953b83a78d44a1b054b0afbbdff57e"]
+        let headers = ["Ocp-Apim-Subscription-Key": key]
         Alamofire.request(.GET, "https://api.fantasydata.net/nfl/v2/JSON/PlayerSeasonStatsByPlayerID/2015/\(id)", headers: headers)
             .responseJSON { response in
                 do{
@@ -153,7 +155,7 @@ class HCFantasyDataProvider{
     
     func getCurrentSeason(){
         // Using Joe's subscription key
-        let headers = ["Ocp-Apim-Subscription-Key": "2ae4d2ad88ae486e8dd3004e4259e2f1"]
+        let headers = ["Ocp-Apim-Subscription-Key": key]
         Alamofire.request(.GET, "https://api.fantasydata.net/nfl/v2/JSON/CurrentSeason", headers: headers)
             .responseJSON { response in
                 
