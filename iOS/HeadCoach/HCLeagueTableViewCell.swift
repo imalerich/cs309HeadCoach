@@ -8,6 +8,7 @@
 
 import Foundation
 import SnapKit
+import ImageLoader
 
 class HCLeagueTableViewCell: UITableViewCell {
 
@@ -16,6 +17,9 @@ class HCLeagueTableViewCell: UITableViewCell {
 
     /// Content view for the cell, the rest will be a border around the cell
     let dataView = UIView()
+
+    /// This will be used to display the users profile picture.
+    let img = UIImageView()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -31,11 +35,25 @@ class HCLeagueTableViewCell: UITableViewCell {
             make.top.equalTo(self.snp_top).offset(OFFSET)
             make.bottom.equalTo(self.snp_bottom)
         })
+
+        // just for testing right now, I'll clean it up later
+        img.contentMode = .ScaleAspectFill
+        img.clipsToBounds = true
+
+        dataView.addSubview(img)
+        img.snp_makeConstraints { (make) in
+            make.left.equalTo(dataView.snp_left)
+            make.top.equalTo(dataView.snp_top)
+            make.bottom.equalTo(dataView.snp_bottom)
+            make.width.equalTo(img.snp_height)
+        }
     }
 
     /// Setup this cell for the given user.
     internal func setUser(user: HCUser) {
-        //
+        if user.img_url.characters.count > 0 {
+            img.load(user.img_url)
+        }
     }
 
     // This shit is required.
