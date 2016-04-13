@@ -16,35 +16,44 @@ class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableView
     /// List of users, this will be our data source for the table view.
     var users = [HCUser]()
 
+    // The header view that will be displayed at the top of the page.
+    let header = HCLeagueDetailsHeaderCell()
+
     /// The actual table view that will display our data.
     let tableView = UITableView()
 
     /// Cell reuse identifier for our user cells.
     let CELL_ID = "LeagueCell"
 
-    /// Cell reuse identifier for our header view.
-    let HEADER_ID = "LeagueHeaderCell"
-
     override func viewDidLoad(){
         super.viewDidLoad()
 
         // Create our table view.
         tableView.registerClass(HCLeagueTableViewCell.self, forCellReuseIdentifier: CELL_ID)
-        tableView.registerClass(HCLeagueDetailsHeaderCell.self, forHeaderFooterViewReuseIdentifier: HEADER_ID)
         tableView.separatorStyle = .None
         tableView.dataSource = self
         tableView.delegate = self
+
+        edgesForExtendedLayout = .None
 
         let background = UIImageView(image: UIImage(named: "blurred_background"))
         background.contentMode = .ScaleAspectFill
         background.alpha = 0.4
         tableView.backgroundColor = UIColor.footballColor(0.2)
         tableView.backgroundView = background
+        tableView.allowsSelection = false
+
+        // Layout the header.
+        view.addSubview(header)
+        header.snp_makeConstraints { (make) in
+            make.top.left.right.equalTo(self.view)
+            make.height.equalTo(50)
+        }
 
         // Layout the table view.
         view.addSubview(tableView)
         tableView.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(view.snp_top)
+            make.top.equalTo(header.snp_bottom)
             make.bottom.equalTo(view.snp_bottom)
             make.left.equalTo(view.snp_left)
             make.right.equalTo(view.snp_right)
@@ -71,6 +80,8 @@ class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableView
                 self.tableView.reloadData()
             })
         }
+
+        header.setLeague(dp.league!)
     }
 
     // ------------------------------------------
@@ -91,19 +102,6 @@ class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableView
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 120
-    }
-
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 50
-    }
-
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = HCLeagueDetailsHeaderCell(reuseIdentifier: HEADER_ID)
-        if let league = HCHeadCoachDataProvider.sharedInstance.league {
-            view.setLeague(league)
-        }
-
-        return view
     }
 
 }
