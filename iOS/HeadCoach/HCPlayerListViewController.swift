@@ -15,8 +15,8 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
     
     let tableView = UITableView()
     let menu = HCPositionMenu()
-    var displayedPlayers = [HCPlayer]()
 
+    var currentPosition = "All"
     var players = Dictionary<String, Array<HCPlayer>>()
 
     override func viewDidLoad(){
@@ -71,8 +71,8 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
     /// then reloads the data for the table view
     func setCurrentPosition(pos: Position) {
         let key = HCPositionUtil.positionToString(pos)
-        displayedPlayers = players[key]!
-        menu.label.text = "Position: \(key)"
+        currentPosition = key
+        menu.label.text = "Position: \(HCPositionUtil.positionToName(pos))"
 
         tableView.reloadData()
     }
@@ -88,7 +88,7 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
         // TODO - MAKE THIS SHIT WORK
         let cell = tableView.dequeueReusableCellWithIdentifier("PlayerListCell", forIndexPath: indexPath) as! HCPlayerListCell
         cell.backgroundColor = indexPath.row % 2 == 0 ? UIColor.whiteColor() : UIColor(white: 0.9, alpha: 1.0)
-        cell.changePlayer(displayedPlayers[indexPath.row])
+        cell.changePlayer(players[currentPosition]![indexPath.row])
         
         return cell
     }
@@ -98,16 +98,16 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return displayedPlayers.count
+        return players[currentPosition]!.count
     }
-    
+
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 60
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let dp = HCFantasyDataProvider()
-        let player = displayedPlayers[indexPath.row]
+        let player = players[currentPosition]![indexPath.row]
 
         dp.getFDPlayerFromHCPlayer(player) { (fd_player) in
             let vc = HCPlayerMoreDetailController()
