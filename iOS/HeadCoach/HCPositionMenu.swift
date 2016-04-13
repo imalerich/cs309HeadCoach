@@ -14,7 +14,7 @@ class HCPositionMenu : UIView {
     var label = UILabel()
     var button = UIButton()
     var position = Position.All
-    let OFFSET = 16
+    let OFFSET = 8
     
     override init(frame: CGRect){
         // TODO - do I need to change this frame?
@@ -30,7 +30,7 @@ class HCPositionMenu : UIView {
         label.font = UIFont.systemFontOfSize(14.0)
         label.textColor = UIColor.whiteColor()
         label.text = "Position: \(HCPositionUtil.positionToString(position))"
-        label.textAlignment = .Center
+        label.textAlignment = .Left
         
         button.setTitle("Change", forState: .Normal)
         button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
@@ -40,20 +40,16 @@ class HCPositionMenu : UIView {
     internal func layoutViews(){
         addSubview(label)
         label.snp_makeConstraints { (make) in
-            make.left.equalTo(snp_left)
-            make.centerY.equalTo(snp_centerY)
-            make.width.equalTo(snp_width).multipliedBy(0.66)
-            make.height.equalTo(snp_height)
-            make.right.equalTo(snp_right).multipliedBy(0.66)
+            make.top.bottom.equalTo(self)
+            make.left.equalTo(snp_left).offset(OFFSET)
+            make.width.equalTo(snp_width).multipliedBy(2/3.0)
         }
         
         addSubview(button)
         button.snp_makeConstraints { (make) in
-            make.left.equalTo(label.snp_right)
-            make.right.equalTo(snp_right)
-            make.width.equalTo(snp_width).multipliedBy(0.33)
-            make.height.equalTo(snp_height)
-            make.centerY.equalTo(snp_centerY)
+            make.top.bottom.equalTo(self)
+            make.right.equalTo(snp_right).offset(-OFFSET)
+            make.width.equalTo(snp_width).multipliedBy(1/3.0)
         }
     }
     

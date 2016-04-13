@@ -13,7 +13,7 @@ import UIKit
 /// Note that 'Bench' is not an actual position,
 /// but is included to aid in the call to
 /// check if a users draft is valid.
-enum Position {
+enum Position: String {
     case QuarterBack
     case RunningBack
     case WideReceiver
@@ -57,6 +57,20 @@ class HCPositionUtil {
         default:
             return "Defence"
         }
+    }
+
+    // Returns an array of all possible position types.
+    class func getAllPositions() -> [Position] {
+        return [
+            Position.QuarterBack,
+            Position.RunningBack,
+            Position.WideReceiver,
+            Position.TightEnd,
+            Position.Kicker,
+            Position.DefensiveLine,
+            Position.Bench,
+            Position.All
+        ]
     }
 
     /// Converts the input 'Position' to its 
