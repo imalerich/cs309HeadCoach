@@ -85,11 +85,14 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        // TODO
-        // Here, and only here, make a network request to create an FDPlayer from 
-        // the fantasy_id, right now the Fantasy Data provider gets all fd players, 
-        // it will need a call to only get one, as our new design does not require all of them
-        // as we get all of them from my data provider
-        // once this network request is done, you can pass it into davors view to view that player
+        let dp = HCFantasyDataProvider()
+        let player = displayedPlayers[indexPath.row]
+
+        dp.getFDPlayerFromHCPlayer(player) { (fd_player) in
+            let vc = HCPlayerMoreDetailController()
+            vc.player = fd_player
+
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }
