@@ -68,6 +68,7 @@ $query = "CREATE TABLE "
 	. "user_id INT(11) NOT NULL, "
 	. "pos VARCHAR(11) NOT NULL,"
 	. "pos_cat VARCHAR(11) NOT NULL,"
+	. "img VARCHAR(99) NOT NULL,"
 	. "on_bench INT(1) NOT NULL DEFAULT 0,"
 	. "fd_id INT(11) NOT NULL, "
 	. "PRIMARY KEY (id), "
@@ -110,6 +111,7 @@ try {
 		$name = $first . " " . $last;
 		$pos = $json[$i]["FantasyPosition"];
 		$pos_cat = $json[$i]["PositionCategory"];
+		$img = $json[$i]["PhotoUrl"];
 		$id = $json[$i]["PlayerID"];
 
 		// we will only use one defensive position for this league
@@ -118,9 +120,9 @@ try {
 		}
 
 		$query  = "INSERT INTO " . $draft_table .  " (";
-		$query .= "name, user_id, pos, pos_cat, fd_id";
+		$query .= "name, user_id, pos, pos_cat, img, fd_id";
 		$query .= ") VALUES (";
-		$query .= "\"{$name}\", 0, \"{$pos}\", \"{$pos_cat}\", $id";
+		$query .= "\"{$name}\", 0, \"{$pos}\", \"{$pos_cat}\", \"{$img}\", $id";
 		$query .= ")";
 
 		$result = mysqli_query($db, $query);

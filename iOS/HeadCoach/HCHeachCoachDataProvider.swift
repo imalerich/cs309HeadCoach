@@ -41,8 +41,8 @@ class HCHeadCoachDataProvider: NSObject {
     override init() {
         super.init()
 
-//        let url = "\(api)/schedule/update.php?week=5"
-//        Alamofire.request(.GET, url).responseJSON { response in }
+        let url = "\(api)/schedule/update.php?week=5"
+        Alamofire.request(.GET, url).responseJSON { response in }
 
         // make sure the curent league data is up to date
         if league != nil && league?.name != nil {
@@ -64,9 +64,10 @@ class HCHeadCoachDataProvider: NSObject {
             let id = NSUserDefaults.standardUserDefaults().integerForKey("HC.USER.ID")
             let name = NSUserDefaults.standardUserDefaults().stringForKey("HC.USER.NAME")
             let reg_date = NSUserDefaults.standardUserDefaults().integerForKey("HC.USER.REG_DATE")
+            let img_url = NSUserDefaults.standardUserDefaults().stringForKey("HC.USER.IMG_URL")
 
             if name == nil { return nil }
-            return HCUser(id: id, name: name!, red_date: reg_date)
+            return HCUser(id: id, name: name!, red_date: reg_date, img_url: img_url)
         }
 
         set(newUser) {
@@ -78,6 +79,8 @@ class HCHeadCoachDataProvider: NSObject {
                                                            forKey: "HC.USER.NAME")
             NSUserDefaults.standardUserDefaults().setValue(newUser!.reg_date,
                                                            forKey: "HC.USER.REG_DATE")
+            NSUserDefaults.standardUserDefaults().setValue(newUser!.img_url,
+                                                           forKey: "HC.USER.IMG_URL")
             NSUserDefaults.standardUserDefaults().synchronize()
 
             NSNotificationCenter.defaultCenter().postNotificationName(HCHeadCoachDataProvider.UserDidLogin, object: self)
@@ -193,6 +196,23 @@ class HCHeadCoachDataProvider: NSObject {
 
             // request complete, return all users found in the database
             completion(users.count == 0, users)
+        }
+    }
+
+    /// This call will update the profile picture for the given user.
+    /// Note: The HeadCoach service will not host this image, a link
+    /// to an external image storage service (such as imgur) is expected
+    /// to be used instead.
+    internal func setUserProfileImage(user: HCUser, imgUrl: String, completion: (Bool) -> Void) {
+        let img = imgUrl.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+        let url = "\(api)/users/setUserImage.php?user=\(user.id)&img=\(img!)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            if let json = response.result.value as? Dictionary<String, AnyObject> {
+                completion(json["error"] as! Bool)
+            } else {
+                completion(false)
+            }
         }
     }
 

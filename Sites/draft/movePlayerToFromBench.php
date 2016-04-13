@@ -32,7 +32,7 @@ $league = mysqli_fetch_assoc($result);
 $draft_table = $league["name"] . "_draft";
 
 // update the draft table for this league to the now state
-$query = "UPDATE {$draft_tabel} SET on_bench={$_GET["state"]} WHERE id={$_GET["player"]}";
+$query = "UPDATE {$draft_table} SET on_bench={$_GET["state"]} WHERE id={$_GET["player"]}";
 
 $result = mysqli_query($db, $query);
 if (!$result) {

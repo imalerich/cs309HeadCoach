@@ -32,6 +32,24 @@ if (!$result) {
 $league = mysqli_fetch_assoc($result);
 $schedule_table = $league["name"] . "_schedule";
 
+// create an array of statistics for each user
+// the key will be the users id, and the value
+// will be an associated dictionary describing
+// the users number of wins, loses, draws,
+// and their total score
+$user_stats = array();
+for ($i = 0; $i < 5; $i++) {
+	$key = "member" . $i;
+	if ($league[$key] > 0) {
+		$user_stats[$league[$key]] = array(
+			"score" => 0,
+			"wins" => 0,
+			"loses" => 0,
+			"draws" => 0
+		);
+	}
+}
+
 // now that we have the table name, output all the data as json
 $query = "SELECT * FROM {$schedule_table}";
 
@@ -40,86 +58,53 @@ if (!$result) {
 	die("Database query failed with error: " . mysqli_error($db));
 }
 
-$game_stats = array(
-	"wins" => 0,
-	"loses" => 0,
-	"draws" => 0
-);
-
 // fetch all the results inta an array
 while ($game = mysqli_fetch_assoc($result)) {
-	$inGame = False;
-	$usersScore = 0;
-	$otherScore = 0;
-
-	// was the user in this game?
-	if ($game["user_id_0"] == $_GET["user"]) {
-		$inGame = True;
-		$usersScore = $game["score_0"];
-		$otherScore = $game["score_1"];
-	} else if ($game["user_id_1"] == $_GET["user"]) {
-		$inGame = True;
-		$usersScore = $game["score_1"];
-		$otherScore = $game["score_0"];
+	// if this game is not yet completed, skip it
+	if ($game["completed"] != 1) {
+		continue;
 	}
 
-	// count the wins and loses
-	if ($inGame) {
-		if ($usersScore < $otherScore) {
-			$game_stats["loses"]++;
-		} else if ($usersScore > $otherScore) {
-			$game_stats["wins"]++;
-		} else {
-			$game_stats["draws"]++;
-		}
+	$user0 = $game["user_id_0"];
+	$user1 = $game["user_id_1"];
+
+	$score0 = $game["score_0"];
+	$score1 = $game["score_1"];
+
+	$user_stats[$user0]["score"] += $score0;
+	$user_stats[$user1]["score"] += $score1;
+
+	if ($score1 < $score0) {
+		$user_stats[$user0]["wins"]++;
+		$user_stats[$user1]["loses"]++;
+	} else if ($score1 > $score0) {
+		$user_stats[$user0]["loses"]++;
+		$user_stats[$user1]["wins"]++;
+	} else {
+		$user_stats[$user0]["draws"]++;
+		$user_stats[$user1]["draws"]++;
 	}
 }
 
-// pull the ranking and total score information from our
-// 'getScoresForLeague' call
-$addr = "http://localhost/schedule/getScoresForLeague.php?league={$_GET["league"]}";
 
-$request = new HTTP_Request2($addr);
-$url = $request->getUrl();
-
-$request->setMethod(HTTP_Request2::METHOD_GET);
-$request->setBody("{body}");
-
-// RHEL will not behave without this
-// Mac OS X will not behave with this
-// if either is not working it's probably
-// this lines fault
-// $request->setAdapter('curl');
-
-try {
-	// add all the players to the database
-	$response = $request->send();
-	$json = json_decode($response->getBody(), True);
-
-	$rank = 1;
-	foreach ($json as $user => $score) {
-		// found the user, output their rank and their score
-		if ($user == $_GET["user"]) {
-			echo json_encode(
-				array(
-					"user" => $user,
-					"rank" => $rank,
-					"score" => $score,
-					"wins" => $game_stats["wins"],
-					"loses" => $game_stats["loses"],
-					"draws" => $game_stats["draws"]
-				)
-			);
-
-			exit();
-		}
-
-		// increment the rank after each user
+$rank = 1;
+$user = $_GET["user"];
+$user_score = $user_stats[$user]["score"];
+foreach ($user_stats as $userid => $stats) {
+	if ($user_score < $stats["score"]) {
 		$rank++;
 	}
-
-} catch (HttpException $e) {
-	die("Request failed with error $e");
 }
+
+echo json_encode(
+	array(
+		"user" => $user,
+		"rank" => $rank,
+		"score" => $user_stats[$user]["score"],
+		"wins" => $user_stats[$user]["wins"],
+		"loses" => $user_stats[$user]["loses"],
+		"draws" => $user_stats[$user]["draws"]
+	)
+);
 
 ?>
