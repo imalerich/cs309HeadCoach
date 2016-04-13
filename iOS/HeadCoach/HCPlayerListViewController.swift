@@ -15,53 +15,58 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
     
     let tableView = UITableView()
     let menu = HCPositionMenu()
-    var undraftedPlayers : [(HCPlayer)] = []
-    var displayedPlayers : [(HCPlayer)] = []
+    var undraftedPlayers = [HCPlayer]()
+    var displayedPlayers = [HCPlayer]()
     
     override func viewDidLoad(){
         super.viewDidLoad()
-        
-        // add views
-        self.view.addSubview(menu)
-        self.view.addSubview(tableView)
-        
         self.title = "Drafting"
         
-        let dp = HCHeadCoachDataProvider.sharedInstance
-        
-        if(undraftedPlayers.count == 0){
-            dp.getUndraftedPlayersInLeague(dp.league!) { (error, players) in
-                self.undraftedPlayers = players
-                self.tableView.reloadData()
-            }
-        }
-        
-        if(menu.position == Position.All){
+        // register custom class
+        tableView.registerClass(HCPlayerListCell.classForCoder(), forCellReuseIdentifier: "PlayerListCell")
+        tableView.delegate = self
+        tableView.dataSource = self
+
+        // this fixes the menu being underneath the navigation bar
+        // don't ask, its stupid
+        edgesForExtendedLayout = .None
+
+        // do not actually use purple here
+        menu.backgroundColor = UIColor.purpleColor()
+
+        if menu.position == Position.All {
             displayedPlayers = undraftedPlayers
         }
         
         // layout views
+        self.view.addSubview(menu)
         menu.snp_makeConstraints { (make) in
-            make.left.right.top.width.equalTo(self.view)
-            make.bottom.equalTo(self.view).dividedBy(6.0)
+            make.left.top.right.equalTo(self.view)
             make.height.equalTo(60)
         }
-        
+
+        self.view.addSubview(tableView)
         tableView.snp_makeConstraints { (make) in
-            make.left.right.bottom.width.equalTo(self.view)
+            make.left.right.bottom.equalTo(view)
             make.top.equalTo(menu.snp_bottom)
-            make.height.equalTo(self.view).offset(-60)
         }
-        
-        // register custom class
-        self.tableView.registerClass(HCPlayerListCell.classForCoder(), forCellReuseIdentifier: "PlayerListCell")
+
+        updatePlayersList()
     }
-    
+
+    func updatePlayersList() {
+        let dp = HCHeadCoachDataProvider.sharedInstance
+        dp.getUndraftedPlayersInLeague(dp.league!) { (error, players) in
+            self.undraftedPlayers = players
+            self.displayedPlayers = self.undraftedPlayers
+            self.tableView.reloadData()
+        }
+    }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         // TODO - MAKE THIS SHIT WORK
         let cell = tableView.dequeueReusableCellWithIdentifier("PlayerListCell", forIndexPath: indexPath) as! HCPlayerListCell
-        
+        cell.backgroundColor = indexPath.row % 2 == 0 ? UIColor.whiteColor() : UIColor(white: 0.9, alpha: 1.0)
         cell.changePlayer(displayedPlayers[indexPath.row])
         
         return cell
@@ -76,6 +81,6 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 100
+        return 60
     }
 }
