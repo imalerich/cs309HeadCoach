@@ -16,7 +16,7 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
     let tableView = UITableView()
     let menu = HCPositionMenu()
 
-    var currentPosition = "All"
+    var currentPosition = Position.All
     var players = Dictionary<String, Array<HCPlayer>>()
 
     override func viewDidLoad(){
@@ -48,6 +48,7 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
             make.top.equalTo(menu.snp_bottom)
         }
 
+        setupPlayersDict()
         updatePlayersList()
     }
 
@@ -70,8 +71,7 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
     /// pull the undrafted players for that position
     /// then reloads the data for the table view
     func setCurrentPosition(pos: Position) {
-        let key = HCPositionUtil.positionToString(pos)
-        currentPosition = key
+        currentPosition = pos
         menu.label.text = "Position: \(HCPositionUtil.positionToName(pos))"
 
         tableView.reloadData()
@@ -88,7 +88,7 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
         // TODO - MAKE THIS SHIT WORK
         let cell = tableView.dequeueReusableCellWithIdentifier("PlayerListCell", forIndexPath: indexPath) as! HCPlayerListCell
         cell.backgroundColor = indexPath.row % 2 == 0 ? UIColor.whiteColor() : UIColor(white: 0.9, alpha: 1.0)
-        cell.changePlayer(players[currentPosition]![indexPath.row])
+        cell.changePlayer(players[HCPositionUtil.positionToString(currentPosition)]![indexPath.row])
         
         return cell
     }
@@ -98,7 +98,7 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return players[currentPosition]!.count
+        return players[HCPositionUtil.positionToString(currentPosition)]!.count
     }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -107,7 +107,7 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let dp = HCFantasyDataProvider()
-        let player = players[currentPosition]![indexPath.row]
+        let player = players[HCPositionUtil.positionToString(currentPosition)]![indexPath.row]
 
         dp.getFDPlayerFromHCPlayer(player) { (fd_player) in
             let vc = HCPlayerMoreDetailController()
