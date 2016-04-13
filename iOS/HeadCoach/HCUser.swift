@@ -24,6 +24,13 @@ class HCUser: CustomStringConvertible {
     /// USING IT!!!
     internal var img_url = ""
 
+    /// Never assume this value is not nil, first check if it is nil
+    /// if it is not, go ahead and use it, otherwise ask the data 
+    /// provider to load the data to load it, the call
+    /// 'loadUserStats' will automatically fill this property on
+    /// completion
+    internal var stats: HCUserStats?
+
     /// String conversion for debug printing.
     var description: String {
         return "{\nid: \(id)\nname: \(name)\nreg_date: \(reg_date)\n}\n"

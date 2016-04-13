@@ -1,7 +1,5 @@
 <?php
 
-require_once 'HTTP/Request2.php';
-
 header("Content-Type: application/json");
 
 // connect to the CS309 database
@@ -98,7 +96,7 @@ foreach ($user_stats as $userid => $stats) {
 
 echo json_encode(
 	array(
-		"user" => $user,
+		"user" => intval($user),
 		"rank" => $rank,
 		"score" => $user_stats[$user]["score"],
 		"wins" => $user_stats[$user]["wins"],

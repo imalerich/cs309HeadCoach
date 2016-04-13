@@ -31,7 +31,7 @@ class HCHeadCoachDataProvider: NSObject {
     /// to the server. Otherwise the CS309 server should be used.
     let api =
         "http://proj-309-08.cs.iastate.edu"
-  //      "http://localhost"
+//        "http://localhost"
 
     /// When the shared instance is first created,
     /// send a request to the server to update all of its
@@ -520,7 +520,8 @@ class HCHeadCoachDataProvider: NSObject {
         let url = "\(api)/schedule/getUserStats.php?league=\(league.id)&user=\(user.id)"
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Dictionary<String, Int> {
-                completion(HCUserStats(user: user, json: json))
+                user.stats = HCUserStats(json: json)
+                completion(user.stats)
             }
 
             completion(nil);
