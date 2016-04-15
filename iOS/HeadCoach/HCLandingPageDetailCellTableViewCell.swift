@@ -15,10 +15,18 @@ class HCLandingPageDetailCellTableViewCell: UITableViewCell {
 
     /// Content view for the cell, the rest will be a border around the cell
     let dataView = UIView()
+
+    /// Containing view for the Week label, we are keeping it as a property so
+    /// we can change the background color for games that are finished
+    /// vs games that have yet to be played.
+    let weekContainer = UIView()
+
     /// The week the game took place.
     let week = UITextView()
+
     /// Player0 detail view
     let player0 = HCPlayerMatchView()
+
     /// Player1 detail view
     let player1 = HCPlayerMatchView()
 
@@ -43,7 +51,6 @@ class HCLandingPageDetailCellTableViewCell: UITableViewCell {
             make.bottom.equalTo(self.snp_bottom)
         })
 
-        let weekContainer = UIView()
         weekContainer.backgroundColor = UIColor(white: 0.86, alpha: 1.0)
         dataView.addSubview(weekContainer)
         weekContainer.snp_makeConstraints { (make) in
@@ -98,6 +105,14 @@ class HCLandingPageDetailCellTableViewCell: UITableViewCell {
         player1.setWinner(game.scores.1 > game.scores.0)
 
         week.text = "Week \(game.week)"
+
+        if game.completed {
+            weekContainer.backgroundColor = UIColor(white: 0.70, alpha: 1.0)
+            week.textColor = UIColor(white: 0.3, alpha: 1.0)
+        } else {
+            weekContainer.backgroundColor = UIColor(white: 0.86, alpha: 1.0)
+            week.textColor = UIColor(white: 0.3, alpha: 1.0)
+        }
     }
 
     // this shit is required
