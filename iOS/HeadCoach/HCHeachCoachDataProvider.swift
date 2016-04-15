@@ -527,4 +527,50 @@ class HCHeadCoachDataProvider: NSObject {
             completion(nil);
         }
     }
+
+    // ----------------------------------------
+    // MARK: Messaging system requests.
+    // ----------------------------------------
+
+    /// Send a message from the 'from' user to the 'to' user, whith the message given by 'message'.
+    /// This call currently makes no tests whether or not either user exists in the database.
+    /// If the app is set up correctly however, this cale will never happen.
+    internal func sendMessage(from: HCUser, to: HCUser, message: String, completion: (Bool) -> Void) {
+        let msg = message.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+        let url = "\(api)/messages/sendMessage.php?from=\(from.id)&to=\(to.id)&msg=\(msg!)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            if let json = response.result.value as? Dictionary<String, AnyObject> {
+                completion(json["error"] as! Bool)
+            } else {
+                completion(false)
+            }
+        }
+    }
+
+    /// Gets a list of all messages involving the given user from the database.
+    /// The messages will be returned as a dictionary where the key's are the User id's
+    /// of the other user involved in a conversation, and the value is an array of 
+    /// 'HCMessages's describing the conversation.
+    internal func getMessages(user: HCUser, msg: String, completion: (Bool, Dictionary<Int, Array<HCMessage>>) -> Void) {
+        let url = "\(api)/messages/getMessages.php?user=\(user.id)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            // TODO
+        }
+    }
+
+    /// Takes all messages between the two input users and sets their 'has_read' property to 'true'
+    /// in the database.
+    internal func readConversation(user0: HCUser, user1: HCUser, msg: String, completion: (Bool) -> Void) {
+        let url = "\(api)/messages/readConversation.php?user0=\(user0.id)&user1=\(user1.id)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            if let json = response.result.value as? Dictionary<String, AnyObject> {
+                completion(json["error"] as! Bool)
+            } else {
+                completion(false)
+            }
+        }
+    }
 }

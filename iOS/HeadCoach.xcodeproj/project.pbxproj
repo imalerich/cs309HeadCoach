@@ -16,6 +16,7 @@
 		B48FFE581CBD859B00E175C5 /* HCPositionMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48FFE571CBD859B00E175C5 /* HCPositionMenu.swift */; };
 		B48FFE5A1CBD85BC00E175C5 /* HCPlayerListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48FFE591CBD85BC00E175C5 /* HCPlayerListCell.swift */; };
 		B4FAF10F1CB06CD100C130F9 /* HCDraftTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FAF10E1CB06CD100C130F9 /* HCDraftTableViewCell.swift */; };
+		B90472E91CC14D65006D4CCF /* HCMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90472E81CC14D65006D4CCF /* HCMessage.swift */; };
 		B937D5F61CB74722005FFE79 /* HCGameResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B937D5F51CB74722005FFE79 /* HCGameResult.swift */; };
 		B937D5F81CB7602F005FFE79 /* HCUserStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = B937D5F71CB7602F005FFE79 /* HCUserStats.swift */; };
 		B947C0611CBC172B000931A2 /* HCLeagueDetailsHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B947C0601CBC172B000931A2 /* HCLeagueDetailsHeaderCell.swift */; };
@@ -67,6 +68,7 @@
 		B48FFE571CBD859B00E175C5 /* HCPositionMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPositionMenu.swift; sourceTree = "<group>"; };
 		B48FFE591CBD85BC00E175C5 /* HCPlayerListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPlayerListCell.swift; sourceTree = "<group>"; };
 		B4FAF10E1CB06CD100C130F9 /* HCDraftTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCDraftTableViewCell.swift; sourceTree = "<group>"; };
+		B90472E81CC14D65006D4CCF /* HCMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCMessage.swift; sourceTree = "<group>"; };
 		B937D5F51CB74722005FFE79 /* HCGameResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCGameResult.swift; sourceTree = "<group>"; };
 		B937D5F71CB7602F005FFE79 /* HCUserStats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCUserStats.swift; sourceTree = "<group>"; };
 		B947C0601CBC172B000931A2 /* HCLeagueDetailsHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLeagueDetailsHeaderCell.swift; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 				B99BA5E71CB49B8E008F50FD /* HCPositionUtil.swift */,
 				B937D5F51CB74722005FFE79 /* HCGameResult.swift */,
 				B937D5F71CB7602F005FFE79 /* HCUserStats.swift */,
+				B90472E81CC14D65006D4CCF /* HCMessage.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -404,6 +407,7 @@
 				B9E731891CB40AFD002C5638 /* HCSettingsViewController.swift in Sources */,
 				B96E55F21CA850AB001A4017 /* AppDelegate.swift in Sources */,
 				B47ACD0F1CBCA7AC00F3D52E /* HCPlayerListViewController.swift in Sources */,
+				B90472E91CC14D65006D4CCF /* HCMessage.swift in Sources */,
 				B48FFE5A1CBD85BC00E175C5 /* HCPlayerListCell.swift in Sources */,
 				B94C49FA1CA8539B00F2C2F0 /* UserDetailTableViewCell.swift in Sources */,
 				B94C49E41CA8539B00F2C2F0 /* HCFantasyDataProvider.swift in Sources */,

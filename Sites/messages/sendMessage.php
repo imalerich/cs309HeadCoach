@@ -20,12 +20,20 @@ if (!array_key_exists("to", $_GET) || !array_key_exists("from", $_GET) ||
 	die("'to', 'from', & 'msg' parameters are required");
 }
 
+if ($_GET["to"] == $_GET["from"]) {
+	echo json_encode(
+		array(
+			"error" => True
+		)
+	);
+}
+
 $time_stamp = time();
 
 $query  = "INSERT INTO messages (";
 $query .= "to_id, from_id, time_stamp, msg";
 $query .= ") VALUES (";
-$qruey .= "{$_GET["to"]}, {$_GET["from"]}, {$time_stamp}, \"{$_get["msg"]}\"";
+$query .= "{$_GET["to"]}, {$_GET["from"]}, {$time_stamp}, \"{$_GET["msg"]}\"";
 $query .= ")";
 
 $result = mysqli_query($db, $query);
