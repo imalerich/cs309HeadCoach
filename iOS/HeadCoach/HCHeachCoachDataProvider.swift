@@ -552,17 +552,35 @@ class HCHeadCoachDataProvider: NSObject {
     /// The messages will be returned as a dictionary where the key's are the User id's
     /// of the other user involved in a conversation, and the value is an array of 
     /// 'HCMessages's describing the conversation.
-    internal func getMessages(user: HCUser, msg: String, completion: (Bool, Dictionary<Int, Array<HCMessage>>) -> Void) {
+    internal func getMessages(user: HCUser, completion: (Bool, Dictionary<Int, Array<HCMessage>>) -> Void) {
         let url = "\(api)/messages/getMessages.php?user=\(user.id)"
 
         Alamofire.request(.GET, url).responseJSON { response in
-            // TODO
+            if let json = response.result.value as? Dictionary<String, Array<Dictionary<String, AnyObject>>> {
+                var data = Dictionary<Int, Array<HCMessage>>()
+
+                // for each conversation
+                for str_idx in json.keys {
+                    let idx = Int(str_idx)!
+                    data[idx] = Array<HCMessage>()
+
+                    // for each message in that conversation
+                    for msg_json in json[str_idx]! {
+                        let msg = HCMessage(json: msg_json)
+                        data[idx]?.append(msg)
+                    }
+                }
+
+                completion(true, data)
+            } else {
+                completion(false, Dictionary<Int, Array<HCMessage>>())
+            }
         }
     }
 
     /// Takes all messages between the two input users and sets their 'has_read' property to 'true'
     /// in the database.
-    internal func readConversation(user0: HCUser, user1: HCUser, msg: String, completion: (Bool) -> Void) {
+    internal func readConversation(user0: HCUser, user1: HCUser, completion: (Bool) -> Void) {
         let url = "\(api)/messages/readConversation.php?user0=\(user0.id)&user1=\(user1.id)"
 
         Alamofire.request(.GET, url).responseJSON { response in

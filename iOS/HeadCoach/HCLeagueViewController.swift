@@ -13,6 +13,9 @@ import ImageLoader
 
 class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
 
+    /// Constant to describe the height of the cell.
+    let CELL_HEIGHT = CGFloat(120)
+
     /// List of users, this will be our data source for the table view.
     var users = [HCUser]()
 
@@ -91,6 +94,7 @@ class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableView
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID, forIndexPath: indexPath) as! HCLeagueTableViewCell
         cell.setUser(users[indexPath.row])
+        cell.img.layer.cornerRadius = CELL_HEIGHT / 2 - 1.5 * CGFloat(cell.OFFSET)
 
         return cell
             
@@ -101,7 +105,7 @@ class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableView
     }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 120
+        return CELL_HEIGHT
     }
 
 }
