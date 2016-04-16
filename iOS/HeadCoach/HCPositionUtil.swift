@@ -13,7 +13,7 @@ import UIKit
 /// Note that 'Bench' is not an actual position,
 /// but is included to aid in the call to
 /// check if a users draft is valid.
-enum Position {
+enum Position: String {
     case QuarterBack
     case RunningBack
     case WideReceiver
@@ -21,6 +21,7 @@ enum Position {
     case Kicker
     case DefensiveLine
     case Bench
+    case All
 }
 
 /// Utility class for converting the
@@ -49,10 +50,27 @@ class HCPositionUtil {
 
         case .Bench:
             return "Bench"
+            
+        case .All:
+            return "All"
 
         default:
             return "Defence"
         }
+    }
+
+    // Returns an array of all possible position types.
+    class func getAllPositions() -> [Position] {
+        return [
+            Position.QuarterBack,
+            Position.RunningBack,
+            Position.WideReceiver,
+            Position.TightEnd,
+            Position.Kicker,
+            Position.DefensiveLine,
+            Position.Bench,
+            Position.All
+        ]
     }
 
     /// Converts the input 'Position' to its 
@@ -76,6 +94,9 @@ class HCPositionUtil {
 
         case .Bench:
             return "BENCH"
+        
+        case .All:
+            return "ALL"
 
         default:
             return "DL"
@@ -103,6 +124,9 @@ class HCPositionUtil {
 
         case "BENCH", "bench":
             return .Bench
+        
+        case "ALL", "all":
+            return .All
 
         default:
             return .DefensiveLine

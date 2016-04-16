@@ -76,7 +76,7 @@ class TradeDetailView: UIView {
         setNeedsLayout()
     }
     
-    func setStats(id: Int, json: NSArray) -> Void{
+    func setStats(id: Int, json: Array<AnyObject>) -> Void{
         var passYds: Int = 0
         var rushYds: Int = 0
         var tds: Int = 0

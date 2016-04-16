@@ -9,7 +9,7 @@ if (mysqli_connect_errno()) {
 	);
 }
 
-header("Content-Type: application/json");
+// header("Content-Type: application/json");
 require_once 'HTTP/Request2.php';
 
 // check and make sure all required parameters are present
@@ -68,6 +68,7 @@ $query = "CREATE TABLE "
 	. "user_id INT(11) NOT NULL, "
 	. "pos VARCHAR(11) NOT NULL,"
 	. "pos_cat VARCHAR(11) NOT NULL,"
+	. "img VARCHAR(99) NOT NULL,"
 	. "on_bench INT(1) NOT NULL DEFAULT 0,"
 	. "fd_id INT(11) NOT NULL, "
 	. "PRIMARY KEY (id), "
@@ -86,7 +87,7 @@ if (!$result) {
 $request = new HTTP_Request2("https://api.fantasydata.net/nfl/v2/JSON/Players");
 $url = $request->getUrl();
 
-$headers = array("Ocp-Apim-Subscription-Key" => "fa953b83a78d44a1b054b0afbbdff57e");
+$headers = array("Ocp-Apim-Subscription-Key" => "2b7828ede774479883ac80def76b4d45");
 $request->setHeader($headers);
 $request->setMethod(HTTP_Request2::METHOD_GET);
 $request->setBody("{body}");
@@ -110,6 +111,7 @@ try {
 		$name = $first . " " . $last;
 		$pos = $json[$i]["FantasyPosition"];
 		$pos_cat = $json[$i]["PositionCategory"];
+		$img = $json[$i]["PhotoUrl"];
 		$id = $json[$i]["PlayerID"];
 
 		// we will only use one defensive position for this league
@@ -118,9 +120,9 @@ try {
 		}
 
 		$query  = "INSERT INTO " . $draft_table .  " (";
-		$query .= "name, user_id, pos, pos_cat, fd_id";
+		$query .= "name, user_id, pos, pos_cat, img, fd_id";
 		$query .= ") VALUES (";
-		$query .= "\"{$name}\", 0, \"{$pos}\", \"{$pos_cat}\", $id";
+		$query .= "\"{$name}\", 0, \"{$pos}\", \"{$pos_cat}\", \"{$img}\", $id";
 		$query .= ")";
 
 		$result = mysqli_query($db, $query);
@@ -159,7 +161,7 @@ $query = "CREATE TABLE "
 	. "week INT(11) NOT NULL, "
 	. "score_0 INT(11) NOT NULL DEFAULT 0, "
 	. "score_1 INT(11) NOT NULL DEFAULT 0, "
-	. "completed INT(1) NOT NULL DEFAULT 0. "
+	. "completed INT(1) NOT NULL DEFAULT 0, "
 	. "PRIMARY KEY (id), "
 	. "INDEX (user_id_0), "
 	. "INDEX (user_id_1) "

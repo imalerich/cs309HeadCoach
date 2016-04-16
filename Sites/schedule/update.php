@@ -53,34 +53,48 @@ function getScoreForUser($user, $league, $week) {
 }
 
 function updateLeagueForWeek($league, $week, $db) {
-	// construct the active members array
-	$members = array();
-	for ($i=0; $i<5; $i++) {
-		if ($league["member" . $i] > 0) {
-			array_push($members, $league["member" . $i]);
-		}
+	// get each match for this week
+	$query = "SELECT * FROM {$league["name"]}_schedule WHERE week={$week}";
+
+	$result = mysqli_query($db, $query);
+	if (!$result) {
+		die("Database query failed with errer: " . mysqli_error($db));
 	}
 
-	// using a simple random assignment for this weeks matches
-	shuffle($members);
-
-	// their will be a game for each set of two players
-	for ($i = 0; $i < floor(count($members)/2); $i++) {
-		$user0 = $members[$i * 2];
-		$user1 = $members[$i * 2 + 1];
+	while ($match = mysqli_fetch_assoc($result)) {
+		$user0 = $match["user_id_0"];
+		$user1 = $match["user_id_1"];
 
 		$score0 = getScoreForUser($user0, $league, $week);
 		$score1 = getScoreForUser($user1, $league, $week);
 
-		// update the schedule database with the new data
-		$query  = "INSERT INTO {$league["name"]}_schedule";
-		$query .= " (user_id_0, user_id_1, score_0, score_1, week, completed)";
-		$query .= " VALUES ";
-		$query .= " ({$user0}, {$user1}, {$score0}, {$score1}, {$week}, 1) ";
+		// tell the databse to update the scores
+		$query  = "UPDATE {$league["name"]}_schedule";
+		$query .= " SET score_0={$score0}, score_1={$score1}, completed=1";
+		$query .= " WHERE id={$match["id"]}";
 
-		$result = mysqli_query($db, $query);
+		$tmp = mysqli_query($db, $query);
+		if (!$tmp) {
+			die("Database query failed with errer: " . mysqli_error($db));
+		}
+	}
+}
 
-		if (!$result) {
+function resetLeagueForWeek($league, $week, $db) {
+	$query = "SELECT * FROM {$league["name"]}_schedule WHERE week={$week}";
+
+	$result = mysqli_query($db, $query);
+	if (!$result) {
+		die("Database query failed with errer: " . mysqli_error($db));
+	}
+
+	while ($match = mysql_fetch_assoc($result)) {
+		$query  = "UPDATE {$league["name"]}_schedule";
+		$query .= " SET score_0=0, score_1=0, completed=0";
+		$query .= " WHERE id={$match["id"]}";
+
+		$tmp = mysqli_query($db, $query);
+		if (!$tmp) {
 			die("Database query failed with errer: " . mysqli_error($db));
 		}
 	}
@@ -104,15 +118,19 @@ while ($league = mysqli_fetch_assoc($result)) {
 	for ($i = $old_week + 1; $i <= $new_week; $i++) {
 		updateLeagueForWeek($league, $i, $db);
 	}
+
+	for ($i = $new_week+1; $i<=17; $i++) {
+		resetLeagueForWeek($league, $i, $db);
+	}
 }
 
 // update the week column in each column of the 'leagues' table
 $query = "UPDATE leagues SET week=" . $new_week;
 
- $result = mysqli_query($db, $query);
- if (!$result) {
- 	die("Database query failed with errer: " . mysqli_error($db));
- }
+$result = mysqli_query($db, $query);
+if (!$result) {
+	die("Database query failed with errer: " . mysqli_error($db));
+}
 
 // this call has no return value
 // the client is expected to be responsible for

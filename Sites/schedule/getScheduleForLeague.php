@@ -30,6 +30,20 @@ if (!$result) {
 $league = mysqli_fetch_assoc($result);
 $schedule_table = $league["name"] . "_schedule";
 
+// get a list of all users, we will use this
+// to put actual user data in the return call
+$query = "SELECT * FROM users";
+
+$result = mysqli_query($db, $query);
+if (!$result) {
+	die("Database query failed with error: " . mysqli_error($db));
+}
+
+$users = array();
+while ($user = mysqli_fetch_assoc($result)) {
+	$users[$user["id"]] = $user;
+}
+
 // now that we have the table name, output all the data as json
 $query = "SELECT * FROM {$schedule_table}";
 
@@ -48,7 +62,20 @@ if (!$result) {
 // fetch all the results inta an array
 $schedule = array();
 while ($game = mysqli_fetch_assoc($result)) {
-	array_push($schedule, $game);
+	$user0 = $game["user_id_0"];
+	$user1 = $game["user_id_1"];
+
+	array_push($schedule,
+		array(
+			"id" => $game["id"],
+			"user_0" => $users[$user0],
+			"user_1" => $users[$user1],
+			"score_0" => $game["score_0"],
+			"score_1" => $game["score_1"],
+			"week" => $game["week"],
+			"completed" => $game["completed"]
+		)
+	);
 }
 
 echo json_encode($schedule);

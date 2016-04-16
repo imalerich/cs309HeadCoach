@@ -27,7 +27,7 @@ if (!array_key_exists("week", $_GET) || !array_key_exists("user", $_GET)
 $week = $_GET["week"];
 $user = $_GET["user"];
 $league = $_GET["league"];
-$points = 10;
+$points = rand(0, 10) * 7;
 
 // pull the game data for the input week
 

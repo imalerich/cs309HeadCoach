@@ -161,7 +161,14 @@ class PlayerListView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             filterButton.setAttributedTitle(NSAttributedString(string: "QB"), forState: UIControlState.Normal)
         case FDPlayer.PositionFilterType.TE:
             filterButton.setAttributedTitle(NSAttributedString(string: "TE"), forState: UIControlState.Normal)
+        case FDPlayer.PositionFilterType.RB:
+            filterButton.setAttributedTitle(NSAttributedString(string: "RB"), forState: UIControlState.Normal)
+        case FDPlayer.PositionFilterType.K:
+            filterButton.setAttributedTitle(NSAttributedString(string: "K"), forState: UIControlState.Normal)
+        case FDPlayer.PositionFilterType.WR:
+            filterButton.setAttributedTitle(NSAttributedString(string: "WR"), forState: UIControlState.Normal)
         }
+        
         setNeedsLayout()
     }
     
@@ -194,6 +201,9 @@ class PlayerListView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
                 case "All": delegate.filterPlayer(FDPlayer.PositionFilterType.All)
                 case "QB": delegate.filterPlayer(FDPlayer.PositionFilterType.QB)
                 case "TE": delegate.filterPlayer(FDPlayer.PositionFilterType.TE)
+                case "RB": delegate.filterPlayer(FDPlayer.PositionFilterType.TE)
+                case "WR": delegate.filterPlayer(FDPlayer.PositionFilterType.TE)
+                case "K": delegate.filterPlayer(FDPlayer.PositionFilterType.TE)
             default: break
             }
             delegate.sortPlayers(delegate.sortType)

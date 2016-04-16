@@ -44,7 +44,6 @@ $query .= "'{$_GET["name"]}', {$time}";
 $query .= ")";
 
 $result = mysqli_query($db, $query);
-
 if (!$result) {
 	die("Database query failed with error:" . mysqli_error($db));
 }

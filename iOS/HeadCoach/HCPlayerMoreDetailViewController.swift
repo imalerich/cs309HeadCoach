@@ -30,7 +30,7 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
     
     func sendDataRequest(){
         for index in 0...4{
-            let headers = ["Ocp-Apim-Subscription-Key" : "fa953b83a78d44a1b054b0afbbdff57e"]
+            let headers = ["Ocp-Apim-Subscription-Key" : HCFantasyDataProvider.sharedInstance.key]
             let url = "http://api.fantasydata.net/nfl/v2/JSON/PlayerGameStatsByPlayerID/2015REG/" + String(index) + "/" + String(player?.id)
             Alamofire.request(.GET, url, headers: headers)
                 .responseJSON{response in switch response.result {

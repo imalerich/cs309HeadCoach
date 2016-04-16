@@ -37,11 +37,12 @@ class HCLeague: CustomStringConvertible {
     /// This can be used when you need to store a league
     /// in the NSUserDefaults, as is done by the
     /// HCHeadCoachDataProvider.
-    init(id: Int, name: String, drafting_style: Int, users: [Int]) {
+    init(id: Int, name: String, drafting_style: Int, users: [Int], week: Int) {
         self.id = id
         self.name = name
         self.drafting_style = drafting_style
         self.users = users
+        self.week_number = week
     }
 
     /// Initialize with data retrieved from the
