@@ -21,6 +21,11 @@ class HCRandomInsultGenerator{
         let descriptorChoice = Int(arc4random_uniform(descriptors.count as! UInt32))
         let kickerChoice = Int(arc4random_uniform((kickers[descriptors[descriptorChoice]]!).count as UInt32))
         
+        let subject = subjects[subjectChoice]
+        let descriptor = descriptors[descriptorChoice]
+        let kicker = kickers[descriptor][kickerChoice]
+        
+        return subject + descriptor + kicker
     }
     
 }
