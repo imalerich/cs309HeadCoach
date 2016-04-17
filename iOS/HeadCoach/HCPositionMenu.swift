@@ -13,8 +13,9 @@ class HCPositionMenu : UIView {
     
     var label = UILabel()
     var button = UIButton()
-    var position = Position.All
+    var position = Position.QuarterBack
     let OFFSET = 8
+    var selector = UIPickerView()
     
     override init(frame: CGRect){
         // TODO - do I need to change this frame?
@@ -35,6 +36,7 @@ class HCPositionMenu : UIView {
         button.setTitle("Change", forState: .Normal)
         button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         // TODO - set button action
+        button.addTarget(self, action: "changePosition", forControlEvents: .TouchUpInside)
     }
     
     internal func layoutViews(){
@@ -53,10 +55,12 @@ class HCPositionMenu : UIView {
         }
     }
     
+    func setMenuSelector(inout selector: UIPickerView){
+        self.selector = selector
+    }
     
-    func changePosition(position : Position){
-        self.position = position
-        label.text = "Position: \(HCPositionUtil.positionToString(position))"
+    func changePosition(){
+        selector.hidden = false
     }
     
     required init?(coder aDecoder: NSCoder) {

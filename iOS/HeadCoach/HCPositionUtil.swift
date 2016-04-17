@@ -21,7 +21,6 @@ enum Position: String {
     case Kicker
     case DefensiveLine
     case Bench
-    case All
 }
 
 /// Utility class for converting the
@@ -50,9 +49,6 @@ class HCPositionUtil {
 
         case .Bench:
             return "Bench"
-            
-        case .All:
-            return "All"
 
         default:
             return "Defence"
@@ -68,8 +64,7 @@ class HCPositionUtil {
             Position.TightEnd,
             Position.Kicker,
             Position.DefensiveLine,
-            Position.Bench,
-            Position.All
+            Position.Bench
         ]
     }
 
@@ -94,9 +89,6 @@ class HCPositionUtil {
 
         case .Bench:
             return "BENCH"
-        
-        case .All:
-            return "ALL"
 
         default:
             return "DL"
@@ -124,9 +116,6 @@ class HCPositionUtil {
 
         case "BENCH", "bench":
             return .Bench
-        
-        case "ALL", "all":
-            return .All
 
         default:
             return .DefensiveLine
