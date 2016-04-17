@@ -44,7 +44,7 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
     
     // method for performing live player chat actions
     func chatMethod(){
-        print("Chat initiated")
+        print(HCRandomInsultGenerator.sharedInstance.generateInsult())
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {

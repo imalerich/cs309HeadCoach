@@ -243,6 +243,7 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
     func openPlayersView() {
         let vc = HCPlayerListViewController()
         self.navigationController?.pushViewController(vc, animated: true)
+//        print(HCRandomInsultGenerator.sharedInstance.generateInsult())
     }
 
     /// Opens the HCDraftingViewController
