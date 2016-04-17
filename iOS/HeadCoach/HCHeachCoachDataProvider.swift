@@ -30,8 +30,8 @@ class HCHeadCoachDataProvider: NSObject {
     /// http://localhost/ can be used for testing new changes
     /// to the server. Otherwise the CS309 server should be used.
     let api =
-//        "http://proj-309-08.cs.iastate.edu"
-        "http://localhost"
+        "http://proj-309-08.cs.iastate.edu"
+//        "http://localhost"
 
     /// When the shared instance is first created,
     /// send a request to the server to update all of its
@@ -41,8 +41,8 @@ class HCHeadCoachDataProvider: NSObject {
     override init() {
         super.init()
 
-//        let url = "\(api)/schedule/update.php?week=5"
-//        Alamofire.request(.GET, url).responseJSON { response in }
+        let url = "\(api)/schedule/update.php?week=5"
+        Alamofire.request(.GET, url).responseJSON { response in }
 
         // make sure the curent league data is up to date
         if league != nil && league?.name != nil {
@@ -64,9 +64,10 @@ class HCHeadCoachDataProvider: NSObject {
             let id = NSUserDefaults.standardUserDefaults().integerForKey("HC.USER.ID")
             let name = NSUserDefaults.standardUserDefaults().stringForKey("HC.USER.NAME")
             let reg_date = NSUserDefaults.standardUserDefaults().integerForKey("HC.USER.REG_DATE")
+            let img_url = NSUserDefaults.standardUserDefaults().stringForKey("HC.USER.IMG_URL")
 
             if name == nil { return nil }
-            return HCUser(id: id, name: name!, red_date: reg_date)
+            return HCUser(id: id, name: name!, red_date: reg_date, img_url: img_url)
         }
 
         set(newUser) {
@@ -78,6 +79,8 @@ class HCHeadCoachDataProvider: NSObject {
                                                            forKey: "HC.USER.NAME")
             NSUserDefaults.standardUserDefaults().setValue(newUser!.reg_date,
                                                            forKey: "HC.USER.REG_DATE")
+            NSUserDefaults.standardUserDefaults().setValue(newUser!.img_url,
+                                                           forKey: "HC.USER.IMG_URL")
             NSUserDefaults.standardUserDefaults().synchronize()
 
             NSNotificationCenter.defaultCenter().postNotificationName(HCHeadCoachDataProvider.UserDidLogin, object: self)
@@ -193,6 +196,23 @@ class HCHeadCoachDataProvider: NSObject {
 
             // request complete, return all users found in the database
             completion(users.count == 0, users)
+        }
+    }
+
+    /// This call will update the profile picture for the given user.
+    /// Note: The HeadCoach service will not host this image, a link
+    /// to an external image storage service (such as imgur) is expected
+    /// to be used instead.
+    internal func setUserProfileImage(user: HCUser, imgUrl: String, completion: (Bool) -> Void) {
+        let img = imgUrl.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+        let url = "\(api)/users/setUserImage.php?user=\(user.id)&img=\(img!)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            if let json = response.result.value as? Dictionary<String, AnyObject> {
+                completion(json["error"] as! Bool)
+            } else {
+                completion(false)
+            }
         }
     }
 
@@ -500,10 +520,57 @@ class HCHeadCoachDataProvider: NSObject {
         let url = "\(api)/schedule/getUserStats.php?league=\(league.id)&user=\(user.id)"
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Dictionary<String, Int> {
-                completion(HCUserStats(user: user, json: json))
+                user.stats = HCUserStats(json: json)
+                completion(user.stats)
             }
 
             completion(nil);
+        }
+    }
+
+    // ----------------------------------------
+    // MARK: Messaging system requests.
+    // ----------------------------------------
+
+    /// Send a message from the 'from' user to the 'to' user, whith the message given by 'message'.
+    /// This call currently makes no tests whether or not either user exists in the database.
+    /// If the app is set up correctly however, this cale will never happen.
+    internal func sendMessage(from: HCUser, to: HCUser, message: String, completion: (Bool) -> Void) {
+        let msg = message.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+        let url = "\(api)/messages/sendMessage.php?from=\(from.id)&to=\(to.id)&msg=\(msg!)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            if let json = response.result.value as? Dictionary<String, AnyObject> {
+                completion(json["error"] as! Bool)
+            } else {
+                completion(false)
+            }
+        }
+    }
+
+    /// Gets a list of all messages involving the given user from the database.
+    /// The messages will be returned as a dictionary where the key's are the User id's
+    /// of the other user involved in a conversation, and the value is an array of 
+    /// 'HCMessages's describing the conversation.
+    internal func getMessages(user: HCUser, msg: String, completion: (Bool, Dictionary<Int, Array<HCMessage>>) -> Void) {
+        let url = "\(api)/messages/getMessages.php?user=\(user.id)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            // TODO
+        }
+    }
+
+    /// Takes all messages between the two input users and sets their 'has_read' property to 'true'
+    /// in the database.
+    internal func readConversation(user0: HCUser, user1: HCUser, msg: String, completion: (Bool) -> Void) {
+        let url = "\(api)/messages/readConversation.php?user0=\(user0.id)&user1=\(user1.id)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            if let json = response.result.value as? Dictionary<String, AnyObject> {
+                completion(json["error"] as! Bool)
+            } else {
+                completion(false)
+            }
         }
     }
 }

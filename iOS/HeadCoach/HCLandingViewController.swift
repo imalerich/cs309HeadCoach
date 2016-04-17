@@ -235,14 +235,14 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
     /// This view will be pushed on the current navigation controller.
     func openUserDetailView() {
         let vc = HCUserDetailViewController()
-        vc.user = HCHeadCoachDataProvider.sharedInstance.user!.name
+        vc.user = HCHeadCoachDataProvider.sharedInstance.user!
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
     /// Opens the HCLeagueViewController
     /// This view will be pushed on the current navigation controller.
     func openPlayersView() {
-        let vc = HCPlayerDetailViewController()
+        let vc = HCPlayerListViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }
 

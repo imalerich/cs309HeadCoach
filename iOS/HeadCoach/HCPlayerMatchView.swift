@@ -36,12 +36,18 @@ class HCPlayerMatchView: UIView {
         self.nameLabel.text = user.name
 
         // pull additional user information from the data provider
-        if let league = HCHeadCoachDataProvider.sharedInstance.league {
-            HCHeadCoachDataProvider.sharedInstance.getUserStats(user, league: league, completion: { (stats) in
-                if stats != nil {
-                    self.rank.text = String(stats!.rank)
-                }
-            })
+        if user.stats == nil {
+            // we need to load the data
+            if let league = HCHeadCoachDataProvider.sharedInstance.league {
+                HCHeadCoachDataProvider.sharedInstance.getUserStats(user, league: league, completion: { (stats) in
+                    if stats != nil {
+                        self.rank.text = String(stats!.rank)
+                    }
+                })
+            }
+        } else {
+            // data is already loaded
+            self.rank.text = String(user.stats!.rank)
         }
     }
 

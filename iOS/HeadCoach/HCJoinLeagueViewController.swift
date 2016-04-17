@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import Alamofire
 
-class HCJoinLeagueViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class HCJoinLeagueViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
 
     var pageController: HCSetupViewController? = nil
 
@@ -20,6 +21,8 @@ class HCJoinLeagueViewController: UIViewController, UITableViewDataSource, UITab
     let createName = UITextField()
     let create = UIButton()
     let tableView = UITableView()
+    var imagePicker = UIImagePickerController()
+    let upload = UIButton()
 
     var selected = Set<NSIndexPath>()
     var leagues = [HCLeague]()
@@ -68,7 +71,9 @@ class HCJoinLeagueViewController: UIViewController, UITableViewDataSource, UITab
         create.layer.cornerRadius = 25
         create.backgroundColor = UIColor.whiteColor()
         create.addTouchEvents()
-
+        
+        
+        
         tableView.layer.cornerRadius = 8
         tableView.layer.borderColor = UIColor(white: 1.0, alpha: 0.2).CGColor
         tableView.layer.borderWidth = 1
@@ -127,6 +132,8 @@ class HCJoinLeagueViewController: UIViewController, UITableViewDataSource, UITab
             make.top.equalTo(info.snp_bottom).offset(10)
             make.bottom.equalTo(createInfo.snp_top).offset(-8)
         }
+        
+        view.addSubview(upload)
     }
 
     internal func loadAvailableLeagues() {
@@ -227,4 +234,6 @@ class HCJoinLeagueViewController: UIViewController, UITableViewDataSource, UITab
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
+    
+ 
 }

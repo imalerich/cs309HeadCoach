@@ -9,7 +9,7 @@ if (mysqli_connect_errno()) {
 	);
 }
 
-// header("Content-Type: application/json");
+header("Content-Type: application/json");
 
 // we need the leage to add the user to
 if (!array_key_exists("league", $_GET)) {

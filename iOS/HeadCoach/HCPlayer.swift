@@ -24,6 +24,9 @@ class HCPlayer: NSObject {
     /// of players to fill each required position.
     internal var position: Position = .DefensiveLine
 
+    // PhotoURL for this player.
+    internal var img = ""
+
     /// If false this player is currently active 
     /// and used in fantasy games, else the player
     /// is not. DO NOT EXPLICITLY CHANGE THIS VALUE!
@@ -44,6 +47,7 @@ class HCPlayer: NSObject {
     init(json: Dictionary<String, String>) {
         id = Int(json["id"]!)!
         name = json["name"]!
+        img = json["img"]!
         user_id = Int(json["user_id"]!)!
         position_category = json["pos_cat"]!
         fantasy_id = Int(json["fd_id"]!)!

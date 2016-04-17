@@ -80,6 +80,26 @@ function updateLeagueForWeek($league, $week, $db) {
 	}
 }
 
+function resetLeagueForWeek($league, $week, $db) {
+	$query = "SELECT * FROM {$league["name"]}_schedule WHERE week={$week}";
+
+	$result = mysqli_query($db, $query);
+	if (!$result) {
+		die("Database query failed with errer: " . mysqli_error($db));
+	}
+
+	while ($match = mysql_fetch_assoc($result)) {
+		$query  = "UPDATE {$league["name"]}_schedule";
+		$query .= " SET score_0=0, score_1=0, completed=0";
+		$query .= " WHERE id={$match["id"]}";
+
+		$tmp = mysqli_query($db, $query);
+		if (!$tmp) {
+			die("Database query failed with errer: " . mysqli_error($db));
+		}
+	}
+}
+
 // grab all the leagues that we will loop over
 $query = "SELECT * FROM leagues";
 
@@ -97,6 +117,10 @@ while ($league = mysqli_fetch_assoc($result)) {
 	// update each week we missed (ideally this would only ever be 1)
 	for ($i = $old_week + 1; $i <= $new_week; $i++) {
 		updateLeagueForWeek($league, $i, $db);
+	}
+
+	for ($i = $new_week+1; $i<=17; $i++) {
+		resetLeagueForWeek($league, $i, $db);
 	}
 }
 

@@ -19,6 +19,18 @@ class HCUser: CustomStringConvertible {
     /// The date this user registered with the service (UNIX).
     internal var reg_date = 0
 
+    /// Optional image parameter pointing to a profile image for 
+    /// this user. DO NOT FORGET TO CHECK IF THIS IS EMPTY BEFORE
+    /// USING IT!!!
+    internal var img_url = ""
+
+    /// Never assume this value is not nil, first check if it is nil
+    /// if it is not, go ahead and use it, otherwise ask the data 
+    /// provider to load the data to load it, the call
+    /// 'loadUserStats' will automatically fill this property on
+    /// completion
+    internal var stats: HCUserStats?
+
     /// String conversion for debug printing.
     var description: String {
         return "{\nid: \(id)\nname: \(name)\nreg_date: \(reg_date)\n}\n"
@@ -35,10 +47,14 @@ class HCUser: CustomStringConvertible {
 
     /// Initializes a user with data stored
     /// in the NSUserDefaults
-    init(id: Int, name: String, red_date: Int) {
+    init(id: Int, name: String, red_date: Int, img_url: String?) {
         self.id = id
         self.name = name
         self.reg_date = red_date
+
+        if let url = img_url {
+            self.img_url = url
+        }
     }
 
     /// Initialize with data retrieved from the 
@@ -47,6 +63,7 @@ class HCUser: CustomStringConvertible {
         id = Int(json["id"]!)!
         name = json["user_name"]!
         reg_date = Int(json["reg_date"]!)!
+        img_url = json["img"]!
     }
 
     /// Creates an empty user, any API call will fail
