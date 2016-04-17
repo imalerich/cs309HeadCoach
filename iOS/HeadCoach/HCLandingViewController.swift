@@ -140,21 +140,21 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
         for i in 0...2 {
             let btn = UIButton(type: .Custom)
             
-            let name = ["Profile", "League", "Players"][i]
+            let name = ["Profile", "League", "Chat"][i]
             btn.setTitle(name, forState: .Normal)
             btn.backgroundColor = UIColor.footballColor(1.0 - 0.2 * CGFloat(i % 2))
 
             switch (i) {
             case 0:
-                btn.addTarget(self, action: #selector(HCLandingViewController.openUserDetailView),
+                btn.addTarget(self, action: #selector(self.openUserDetailView),
                               forControlEvents: .TouchUpInside)
                 break
             case 1:
-                btn.addTarget(self, action: #selector(HCLandingViewController.openLeagueView),
+                btn.addTarget(self, action: #selector(self.openLeagueView),
                               forControlEvents: .TouchUpInside)
                 break
             case 2:
-                btn.addTarget(self, action: #selector(HCLandingViewController.openPlayersView),
+                btn.addTarget(self, action: #selector(self.openChatView),
                               forControlEvents: .TouchUpInside)
                 break
             default:
@@ -239,10 +239,10 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    /// Opens the HCLeagueViewController
+    /// Opens the HCChatSelectViewController
     /// This view will be pushed on the current navigation controller.
-    func openPlayersView() {
-        let vc = HCPlayerListViewController()
+    func openChatView() {
+        let vc = HCChatSelectViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }
 

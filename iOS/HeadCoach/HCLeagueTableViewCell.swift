@@ -128,9 +128,9 @@ class HCLeagueTableViewCell: UITableViewCell {
 
         dataView.addSubview(img)
         img.snp_makeConstraints { (make) in
-            make.left.equalTo(dataView.snp_left)
-            make.top.equalTo(dataView.snp_top)
-            make.bottom.equalTo(dataView.snp_bottom)
+            make.left.equalTo(dataView.snp_left).offset(OFFSET)
+            make.top.equalTo(dataView.snp_top).offset(OFFSET)
+            make.bottom.equalTo(dataView.snp_bottom).offset(-OFFSET)
             make.width.equalTo(img.snp_height)
         }
 

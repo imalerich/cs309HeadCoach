@@ -1,6 +1,6 @@
 <?php
 
-header("Content-Type: application/json");
+// header("Content-Type: application/json");
 
 // connect to the CS309 database
 $db = mysqli_connect("localhost", "group08", "password", "CS309");
@@ -38,6 +38,10 @@ if (!$result) {
 
 while ($user = mysqli_fetch_assoc($result)) {
 	$users[$user["id"]] = $user;
+	if ($user["id"] == $_GET["user"]) {
+		continue;
+	}
+
 	$messages[$user["id"]] = array();
 }
 
@@ -55,6 +59,11 @@ while ($msg = mysqli_fetch_assoc($result)) {
 	$to = $msg["to_id"];
 	$from = $msg["from_id"];
 	$other = $to == $_GET["user"] ? $from : $to;
+
+	// exclude messages from user to self
+	if ($to == $from) {
+		continue;
+	}
 
 	// this key should already exist, but just in case it doesn't
 	// check it anyway
