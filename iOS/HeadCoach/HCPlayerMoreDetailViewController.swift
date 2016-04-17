@@ -37,10 +37,21 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
     override func viewDidLoad() {
         super.viewDidLoad()
         self.edgesForExtendedLayout = UIRectEdge.None
+        self.view.backgroundColor = UIColor.whiteColor()
 
+        // we are okay to build the view now
         if fdplayer != nil{
             build(fdplayer)
-        } else {
+        }
+
+        // else it will require an async request, wait till the view has appeared
+        // this will make transition animations appear more smoothly
+    }
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+
+        if fdplayer == nil {
             let dp = HCFantasyDataProvider.sharedInstance
             dp.getFDPlayerFromHCPlayer(hcplayer, completion: { (player) in
                 self.fdplayer = player

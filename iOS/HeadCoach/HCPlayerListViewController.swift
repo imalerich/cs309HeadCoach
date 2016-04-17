@@ -105,12 +105,8 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let dp = HCFantasyDataProvider()
         let player = players[HCPositionUtil.positionToString(currentPosition)]![indexPath.row]
-
-        dp.getFDPlayerFromHCPlayer(player) { (fd_player) in
-            let vc = HCPlayerMoreDetailController(forFDPlayer: fd_player)
-            self.navigationController?.pushViewController(vc, animated: true)
-        }
+        let vc = HCPlayerMoreDetailController(forHCPlayer: player)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
