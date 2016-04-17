@@ -105,6 +105,7 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let player = players[HCPositionUtil.positionToString(currentPosition)]![indexPath.row]
         let vc = HCPlayerMoreDetailController(forHCPlayer: player)
         self.navigationController?.pushViewController(vc, animated: true)

@@ -49,16 +49,6 @@ class HCPlayerDetailViewController: UIViewController, UITextViewDelegate, UITabl
         view.addSubview(playerListView)
         playerListView.filterButton.addTarget(self, action: #selector(HCPlayerDetailViewController.buttonClicked(_:)), forControlEvents: .TouchUpInside)
         playerListView.sortButton.addTarget(self, action: #selector(HCPlayerDetailViewController.buttonClicked(_:)), forControlEvents: .TouchUpInside)
-        /*
-        if(playerList.count==0){
-            HCFantasyDataProvider.sharedInstance.getPlayerDetails(){(responseString:String?) in
-                self.playerList = try! Realm().objects(FDPlayer)
-                self.playerListView.addCustomView()
-            }
-        }else{
-            playerListView.addCustomView()
-        }
-        */
     }
     
     override func motionBegan(motion: UIEventSubtype, withEvent event: UIEvent?) {

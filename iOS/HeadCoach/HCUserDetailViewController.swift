@@ -14,166 +14,223 @@ import Alamofire
 import RealmSwift
 
 class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewDelegate,UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
-    
-    var bench = UITableView()
-    var active = UITableView()
+
+    /// Height of the top bar containing the user details information
+    let USER_DETAILS_HEIGHT = 100
+
+    /// Below that will be the two action buttons 
+    /// to change the profile picture, and the drafting linuxb
+    let OPTIONS_HEIGHT = 50
+
+    /// Height for the 'active/bench' labels.
+    let TABLE_LABLE_HEIGHT = 30
+
     let container = UIView()
+    let bench = UITableView()
+    let active = UITableView()
+
     let profileImage = UIImageView()
     let activeLabel = UILabel()
     let benchLabel = UILabel()
-    let userName = UILabel()
     let record = UILabel()
     let position = UILabel()
+
     var gestureCoordinator = I3GestureCoordinator.init()
     var imagePicker = UIImagePickerController()
     let upload = UIButton()
     let draft = UIButton()
     var user:HCUser?
-    //let parameters = ["client_id":c4299d0c77f8ddd,"client_secret":f4c1e5951d0b3444aebd1bfb3376b9313f75b1c2,]
-    var testarray:NSMutableArray = []
-    var testarray2:NSMutableArray = []
+
+    var activePlayers = NSMutableArray()
+    var benchedPlayers = NSMutableArray()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.automaticallyAdjustsScrollViewInsets = false
-        self.view.addSubview(container)
-        self.view.addSubview(profileImage)
-        self.container.addSubview(activeLabel)
-        self.container.addSubview(benchLabel)
-        self.view.addSubview(userName)
-        self.view.addSubview(record)
-        self.view.addSubview(position)
-        self.view.addSubview(draft)
-        self.view.addSubview(upload)
 
+        view.backgroundColor = UIColor.whiteColor()
+        automaticallyAdjustsScrollViewInsets = false
+
+        // ADD ALL THE SUBVIEWS
+        view.addSubview(container)
+        view.addSubview(profileImage)
+        view.addSubview(record)
+        view.addSubview(position)
+        view.addSubview(draft)
+        view.addSubview(upload)
+
+        // add the subviews for the container
+        container.addSubview(activeLabel)
+        container.addSubview(benchLabel)
+        container.addSubview(bench)
+        container.addSubview(active)
+
+        edgesForExtendedLayout = .None
         benchLabel.text = "Bench"
         activeLabel.text = "Active"
-        view.backgroundColor = UIColor.whiteColor()
-        bench.backgroundColor = UIColor(white: 0.0, alpha: 0.1)
-        bench.layer.borderColor = UIColor.darkGrayColor().CGColor
-        bench.layer.cornerRadius = 25
-        bench.layer.borderWidth = 1
-        active.backgroundColor = UIColor(white: 0.0, alpha: 0.1)
-        active.layer.borderColor = UIColor.darkGrayColor().CGColor
-        active.layer.cornerRadius = 25
-        active.layer.borderWidth = 1
-        self.active.tableFooterView = UIView()
-        self.bench.tableFooterView = UIView()
+        activeLabel.font = UIFont.systemFontOfSize(14, weight: UIFontWeightLight)
+        benchLabel.font = UIFont.systemFontOfSize(14, weight: UIFontWeightLight)
+        activeLabel.textColor = UIColor(white: 0.4, alpha: 1.0)
+        benchLabel.textColor = UIColor(white: 0.4, alpha: 1.0)
+        activeLabel.textAlignment = .Center
+        benchLabel.textAlignment = .Center
+
+        bench.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+        active.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
         
-        profileImage.layer.borderColor = UIColor.darkGrayColor().CGColor
-        profileImage.layer.borderWidth = 1
-        profileImage.layer.cornerRadius = 25
-        profileImage.layer.masksToBounds = true
         profileImage.contentMode = .ScaleAspectFill
-        
-        upload.setTitle("Upload a Profile Picture", forState: .Normal)
-        upload.setTitleColor(UIColor.footballColor(1.3), forState: .Normal)
-        upload.titleLabel!.font = UIFont.systemFontOfSize(20, weight: UIFontWeightLight)
+        profileImage.clipsToBounds = true
+        record.numberOfLines = 3
+        record.textColor = UIColor.whiteColor()
+        record.font = UIFont.systemFontOfSize(18, weight: UIFontWeightLight)
+
+        upload.setTitle("Change Picture", forState: .Normal)
         upload.addTarget(self, action: #selector(self.uploadAction(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        upload.layer.cornerRadius = 10
-        upload.backgroundColor = UIColor.whiteColor()
-        upload.layer.borderColor = UIColor.darkGrayColor().CGColor
-        upload.layer.borderWidth = 1
-        upload.titleLabel?.font = UIFont(name: (upload.titleLabel?.font?.fontName)!,size: 15)
-        
+        upload.titleLabel?.textAlignment = .Center
+
         draft.setTitle("Draft Players", forState: .Normal)
-        draft.setTitleColor(UIColor.footballColor(1.3), forState: .Normal)
-        draft.titleLabel!.font = UIFont.systemFontOfSize(20, weight: UIFontWeightLight)
         draft.addTarget(self, action: #selector(self.draftAction(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        draft.layer.cornerRadius = 10
-        draft.backgroundColor = UIColor.whiteColor()
-        draft.layer.borderColor = UIColor.darkGrayColor().CGColor
-        draft.layer.borderWidth = 1
-        draft.titleLabel?.font = UIFont(name: (upload.titleLabel?.font?.fontName)!,size: 15)
-        
+        draft.titleLabel?.textAlignment = .Center
+
+        upload.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        upload.titleLabel?.font = UIFont.systemFontOfSize(16, weight: UIFontWeightLight)
+        upload.backgroundColor = UIColor.footballColor(0.8)
+
+        draft.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        draft.titleLabel?.font = UIFont.systemFontOfSize(16, weight: UIFontWeightLight)
+        draft.backgroundColor = UIColor.footballColor(0.6)
+
         HCHeadCoachDataProvider.sharedInstance.getUserStats(user!, league: HCHeadCoachDataProvider.sharedInstance.league!) { (stats) in
-            let temp = "Wins: " + String(self.user!.stats!.wins) + " Loses: " + String(self.user!.stats!.loses) + " Draws: " + String(self.user!.stats!.draws)
+            let temp = "Wins " + String(self.user!.stats!.wins) + "\nLoses " + String(self.user!.stats!.loses) + "\nDraws " + String(self.user!.stats!.draws)
             self.record.text = temp
-            print(temp)
         }
         
-        if(user?.name == HCHeadCoachDataProvider.sharedInstance.user!.name){
+        if user?.name == HCHeadCoachDataProvider.sharedInstance.user!.name {
             upload.hidden = false
             draft.hidden = false
-        }else{
+        } else {
             upload.hidden = true
             draft.hidden = true
+
+            draft.snp_updateConstraints(closure: { (make) in
+                make.height.equalTo(0)
+            })
+
+            upload.snp_updateConstraints(closure: { (make) in
+                make.height.equalTo(0)
+            })
         }
+
+
+        // first is the details bar
     
         profileImage.snp_makeConstraints { (make) in
-            make.top.equalTo(self.view.snp_top).inset(70)
-            make.left.equalTo(self.view.snp_left).inset(10)
-            make.height.equalTo(75)
-            make.width.equalTo(75)
+            make.top.left.equalTo(view)
+            make.height.width.equalTo(USER_DETAILS_HEIGHT)
         }
+
+        record.snp_makeConstraints { (make) in
+            make.top.height.equalTo(profileImage)
+            make.right.equalTo(view)
+            make.left.equalTo(profileImage.snp_right).offset(12)
+        }
+
+        // add a little background image behind the record view
+        let bg = UIView()
+        bg.backgroundColor = UIColor.blackColor()
+        view.insertSubview(bg, belowSubview: record)
+        bg.snp_makeConstraints { (make) in
+            make.top.height.equalTo(profileImage)
+            make.right.equalTo(view)
+            make.left.equalTo(profileImage.snp_right)
+        }
+
+        let img_bg = UIImageView(image: UIImage(named: "blurred_background"))
+        img_bg.contentMode = .ScaleAspectFill
+        img_bg.clipsToBounds = true
+        img_bg.alpha = 0.4
+        view.insertSubview(img_bg, aboveSubview: record)
+        img_bg.snp_makeConstraints { (make) in
+            make.edges.equalTo(bg)
+        }
+
+        // next we have the options bar
         
         draft.snp_makeConstraints { (make) in
-            make.width.equalTo(150)
-            make.height.equalTo(30)
-            make.top.equalTo(self.profileImage.snp_top)
-            make.right.equalTo(self.view.snp_right).inset(5)
+            make.top.equalTo(record.snp_bottom)
+            make.right.equalTo(self.view.snp_right)
+            make.width.equalTo(self.view.snp_width).dividedBy(2)
+            make.height.equalTo(OPTIONS_HEIGHT)
         }
         
         upload.snp_makeConstraints { (make) in
-            make.width.equalTo(150)
-            make.height.equalTo(30)
-            make.top.equalTo(profileImage.snp_bottom).inset(-3)
-            make.left.equalTo(profileImage.snp_left)
+            make.top.equalTo(record.snp_bottom)
+            make.left.equalTo(self.view.snp_left)
+            make.width.equalTo(self.view.snp_width).dividedBy(2)
+            make.height.equalTo(OPTIONS_HEIGHT)
         }
+
+        // TODO - current draft status bar
+
+        // and last we have the table views
         
         container.snp_makeConstraints { (make) in
-            make.top.equalTo(self.view.snp_centerY).multipliedBy(0.55)
-            make.left.right.equalTo(self.view)
-            make.bottom.equalTo(self.view.snp_bottom)
-            make.centerX.equalTo(self.view.snp_centerX)
+            make.left.right.equalTo(view)
+            make.top.equalTo(upload.snp_bottom)
+            make.bottom.equalTo(view.snp_bottom)
         }
-        
-        self.container.addSubview(active)
-        active.snp_makeConstraints { (make) in
-            make.top.equalTo(self.container.snp_top).inset(30)
-            make.left.equalTo(self.container).inset(5)
-            make.bottom.equalTo(self.container).inset(5)
-            make.width.equalTo(self.container).multipliedBy(0.5).inset(5)
-            //            make.height.equalTo(self.view)
-            //            make.width.equalTo(self.view).multipliedBy(0.5)
-        }
-        
-        self.container.addSubview(bench)
-        bench.snp_makeConstraints { (make) in
-            make.top.equalTo(self.container.snp_top).inset(30)
-            make.right.equalTo(self.container).inset(5)
-            make.bottom.equalTo(self.container).inset(5)
-            make.width.equalTo(self.container).multipliedBy(0.5).inset(5)
-            //            make.height.equalTo(self.view)
-            //            make.width.equalTo(self.view).multipliedBy(0.5)
-        }
-        
-        userName.snp_makeConstraints { (make) in
-            make.left.equalTo(self.profileImage.snp_right).inset(-5)
-            make.top.equalTo(self.profileImage.snp_top).inset(5)
-            make.width.equalTo(100)
-        }
-        
-        record.snp_makeConstraints { (make) in
-            make.width.equalTo(250)
-            make.height.equalTo(30)
-            make.top.equalTo(userName.snp_bottom)
-            make.left.equalTo(profileImage.snp_right).inset(-5)
-        }
-        
+
+        // Layout the labels for the table views
+
         activeLabel.snp_makeConstraints { (make) in
-            make.top.equalTo(self.container.snp_top)
-            make.centerX.equalTo(self.active.snp_centerX)
-            make.height.equalTo(30)
-            make.width.equalTo(100)
+            make.height.equalTo(TABLE_LABLE_HEIGHT)
+            make.top.equalTo(container)
+            make.centerX.equalTo(active.snp_centerX)
+            make.width.equalTo(container.snp_width).dividedBy(2)
         }
         
         benchLabel.snp_makeConstraints { (make) in
-            make.top.equalTo(self.container.snp_top)
-            make.centerX.equalTo(self.bench.snp_centerX)
-            make.height.equalTo(30)
-            make.width.equalTo(100)
+            make.height.equalTo(TABLE_LABLE_HEIGHT)
+            make.top.equalTo(container)
+            make.centerX.equalTo(bench.snp_centerX)
+            make.width.equalTo(container.snp_width).dividedBy(2)
         }
+
+        // add a little divider underneath the labels
+        let labelBottom = UIView()
+        labelBottom.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
+        container.addSubview(labelBottom)
+        labelBottom.snp_makeConstraints { (make) in
+            make.left.right.equalTo(container)
+            make.bottom.equalTo(benchLabel.snp_bottom)
+            make.height.equalTo(1)
+        }
+
+        // Layout the actual Table Views
+
+        active.snp_makeConstraints { (make) in
+            make.top.equalTo(activeLabel.snp_bottom)
+            make.left.equalTo(container)
+            make.bottom.equalTo(container)
+            make.width.equalTo(container).multipliedBy(0.5)
+        }
+        
+        bench.snp_makeConstraints { (make) in
+            make.top.equalTo(benchLabel.snp_bottom)
+            make.right.equalTo(container)
+            make.bottom.equalTo(container)
+            make.width.equalTo(container).multipliedBy(0.5)
+        }
+
+        // Add a little divider between the bench and active table views.
+        let divider = UIView()
+        divider.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
+        container.addSubview(divider)
+        divider.snp_makeConstraints { (make) in
+            make.top.bottom.centerX.equalTo(container)
+            make.width.equalTo(1)
+        }
+
+        // I do not have any idea what this shit is trying to do.
         
         gestureCoordinator = I3GestureCoordinator.basicGestureCoordinatorFromViewController(self, withCollections:[self.active,self.bench], withRecognizer: UILongPressGestureRecognizer.init())
         active.registerClass(PlayerTableViewCell.classForCoder(), forCellReuseIdentifier: "test1")
@@ -185,14 +242,16 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         bench.delegate = self
         active.delegate = self
         profileImage.load((user?.img_url)!)
+
         HCHeadCoachDataProvider.sharedInstance.getAllPlayersForUserFromLeague(HCHeadCoachDataProvider.sharedInstance.league!, user:HCHeadCoachDataProvider.sharedInstance.user! ) { (error, players) in
-            for(var i = 0;i<players.count;i++){
-                if (players[i].isOnBench){
-                    self.testarray2.addObject(players[i])
-                }else{
-                    self.testarray.addObject(players[i])
+            for player in players {
+                if (player.isOnBench) {
+                    self.benchedPlayers.addObject(player)
+                } else {
+                    self.activePlayers.addObject(player)
                 }
             }
+
             self.active.reloadData()
             self.bench.reloadData()
         }
@@ -201,14 +260,15 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        userName.text = self.user?.name
+        self.title = self.user?.name
     }
    
-    internal func dataForCollection(collection:UIView) ->NSMutableArray{
-        if (collection==self.active){
-            return self.testarray
-        }else{
-            return self.testarray2         }
+    internal func dataForCollection(collection:UIView) -> NSMutableArray {
+        if (collection==self.active) {
+            return self.activePlayers
+        } else {
+            return self.benchedPlayers
+        }
     }
     
     func canItemBeDraggedAt(at: NSIndexPath!, inCollection collection: UIView!) -> Bool {
@@ -268,12 +328,12 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         let toTable = toCollection as! UITableView
         
         if(fromTable==self.active){
-            HCHeadCoachDataProvider.sharedInstance.movePlayerToBench(self.testarray[from.row] as! HCPlayer, league: HCHeadCoachDataProvider.sharedInstance.league!, completion: { (error) in
+            HCHeadCoachDataProvider.sharedInstance.movePlayerToBench(self.activePlayers[from.row] as! HCPlayer, league: HCHeadCoachDataProvider.sharedInstance.league!, completion: { (error) in
                 print("move to bench")
                 print(error)
             })
         }else{
-            HCHeadCoachDataProvider.sharedInstance.movePlayerToActive(self.testarray2[from.row] as! HCPlayer, league: HCHeadCoachDataProvider.sharedInstance.league!, completion: { (error) in
+            HCHeadCoachDataProvider.sharedInstance.movePlayerToActive(self.benchedPlayers[from.row] as! HCPlayer, league: HCHeadCoachDataProvider.sharedInstance.league!, completion: { (error) in
                 print("move to active")
                 print(error)
             })
@@ -322,10 +382,10 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(tableView == self.active){
-            return self.testarray.count
-        }else{
-            return self.testarray2.count
+        if(tableView == self.active) {
+            return self.activePlayers.count
+        } else {
+            return self.benchedPlayers.count
         }
         
     }
