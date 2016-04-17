@@ -290,9 +290,7 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         let realm = try! Realm()
         let player = self.dataForCollection(tableView)[indexPath.row] as! HCPlayer
         let temp = realm.objectForPrimaryKey(FDPlayer.self, key: player.fantasy_id)
-        print(temp?.name)
-        let vc = HCPlayerMoreDetailController()
-        vc.player = temp
+        let vc = HCPlayerMoreDetailController(forFDPlayer: temp!)
         navigationController?.pushViewController(vc, animated: true)
     }
     

@@ -176,6 +176,7 @@
 				C86B87771CB238D300218C31 /* PlayerListView.swift */,
 				B9FF59031CB9595B00033C12 /* HCLoadingView.swift */,
 				B9FF59051CB9671A00033C12 /* HCPlayerMatchView.swift */,
+				C89B05691CBAA2B0007EE6C3 /* GameStatView.swift */,
 				B947C0601CBC172B000931A2 /* HCLeagueDetailsHeaderCell.swift */,
 				B48FFE571CBD859B00E175C5 /* HCPositionMenu.swift */,
 				B48FFE591CBD85BC00E175C5 /* HCPlayerListCell.swift */,

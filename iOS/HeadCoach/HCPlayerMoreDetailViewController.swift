@@ -37,31 +37,15 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
     override func viewDidLoad() {
         super.viewDidLoad()
         self.edgesForExtendedLayout = UIRectEdge.None
-        detail = PlayerDetailView(frame: view.bounds)
-        view.addSubview(detail)
-        detail.addCustomView()
-        detail.setPlayer(player)
-        detail.tempTradeButton.addTarget(self, action: #selector(HCPlayerMoreDetailController.buttonClicked(_:)), forControlEvents: .TouchUpInside)
-//        sendDataRequest()
-    }
-    
-    func sendDataRequest(){
-        for index in 0...4{
-            let headers = ["Ocp-Apim-Subscription-Key" : HCFantasyDataProvider.sharedInstance.key]
-            let url = "http://api.fantasydata.net/nfl/v2/JSON/PlayerGameStatsByPlayerID/2015REG/" + String(index) + "/" + String(player?.id)
-            Alamofire.request(.GET, url, headers: headers)
-                .responseJSON{response in switch response.result {
-                case .Success(let JSON):
-                    
-                    let data = JSON as! NSDictionary
-                    
-                    let game = Game(week: data.objectForKey("Week") as! Int, opp: data.objectForKey("Opponent") as! String, homeOrAway: data.objectForKey("HomeOrAway") as! String, passYds: data.objectForKey("PassingYards") as! Int, recYds: data.objectForKey("ReceivingYards") as! Int)
-                    self.games.append(game)
-                    self.setUpTableView()
-                case .Failure(let error):
-                    print("Request failed with error: \(error)")
-                    }
-            }
+
+        if fdplayer != nil{
+            build(fdplayer)
+        } else {
+            let dp = HCFantasyDataProvider.sharedInstance
+            dp.getFDPlayerFromHCPlayer(hcplayer, completion: { (player) in
+                self.fdplayer = player
+                self.build(self.fdplayer)
+            })
         }
     }
     
@@ -78,7 +62,8 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
     func requestGameData(){
         self.games = [Game]()
         for index in 0...20{
-            HCFantasyDataProvider.sharedInstance.getGameData(forWeek: index, forPlayer: fdplayer.id, handler: HCPlayerMoreDetailController.handleGameResponse(self))
+            let dp = HCFantasyDataProvider.sharedInstance
+            dp.getGameData(forWeek: index, forPlayer: fdplayer.id, handler: self.handleGameResponse)
         }
 
     }
