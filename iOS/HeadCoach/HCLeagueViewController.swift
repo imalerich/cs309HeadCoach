@@ -103,13 +103,7 @@ class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableView
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 120
     }
-    func tableView(tableView: UITableView,didSelectRowAtIndexPath indexPath: NSIndexPath){
-        print("clicked")
-        let vc = HCUserDetailViewController()
-        vc.user = list[indexPath.row].name
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    
+
 }
 
 

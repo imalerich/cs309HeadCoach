@@ -10,9 +10,10 @@ import UIKit
 import SnapKit
 import BetweenKit
 import Foundation
+import Alamofire
 import RealmSwift
 
-class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewDelegate,UITableViewDataSource {
+class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewDelegate,UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
     var bench = UITableView()
     var active = UITableView()
@@ -24,7 +25,12 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
     let record = UILabel()
     let position = UILabel()
     var gestureCoordinator = I3GestureCoordinator.init()
-    var user = ""
+    var imagePicker = UIImagePickerController()
+    let upload = UIButton()
+    
+    var user:HCUser?
+    //let parameters = ["client_id":c4299d0c77f8ddd,"client_secret":f4c1e5951d0b3444aebd1bfb3376b9313f75b1c2,]
+    
 
     var testarray:NSMutableArray = []
     var testarray2:NSMutableArray = []
@@ -57,13 +63,37 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         profileImage.layer.borderWidth = 1
         profileImage.layer.cornerRadius = 25
         profileImage.layer.masksToBounds = true
+        self.view.addSubview(upload)
+        upload.setTitle("Upload a Profile Picture", forState: .Normal)
+        upload.setTitleColor(UIColor.footballColor(1.3), forState: .Normal)
+        upload.titleLabel!.font = UIFont.systemFontOfSize(20, weight: UIFontWeightLight)
+        upload.addTarget(self, action: #selector(self.uploadAction(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        upload.layer.cornerRadius = 10
+        upload.backgroundColor = UIColor.whiteColor()
+        upload.layer.borderColor = UIColor.darkGrayColor().CGColor
+        upload.layer.borderWidth = 1
+        upload.titleLabel?.font = UIFont(name: (upload.titleLabel?.font?.fontName)!,size: 10)
         
+        if(user?.name == HCHeadCoachDataProvider.sharedInstance.user!.name){
+            upload.hidden = false
+        }else{
+            upload.hidden = true
+        }
+    
         profileImage.snp_makeConstraints { (make) in
             make.top.equalTo(self.view.snp_top).inset(70)
             make.left.equalTo(self.view.snp_left).inset(10)
-            make.height.equalTo(100)
-            make.width.equalTo(100)
+            make.height.equalTo(75)
+            make.width.equalTo(75)
         }
+        
+        upload.snp_makeConstraints { (make) in
+            make.width.equalTo(150)
+            make.height.equalTo(30)
+            make.top.equalTo(profileImage.snp_bottom).inset(-3)
+            make.left.equalTo(profileImage.snp_left)
+        }
+        
         container.snp_makeConstraints { (make) in
             make.top.equalTo(self.view.snp_centerY).multipliedBy(0.55)
             make.left.right.equalTo(self.view)
@@ -120,7 +150,7 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         bench.dataSource = self
         bench.delegate = self
         active.delegate = self
-        profileImage.load("https://yt3.ggpht.com/-9JtIWfELi1A/AAAAAAAAAAI/AAAAAAAAAAA/sY8X2YGMGjU/s900-c-k-no/photo.jpg")
+        profileImage.load((user?.img_url)!)
         HCHeadCoachDataProvider.sharedInstance.getAllPlayersForUserFromLeague(HCHeadCoachDataProvider.sharedInstance.league!, user:HCHeadCoachDataProvider.sharedInstance.user! ) { (error, players) in
             for(var i = 0;i<players.count;i++){
                 if (players[i].isOnBench){
@@ -143,7 +173,7 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
     }
     
     func canItemBeDraggedAt(at: NSIndexPath!, inCollection collection: UIView!) -> Bool {
-        if(user == HCHeadCoachDataProvider.sharedInstance.user!.name){
+        if(user?.name == HCHeadCoachDataProvider.sharedInstance.user!.name){
            return true
         }
         else {
@@ -152,28 +182,30 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
     }
     
     func canItemFrom(from: NSIndexPath!, beRearrangedWithItemAt to: NSIndexPath!, inCollection collection: UIView!) -> Bool {
-        if(user == HCHeadCoachDataProvider.sharedInstance.user!.name){
+        if(user!.name == HCHeadCoachDataProvider.sharedInstance.user!.name){
             return true
         }
         else {
-            return true
+            return false
         }
+        
+        
     }
     func canItemAt(from: NSIndexPath!, fromCollection: UIView!, beDroppedAtPoint at: CGPoint, onCollection toCollection: UIView!) -> Bool {
-        if(user == HCHeadCoachDataProvider.sharedInstance.user!.name){
+        if(user!.name == HCHeadCoachDataProvider.sharedInstance.user!.name){
             return true
         }
         else {
-            return true
+            return false
         }
     }
     
     func canItemAt(from: NSIndexPath!, fromCollection: UIView!, beDroppedTo to: NSIndexPath!, onCollection toCollection: UIView!) -> Bool {
-        if(user == HCHeadCoachDataProvider.sharedInstance.user!.name){
+        if(user!.name == HCHeadCoachDataProvider.sharedInstance.user!.name){
             return true
         }
         else {
-            return true
+            return false
         }
     }
     
@@ -261,11 +293,41 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         
     }
     
-  
+    func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!){
+        self.dismissViewControllerAnimated(true, completion: { () -> Void in
+        })
+        let imageData = UIImagePNGRepresentation(image)
+        let base64String = imageData!.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
+        //let base64String = UIImageJPEGRepresentation(image, 1.0)?.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
+        let parameters = ["image": base64String,"type": "base64"]
+        let headers = ["Authorization": "Client-ID c4299d0c77f8ddd"]
+        Alamofire.request(.POST, "https://api.imgur.com/3/upload", parameters: parameters,headers: headers)
+            .responseJSON { response in
+                if let json = response.result.value as? Dictionary<String, AnyObject> {
+                    print(json)
+                    if let data = json["data"] as? Dictionary<String,AnyObject>{
+                        if let url = data["link"]as? String{
+                            print(url)
+                            HCHeadCoachDataProvider.sharedInstance.setUserProfileImage(self.user!, imgUrl: url, completion: { (error) in
+                                print(error)
+                                self.profileImage.load(url)
+                                
+                            })
+                        }
+                    }
+                }
+        }
+        
+    }
     
-    
-    
-    
-    
+    func uploadAction(sender: UIButton!){
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.SavedPhotosAlbum){
+            print("Button capture")
+            imagePicker.delegate = self
+            imagePicker.sourceType = UIImagePickerControllerSourceType.SavedPhotosAlbum;
+            imagePicker.allowsEditing = false
+            self.presentViewController(imagePicker, animated: true, completion: nil)
+        }
+    }
  
 }
