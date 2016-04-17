@@ -15,11 +15,15 @@ class GameTableViewDetail: UITableViewCell {
     var game: Game? {
         didSet{
             if let g = game{
-                weekLabel.text = "Week " + String(g.week)
-                oppLabel.text = "vs. " + g.opp
-                howLabel.text = "at " + g.homeOrAway
-                passLabel.text = "Passed " + String(g.passYds) + "yds"
-                recLabel.text = "Rec'd " + String(g.recYds) + "yds"
+                weekLabel.text = "Week " + String(g.week!)
+                if let opp = g.opp{
+                oppLabel.text = "vs. " + opp
+                }
+                if let how = g.homeOrAway{
+                howLabel.text = how
+                }
+                passLabel.text = "Passed " + String(g.passYds!) + "yds"
+                recLabel.text = "Rec'd " + String(g.recYds!) + "yds"
                 //
                 //                if let url = NSURL(string: p.imageURL){
                 //                    if let data = NSData(contentsOfURL: url){
@@ -32,7 +36,8 @@ class GameTableViewDetail: UITableViewCell {
     }
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        super.init(style: style, reuseIdentifier: "game")
+        backgroundColor = UIColor.whiteColor()
         selectionStyle = .None
         background = UIView(frame: CGRectZero)
         background.alpha = 0.6
