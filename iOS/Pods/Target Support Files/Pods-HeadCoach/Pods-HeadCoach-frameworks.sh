@@ -84,6 +84,7 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "Pods-HeadCoach/ActionSheetPicker_3_0.framework"
   install_framework "Pods-HeadCoach/Alamofire.framework"
   install_framework "Pods-HeadCoach/BetweenKit.framework"
   install_framework "Pods-HeadCoach/ImageLoader.framework"
@@ -92,6 +93,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-HeadCoach/SnapKit.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "Pods-HeadCoach/ActionSheetPicker_3_0.framework"
   install_framework "Pods-HeadCoach/Alamofire.framework"
   install_framework "Pods-HeadCoach/BetweenKit.framework"
   install_framework "Pods-HeadCoach/ImageLoader.framework"

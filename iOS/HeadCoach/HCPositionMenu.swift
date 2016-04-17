@@ -8,6 +8,7 @@
 
 import UIKit
 import SnapKit
+import ActionSheetPicker_3_0
 
 class HCPositionMenu : UIView {
     
@@ -15,28 +16,29 @@ class HCPositionMenu : UIView {
     var button = UIButton()
     var position = Position.QuarterBack
     let OFFSET = 8
-    var selector = UIPickerView()
-    
+
+    var listVC: HCPlayerListViewController? = nil
+
     override init(frame: CGRect){
-        // TODO - do I need to change this frame?
         super.init(frame: frame)
         self.clipsToBounds = true
-        backgroundColor = UIColor.footballColor(1.0)
+        backgroundColor = UIColor.footballColor(0.6)
         
         initViews()
         layoutViews()
     }
     
     internal func initViews(){
-        label.font = UIFont.systemFontOfSize(14.0)
+        label.font = UIFont.systemFontOfSize(22, weight: UIFontWeightLight)
         label.textColor = UIColor.whiteColor()
-        label.text = "Position: \(HCPositionUtil.positionToString(position))"
+        label.text = HCPositionUtil.positionToString(position)
         label.textAlignment = .Left
         
         button.setTitle("Change", forState: .Normal)
         button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        // TODO - set button action
-        button.addTarget(self, action: "changePosition", forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(self.changePosition), forControlEvents: .TouchUpInside)
+        button.backgroundColor = UIColor.footballColor(1.0)
+        button.layer.cornerRadius = 6
     }
     
     internal func layoutViews(){
@@ -49,18 +51,38 @@ class HCPositionMenu : UIView {
         
         addSubview(button)
         button.snp_makeConstraints { (make) in
-            make.top.bottom.equalTo(self)
+            make.top.equalTo(self).offset(OFFSET)
+            make.bottom.equalTo(self).offset(-OFFSET)
             make.right.equalTo(snp_right).offset(-OFFSET)
-            make.width.equalTo(snp_width).multipliedBy(1/3.0)
+            make.width.equalTo(90)
         }
     }
-    
-    func setMenuSelector(inout selector: UIPickerView){
-        self.selector = selector
-    }
-    
-    func changePosition(){
-        selector.hidden = false
+
+    func changePosition() {
+        if let list = listVC {
+            var positions = [Position]()
+            var names = [String]()
+
+            // get the array of positions to select from
+            for key in list.players.keys {
+                let pos = HCPositionUtil.stringToPosition(key)
+
+                // ignore the bench position
+                if pos == Position.Bench {
+                    continue
+                }
+
+                names.append(HCPositionUtil.positionToName(pos))
+                positions.append(pos)
+            }
+
+            // find the currently selected index
+            let idx = positions.indexOf(list.currentPosition)!
+
+            ActionSheetStringPicker.showPickerWithTitle("Filter to Position", rows: names, initialSelection: idx, doneBlock: { (picker, row, str) in
+                list.setCurrentPosition(positions[row])
+            }, cancelBlock: nil, origin: button)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {

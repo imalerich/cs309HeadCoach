@@ -11,40 +11,27 @@ import SnapKit
 import RealmSwift
 
 
-class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITableViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let tableView = UITableView()
-    var selector = UIPickerView()
     let menu = HCPositionMenu()
     
-
     var currentPosition = Position.QuarterBack
     var players = Dictionary<String, Array<HCPlayer>>()
-    var pickerDataSource : [Position] = HCPositionUtil.getAllPositions()
 
     override func viewDidLoad(){
         super.viewDidLoad()
         self.title = "Drafting"
-        pickerDataSource.removeLast()
-        
+
         // register custom class
         tableView.registerClass(HCPlayerListCell.classForCoder(), forCellReuseIdentifier: "PlayerListCell")
         tableView.delegate = self
         tableView.dataSource = self
-        
-        // initialize picker delegate & dataSource
-        selector.delegate = self
-        selector.dataSource = self
-        selector.backgroundColor = UIColor.whiteColor()
-        
+        menu.listVC = self
 
         // this fixes the menu being underneath the navigation bar
         // don't ask, its stupid
         edgesForExtendedLayout = .None
-
-        // do not actually use purple here
-        menu.backgroundColor = UIColor.footballColor(1.0)
-        menu.setMenuSelector(&selector)
 
         // layout views
         self.view.addSubview(menu)
@@ -57,12 +44,6 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
         tableView.snp_makeConstraints { (make) in
             make.left.right.bottom.equalTo(view)
             make.top.equalTo(menu.snp_bottom)
-        }
-        
-        self.view.addSubview(selector)
-        selector.hidden = true
-        selector.snp_makeConstraints { (make) in
-            make.edges.equalTo(view)
         }
 
         setupPlayersDict()
@@ -89,7 +70,7 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
     /// then reloads the data for the table view
     func setCurrentPosition(pos: Position) {
         currentPosition = pos
-        menu.label.text = "Position: \(HCPositionUtil.positionToName(pos))"
+        menu.label.text = HCPositionUtil.positionToName(pos)
 
         tableView.reloadData()
     }
@@ -104,9 +85,8 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
     // table view functions
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        // TODO - MAKE THIS SHIT WORK
         let cell = tableView.dequeueReusableCellWithIdentifier("PlayerListCell", forIndexPath: indexPath) as! HCPlayerListCell
-        cell.backgroundColor = indexPath.row % 2 == 0 ? UIColor.whiteColor() : UIColor(white: 0.9, alpha: 1.0)
+        cell.backgroundColor = UIColor.whiteColor()
         cell.changePlayer(players[HCPositionUtil.positionToString(currentPosition)]![indexPath.row])
         
         return cell
@@ -132,24 +112,5 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
             let vc = HCPlayerMoreDetailController(forFDPlayer: fd_player)
             self.navigationController?.pushViewController(vc, animated: true)
         }
-    }
-    
-    // selector functions
-    
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return pickerDataSource.count
-    }
-    
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return HCPositionUtil.positionToString(pickerDataSource[row])
-    }
-    
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        setCurrentPosition(pickerDataSource[row])
-        selector.hidden = true
     }
 }

@@ -44,7 +44,6 @@ class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableView
         background.alpha = 0.4
         tableView.backgroundColor = UIColor.footballColor(0.2)
         tableView.backgroundView = background
-        tableView.allowsSelection = false
 
         // Layout the header.
         view.addSubview(header)
@@ -95,9 +94,17 @@ class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableView
         let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID, forIndexPath: indexPath) as! HCLeagueTableViewCell
         cell.setUser(users[indexPath.row])
         cell.img.layer.cornerRadius = CELL_HEIGHT / 2 - 1.5 * CGFloat(cell.OFFSET)
+        cell.selectionStyle = .None
 
         return cell
-            
+    }
+
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let vc = HCUserDetailViewController()
+        let user = users[indexPath.row]
+
+        vc.user = user
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

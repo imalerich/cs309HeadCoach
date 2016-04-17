@@ -7,6 +7,7 @@ pod 'Alamofire', '~> 3.0'
 pod 'RealmSwift'
 pod 'ImageLoader'
 pod 'BetweenKit', '~>2.0.1'
-# the commit.
+pod 'ActionSheetPicker-3.0'
+
 end
 

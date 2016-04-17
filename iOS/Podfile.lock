@@ -1,4 +1,5 @@
 PODS:
+  - ActionSheetPicker-3.0 (2.0.5)
   - Alamofire (3.3.1)
   - BetweenKit (2.0.1)
   - ImageLoader (0.8.9)
@@ -10,6 +11,7 @@ PODS:
   - SnapKit (0.20.0)
 
 DEPENDENCIES:
+  - ActionSheetPicker-3.0
   - Alamofire (~> 3.0)
   - BetweenKit (~> 2.0.1)
   - ImageLoader
@@ -17,6 +19,7 @@ DEPENDENCIES:
   - SnapKit
 
 SPEC CHECKSUMS:
+  ActionSheetPicker-3.0: 8312778b6815578e6a86d630fbcf31dc94c534e7
   Alamofire: 369bc67b6f5ac33ded3648d7bd21c5bfb91c2ecc
   BetweenKit: 89edc0c6dd96eb33ea02c097bb99a9b1c14880f0
   ImageLoader: 7a26b4e248aa4cae7df322449ddb109bcfba9f09

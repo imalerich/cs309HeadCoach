@@ -4,7 +4,17 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>ActionSheetPicker-3.0.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Alamofire.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>BetweenKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -42,22 +52,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>1B8C1452343C2BE1168C8054C4F3C3F4</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>20FF3BA2CD28150FE031055F20EEB080</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>3EA65CE9961BF6972756B311ADE67670</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>64E0D6D3356BB27D53F4B179A3097B8E</key>
+		<key>2A9FE11753FFC7B83FE27DA2B56C4B52</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -67,12 +62,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>882897248BB47742E0D2BE8FD739743E</key>
+		<key>BBFB8DE13EEB3D42D3B54A81E42B7391</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A3D011022BD0A492DDE7C28490E18154</key>
+		<key>BF3086479EEC0A285C03B8BDBD013776</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -82,12 +77,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D6B75E41C85748657BF059C97CD86175</key>
+		<key>CE0A701D8A271EFE0065667D13272921</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F4E9EA25B771DD7BED328F036B07A285</key>
+		<key>F74849DC1A48844A31C4CAFF78339AD4</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -46,7 +46,6 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         self.view.addSubview(draft)
         self.view.addSubview(upload)
 
-        userName.text = HCHeadCoachDataProvider.sharedInstance.user!.name
         benchLabel.text = "Bench"
         activeLabel.text = "Active"
         view.backgroundColor = UIColor.whiteColor()
@@ -88,7 +87,7 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         draft.titleLabel?.font = UIFont(name: (upload.titleLabel?.font?.fontName)!,size: 15)
         
         HCHeadCoachDataProvider.sharedInstance.getUserStats(user!, league: HCHeadCoachDataProvider.sharedInstance.league!) { (stats) in
-            let temp = "Wins: " + String(self.user!.stats!.wins) + " Draws: " + String(self.user!.stats!.draws) + " Losses: " + String(self.user!.stats!.loses)
+            let temp = "Wins: " + String(self.user!.stats!.wins) + " Loses: " + String(self.user!.stats!.loses) + " Draws: " + String(self.user!.stats!.draws)
             self.record.text = temp
             print(temp)
         }
@@ -198,6 +197,11 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
             self.bench.reloadData()
         }
     
+    }
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        userName.text = self.user?.name
     }
    
     internal func dataForCollection(collection:UIView) ->NSMutableArray{
