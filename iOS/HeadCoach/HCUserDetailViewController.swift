@@ -28,11 +28,8 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
     var imagePicker = UIImagePickerController()
     let upload = UIButton()
     let draft = UIButton()
-    
     var user:HCUser?
     //let parameters = ["client_id":c4299d0c77f8ddd,"client_secret":f4c1e5951d0b3444aebd1bfb3376b9313f75b1c2,]
-    
-
     var testarray:NSMutableArray = []
     var testarray2:NSMutableArray = []
     
@@ -47,6 +44,8 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         self.view.addSubview(record)
         self.view.addSubview(position)
         self.view.addSubview(draft)
+        self.view.addSubview(upload)
+
         userName.text = HCHeadCoachDataProvider.sharedInstance.user!.name
         benchLabel.text = "Bench"
         activeLabel.text = "Active"
@@ -61,11 +60,13 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         active.layer.borderWidth = 1
         self.active.tableFooterView = UIView()
         self.bench.tableFooterView = UIView()
+        
         profileImage.layer.borderColor = UIColor.darkGrayColor().CGColor
         profileImage.layer.borderWidth = 1
         profileImage.layer.cornerRadius = 25
         profileImage.layer.masksToBounds = true
-        self.view.addSubview(upload)
+        profileImage.contentMode = .ScaleAspectFill
+        
         upload.setTitle("Upload a Profile Picture", forState: .Normal)
         upload.setTitleColor(UIColor.footballColor(1.3), forState: .Normal)
         upload.titleLabel!.font = UIFont.systemFontOfSize(20, weight: UIFontWeightLight)
@@ -75,6 +76,7 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         upload.layer.borderColor = UIColor.darkGrayColor().CGColor
         upload.layer.borderWidth = 1
         upload.titleLabel?.font = UIFont(name: (upload.titleLabel?.font?.fontName)!,size: 15)
+        
         draft.setTitle("Draft Players", forState: .Normal)
         draft.setTitleColor(UIColor.footballColor(1.3), forState: .Normal)
         draft.titleLabel!.font = UIFont.systemFontOfSize(20, weight: UIFontWeightLight)
@@ -84,11 +86,11 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         draft.layer.borderColor = UIColor.darkGrayColor().CGColor
         draft.layer.borderWidth = 1
         draft.titleLabel?.font = UIFont(name: (upload.titleLabel?.font?.fontName)!,size: 15)
-        print(HCHeadCoachDataProvider.sharedInstance.league!.name)
+        
         HCHeadCoachDataProvider.sharedInstance.getUserStats(user!, league: HCHeadCoachDataProvider.sharedInstance.league!) { (stats) in
-            print(stats?.wins)
-            //let temp = "Wins: " + String(stats!.wins) + " Draws: " + String(stats!.draws) + " Losses: " + String(stats!.loses)
-            //self.record.text = temp
+            let temp = "Wins: " + String(self.user!.stats!.wins) + " Draws: " + String(self.user!.stats!.draws) + " Losses: " + String(self.user!.stats!.loses)
+            self.record.text = temp
+            print(temp)
         }
         
         if(user?.name == HCHeadCoachDataProvider.sharedInstance.user!.name){
@@ -104,13 +106,6 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
             make.left.equalTo(self.view.snp_left).inset(10)
             make.height.equalTo(75)
             make.width.equalTo(75)
-        }
-        
-        record.snp_makeConstraints { (make) in
-            make.width.equalTo(200)
-            make.height.equalTo(30)
-            make.top.equalTo(profileImage.snp_top)
-            make.left.equalTo(profileImage.snp_left)
         }
         
         draft.snp_makeConstraints { (make) in
@@ -158,6 +153,13 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
             make.left.equalTo(self.profileImage.snp_right).inset(-5)
             make.top.equalTo(self.profileImage.snp_top).inset(5)
             make.width.equalTo(100)
+        }
+        
+        record.snp_makeConstraints { (make) in
+            make.width.equalTo(250)
+            make.height.equalTo(30)
+            make.top.equalTo(userName.snp_bottom)
+            make.left.equalTo(profileImage.snp_right).inset(-5)
         }
         
         activeLabel.snp_makeConstraints { (make) in
@@ -342,9 +344,10 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
                         if let url = data["link"]as? String{
                             print(url)
                             HCHeadCoachDataProvider.sharedInstance.setUserProfileImage(self.user!, imgUrl: url, completion: { (error) in
-                                print(error)
+                                self.user?.img_url = url
                                 self.profileImage.load(url)
-                                
+                                HCHeadCoachDataProvider.sharedInstance.user = self.user
+                        
                             })
                         }
                     }
