@@ -29,11 +29,6 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
         self.hcplayer = player
     }
     
-    convenience init(forFDPlayer player: FDPlayer){
-        self.init()
-        self.fdplayer = player
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.edgesForExtendedLayout = UIRectEdge.None
@@ -61,13 +56,23 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
     }
     
     func build(player: FDPlayer){
-        detail = PlayerDetailView(player: player, delegate: self)
+        detail = PlayerDetailView(player: player, hc_player: hcplayer, delegate: self)
         view.addSubview(detail)
         detail.snp_makeConstraints { (make) in
             make.edges.equalTo(view)
         }
+
+        detail.draftButton.addTarget(self, action: #selector(self.draftPlayer), forControlEvents: .TouchUpInside)
         requestPlayerStats(fdplayer.id)
         requestGameData()
+    }
+
+    /// Drafts this player to the current user.
+    func draftPlayer() {
+        let dp = HCHeadCoachDataProvider.sharedInstance
+        dp.draftPlayerForUser(dp.league!, user: dp.user!, player: hcplayer) { (err) in
+            // TODO - might have to do something here
+        }
     }
     
     func requestGameData(){
@@ -130,7 +135,7 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
             return cell
         }
         else{
-            var cell = tableView.dequeueReusableCellWithIdentifier("game") as! GameTableViewDetail
+            let cell = tableView.dequeueReusableCellWithIdentifier("game") as! GameTableViewDetail
             cell.game = games[indexPath.row]
             return cell
         }

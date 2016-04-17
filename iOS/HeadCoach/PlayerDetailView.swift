@@ -64,11 +64,12 @@ class PlayerDetailView: UIView {
         super.init(frame: frame)
     }
 
-    convenience init (player: FDPlayer, delegate: HCPlayerMoreDetailController) {
+    convenience init (player: FDPlayer, hc_player: HCPlayer,delegate: HCPlayerMoreDetailController) {
         self.init(frame : CGRectZero)
         addCustomView(delegate)
         setPlayer(player)
         currentSheetVisibility = SheetVisibility.Mid
+        draftButton.hidden = hc_player.user_id > 0
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -83,6 +84,7 @@ class PlayerDetailView: UIView {
         }else{
             teamLabel.text = player.team
         }
+
         numLabel.text = "#" + String(player.number)
         statusText.text = player.status
         statusTextContainer.backgroundColor = getStatusBackground(player.status)

@@ -33,7 +33,6 @@
 		B94C49EB1CA8539B00F2C2F0 /* HCLiveTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49D01CA8539B00F2C2F0 /* HCLiveTableViewCell.swift */; };
 		B94C49EC1CA8539B00F2C2F0 /* HCPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49D11CA8539B00F2C2F0 /* HCPlayer.swift */; };
 		B94C49ED1CA8539B00F2C2F0 /* HCPlayerDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49D21CA8539B00F2C2F0 /* HCPlayerDetailCell.swift */; };
-		B94C49EE1CA8539B00F2C2F0 /* HCPlayerDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49D31CA8539B00F2C2F0 /* HCPlayerDetailViewController.swift */; };
 		B94C49EF1CA8539B00F2C2F0 /* HCPlayerMoreDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49D41CA8539B00F2C2F0 /* HCPlayerMoreDetailViewController.swift */; };
 		B94C49F31CA8539B00F2C2F0 /* HCUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49D81CA8539B00F2C2F0 /* HCUser.swift */; };
 		B94C49F41CA8539B00F2C2F0 /* HCUserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94C49D91CA8539B00F2C2F0 /* HCUserDetailViewController.swift */; };
@@ -55,7 +54,6 @@
 		B9FF59041CB9595B00033C12 /* HCLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FF59031CB9595B00033C12 /* HCLoadingView.swift */; };
 		B9FF59061CB9671A00033C12 /* HCPlayerMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FF59051CB9671A00033C12 /* HCPlayerMatchView.swift */; };
 		C808336F1CACCB5D006F8CAC /* HCTradeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C808336E1CACCB5D006F8CAC /* HCTradeDetailViewController.swift */; };
-		C86B87781CB238D300218C31 /* PlayerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C86B87771CB238D300218C31 /* PlayerListView.swift */; };
 		C89B056A1CBAA2B0007EE6C3 /* GameStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B05691CBAA2B0007EE6C3 /* GameStatView.swift */; };
 /* End PBXBuildFile section */
 
@@ -88,7 +86,6 @@
 		B94C49D01CA8539B00F2C2F0 /* HCLiveTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLiveTableViewCell.swift; sourceTree = "<group>"; };
 		B94C49D11CA8539B00F2C2F0 /* HCPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPlayer.swift; sourceTree = "<group>"; };
 		B94C49D21CA8539B00F2C2F0 /* HCPlayerDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPlayerDetailCell.swift; sourceTree = "<group>"; };
-		B94C49D31CA8539B00F2C2F0 /* HCPlayerDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPlayerDetailViewController.swift; sourceTree = "<group>"; };
 		B94C49D41CA8539B00F2C2F0 /* HCPlayerMoreDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPlayerMoreDetailViewController.swift; sourceTree = "<group>"; };
 		B94C49D81CA8539B00F2C2F0 /* HCUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCUser.swift; sourceTree = "<group>"; };
 		B94C49D91CA8539B00F2C2F0 /* HCUserDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCUserDetailViewController.swift; sourceTree = "<group>"; };
@@ -112,7 +109,6 @@
 		B9FF59031CB9595B00033C12 /* HCLoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCLoadingView.swift; sourceTree = "<group>"; };
 		B9FF59051CB9671A00033C12 /* HCPlayerMatchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPlayerMatchView.swift; sourceTree = "<group>"; };
 		C808336E1CACCB5D006F8CAC /* HCTradeDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCTradeDetailViewController.swift; sourceTree = "<group>"; };
-		C86B87771CB238D300218C31 /* PlayerListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerListView.swift; sourceTree = "<group>"; };
 		C89B05691CBAA2B0007EE6C3 /* GameStatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -140,7 +136,6 @@
 			isa = PBXGroup;
 			children = (
 				B94C49CB1CA8539B00F2C2F0 /* HCLandingViewController.swift */,
-				B94C49D31CA8539B00F2C2F0 /* HCPlayerDetailViewController.swift */,
 				B94C49D41CA8539B00F2C2F0 /* HCPlayerMoreDetailViewController.swift */,
 				B94C49CE1CA8539B00F2C2F0 /* HCLeagueViewController.swift */,
 				B94C49CF1CA8539B00F2C2F0 /* HCLiveGameViewController.swift */,
@@ -173,7 +168,6 @@
 				B4FAF10E1CB06CD100C130F9 /* HCDraftTableViewCell.swift */,
 				B9BD66581CAACBFA0068586F /* HCLandingPageDetailCellTableViewCell.swift */,
 				480FE98C1CB2E6BB00763C1B /* HCLeagueCell.swift */,
-				C86B87771CB238D300218C31 /* PlayerListView.swift */,
 				B9FF59031CB9595B00033C12 /* HCLoadingView.swift */,
 				B9FF59051CB9671A00033C12 /* HCPlayerMatchView.swift */,
 				C89B05691CBAA2B0007EE6C3 /* GameStatView.swift */,
@@ -391,11 +385,9 @@
 				B94C49F51CA8539B00F2C2F0 /* HCUtil.swift in Sources */,
 				B94C49EA1CA8539B00F2C2F0 /* HCLiveGameViewController.swift in Sources */,
 				B9FF59041CB9595B00033C12 /* HCLoadingView.swift in Sources */,
-				C86B87781CB238D300218C31 /* PlayerListView.swift in Sources */,
 				B937D5F81CB7602F005FFE79 /* HCUserStats.swift in Sources */,
 				B94C49F71CA8539B00F2C2F0 /* PlayerTableViewCell.swift in Sources */,
 				B937D5F61CB74722005FFE79 /* HCGameResult.swift in Sources */,
-				B94C49EE1CA8539B00F2C2F0 /* HCPlayerDetailViewController.swift in Sources */,
 				B94C49E81CA8539B00F2C2F0 /* HCLeagueTableViewCell.swift in Sources */,
 				C89B056A1CBAA2B0007EE6C3 /* GameStatView.swift in Sources */,
 				480FE98D1CB2E6BB00763C1B /* HCLeagueCell.swift in Sources */,

@@ -243,7 +243,8 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         active.delegate = self
         profileImage.load((user?.img_url)!)
 
-        HCHeadCoachDataProvider.sharedInstance.getAllPlayersForUserFromLeague(HCHeadCoachDataProvider.sharedInstance.league!, user:HCHeadCoachDataProvider.sharedInstance.user! ) { (error, players) in
+        let dp = HCHeadCoachDataProvider.sharedInstance
+        dp.getAllPlayersForUserFromLeague(dp.league!, user: dp.user! ) { (error, players) in
             for player in players {
                 if (player.isOnBench) {
                     self.benchedPlayers.addObject(player)
@@ -327,12 +328,13 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         let fromTable = fromCollection as! UITableView
         let toTable = toCollection as! UITableView
         
-        if(fromTable==self.active){
+        if(fromTable==self.active) {
             HCHeadCoachDataProvider.sharedInstance.movePlayerToBench(self.activePlayers[from.row] as! HCPlayer, league: HCHeadCoachDataProvider.sharedInstance.league!, completion: { (error) in
                 print("move to bench")
                 print(error)
             })
-        }else{
+
+        } else {
             HCHeadCoachDataProvider.sharedInstance.movePlayerToActive(self.benchedPlayers[from.row] as! HCPlayer, league: HCHeadCoachDataProvider.sharedInstance.league!, completion: { (error) in
                 print("move to active")
                 print(error)
@@ -351,10 +353,8 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let realm = try! Realm()
         let player = self.dataForCollection(tableView)[indexPath.row] as! HCPlayer
-        let temp = realm.objectForPrimaryKey(FDPlayer.self, key: player.fantasy_id)
-        let vc = HCPlayerMoreDetailController(forFDPlayer: temp!)
+        let vc = HCPlayerMoreDetailController(forHCPlayer: player)
         navigationController?.pushViewController(vc, animated: true)
     }
     
