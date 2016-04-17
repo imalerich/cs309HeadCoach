@@ -209,6 +209,10 @@ class HCHeadCoachDataProvider: NSObject {
 
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Dictionary<String, AnyObject> {
+                if json["error"] as! Bool {
+                    user.img_url = imgUrl
+                }
+                
                 completion(json["error"] as! Bool)
             } else {
                 completion(false)
@@ -521,7 +525,7 @@ class HCHeadCoachDataProvider: NSObject {
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Dictionary<String, Int> {
                 user.stats = HCUserStats(json: json)
-                completion(user.stats)
+                completion(HCUserStats(json: json))
             }
 
             completion(nil);

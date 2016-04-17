@@ -9,13 +9,13 @@
 import Foundation
 import SnapKit
 import RealmSwift
+import Alamofire
 
-class HCCreateAccountViewController: UIViewController {
+class HCCreateAccountViewController: UIViewController,UINavigationControllerDelegate,UIImagePickerControllerDelegate {
     
     let info = UILabel()
     let createButton = UIButton()
     let userName = UITextField()
-
     let back = UIButton()
 
     var pageController: HCSetupViewController? = nil
@@ -121,5 +121,6 @@ class HCCreateAccountViewController: UIViewController {
                                            direction: UIPageViewControllerNavigationDirection.Reverse,
                                            animated: true, completion: nil)
     }
+
     
 }
