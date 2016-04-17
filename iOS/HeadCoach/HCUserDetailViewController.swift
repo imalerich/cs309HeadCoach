@@ -11,7 +11,6 @@ import SnapKit
 import BetweenKit
 import Foundation
 import Alamofire
-import RealmSwift
 
 class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewDelegate,UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
 
@@ -359,19 +358,18 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-            let cell = tableView.dequeueReusableCellWithIdentifier("test1", forIndexPath: indexPath) as! PlayerTableViewCell
-            let player = self.dataForCollection(tableView)[indexPath.row] as! HCPlayer
-            let realm = try! Realm()
-            let temp = realm.objectForPrimaryKey(FDPlayer.self, key: player.fantasy_id)
-            cell.setPlayer(temp!)
-            cell.playerImage.load((temp?.photoURL)!)
-            cell.textLabel?.textColor = UIColor.blackColor()
-            cell.separatorInset = UIEdgeInsetsZero
-            cell.layoutMargins = UIEdgeInsetsZero
-            cell.preservesSuperviewLayoutMargins = false
-            return cell
-       
+        let cell = tableView.dequeueReusableCellWithIdentifier("test1", forIndexPath: indexPath) as! PlayerTableViewCell
+        let player = self.dataForCollection(tableView)[indexPath.row] as! HCPlayer
+
+        cell.textLabel!.text = player.name
+        cell.playerImage.load(player.img)
+
+        cell.textLabel?.textColor = UIColor.blackColor()
+        cell.separatorInset = UIEdgeInsetsZero
+        cell.layoutMargins = UIEdgeInsetsZero
+        cell.preservesSuperviewLayoutMargins = false
+
+        return cell
     }
     
     func dropItemAt(from: NSIndexPath!, fromCollection: UIView!, toPoint to: CGPoint, onCollection toCollection: UIView!) {
