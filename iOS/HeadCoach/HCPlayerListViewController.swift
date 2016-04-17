@@ -18,13 +18,14 @@ class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITa
     let menu = HCPositionMenu()
     
 
-    var currentPosition = Position.All
+    var currentPosition = Position.QuarterBack
     var players = Dictionary<String, Array<HCPlayer>>()
     var pickerDataSource : [Position] = HCPositionUtil.getAllPositions()
 
     override func viewDidLoad(){
         super.viewDidLoad()
         self.title = "Drafting"
+        pickerDataSource.removeLast()
         
         // register custom class
         tableView.registerClass(HCPlayerListCell.classForCoder(), forCellReuseIdentifier: "PlayerListCell")

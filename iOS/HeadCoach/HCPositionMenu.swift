@@ -13,7 +13,7 @@ class HCPositionMenu : UIView {
     
     var label = UILabel()
     var button = UIButton()
-    var position = Position.All
+    var position = Position.QuarterBack
     let OFFSET = 8
     var selector = UIPickerView()
     
