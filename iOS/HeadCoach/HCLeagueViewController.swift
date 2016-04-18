@@ -30,6 +30,7 @@ class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableView
 
     override func viewDidLoad(){
         super.viewDidLoad()
+        view.backgroundColor = UIColor.whiteColor()
 
         // Create our table view.
         tableView.registerClass(HCLeagueTableViewCell.self, forCellReuseIdentifier: CELL_ID)
@@ -38,12 +39,6 @@ class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableView
         tableView.delegate = self
 
         edgesForExtendedLayout = .None
-
-        let background = UIImageView(image: UIImage(named: "blurred_background"))
-        background.contentMode = .ScaleAspectFill
-        background.alpha = 0.4
-        tableView.backgroundColor = UIColor.footballColor(0.2)
-        tableView.backgroundView = background
 
         // Layout the header.
         view.addSubview(header)
@@ -93,7 +88,6 @@ class HCLeagueViewController: UIViewController,UITableViewDataSource,UITableView
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID, forIndexPath: indexPath) as! HCLeagueTableViewCell
         cell.setUser(users[indexPath.row])
-        cell.img.layer.cornerRadius = CELL_HEIGHT / 2 - 1.5 * CGFloat(cell.OFFSET)
         cell.selectionStyle = .None
 
         return cell

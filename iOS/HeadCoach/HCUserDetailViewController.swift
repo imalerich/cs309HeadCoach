@@ -42,6 +42,7 @@ class HCUserDetailPlayerCell: UITableViewCell {
     internal func initViews(){
         name.text = "Name"
         name.textAlignment = .Left
+        name.adjustsFontSizeToFitWidth = true
         name.font = UIFont.systemFontOfSize(18, weight: UIFontWeightLight)
 
         pos.textAlignment = .Center
@@ -63,12 +64,12 @@ class HCUserDetailPlayerCell: UITableViewCell {
 
         // add a little right border next to the photo
         let right = UIView()
-        right.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
+        right.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
         addSubview(right)
         right.snp_makeConstraints { (make) in
             make.top.bottom.equalTo(photo)
             make.right.equalTo(photo.snp_right)
-            make.width.equalTo(1)
+            make.width.equalTo(0.8)
         }
 
         addSubview(pos)
@@ -81,18 +82,19 @@ class HCUserDetailPlayerCell: UITableViewCell {
 
         addSubview(name)
         name.snp_makeConstraints { (make) in
-            make.right.equalTo(pos.snp_left).offset(OFFSET)
+            make.right.equalTo(pos.snp_left).offset(-OFFSET)
             make.left.equalTo(photo.snp_right).offset(OFFSET)
             make.bottom.top.equalTo(self)
         }
 
         // add a little bottom border
         let bottom = UIView()
-        bottom.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
+        bottom.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
         addSubview(bottom)
         bottom.snp_makeConstraints { (make) in
-            make.left.bottom.right.equalTo(self)
-            make.height.equalTo(1)
+            make.bottom.right.equalTo(self)
+            make.left.equalTo(photo.snp_right)
+            make.height.equalTo(0.8)
         }
     }
     
@@ -166,8 +168,8 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         activeLabel.textAlignment = .Center
         benchLabel.textAlignment = .Center
 
-        bench.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
-        active.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+        bench.backgroundColor = UIColor.whiteColor()
+        active.backgroundColor = UIColor.whiteColor()
         bench.separatorStyle = .None
         active.separatorStyle = .None
         
@@ -291,7 +293,7 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
 
         // add a little divider underneath the labels
         let labelBottom = UIView()
-        labelBottom.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
+        labelBottom.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
         container.addSubview(labelBottom)
         labelBottom.snp_makeConstraints { (make) in
             make.left.right.equalTo(container)
@@ -317,7 +319,7 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
 
         // Add a little divider between the bench and active table views.
         let divider = UIView()
-        divider.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
+        divider.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
         container.addSubview(divider)
         divider.snp_makeConstraints { (make) in
             make.top.bottom.centerX.equalTo(container)

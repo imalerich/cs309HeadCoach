@@ -23,17 +23,17 @@ class HCUserStandingView: UIView {
     init() {
         super.init(frame: CGRectZero)
 
-        wins.textAlignment = .Center
-        loses.textAlignment = .Center
-        draws.textAlignment = .Center
+//        wins.textAlignment = .Center
+//        loses.textAlignment = .Center
+//        draws.textAlignment = .Center
 
         wins.textColor = UIColor(white: 0.4, alpha: 1.0)
         loses.textColor = UIColor(white: 0.4, alpha: 1.0)
         draws.textColor = UIColor(white: 0.4, alpha: 1.0)
 
-        wins.backgroundColor = UIColor(white: 0.98, alpha: 1.0)
-        loses.backgroundColor = UIColor(white: 0.90, alpha: 1.0)
-        draws.backgroundColor = UIColor(white: 0.98, alpha: 1.0)
+        wins.font = UIFont.systemFontOfSize(16, weight: UIFontWeightLight)
+        loses.font = wins.font
+        draws.font = wins.font
 
         // Layout all of the subviews.
         addSubview(wins)
@@ -56,16 +56,6 @@ class HCUserStandingView: UIView {
             make.height.equalTo(self.snp_height).dividedBy(3)
             make.bottom.equalTo(self)
         }
-
-        // Add a little border on the left edge of the view.
-        let left = UIView()
-        left.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
-
-        addSubview(left)
-        left.snp_makeConstraints { (make) in
-            make.left.top.bottom.equalTo(self)
-            make.width.equalTo(1)
-        }
     }
 
     /// Update these labels with the an HCUSerStats object.
@@ -84,9 +74,6 @@ class HCLeagueTableViewCell: UITableViewCell {
 
     /// UI Offset parameter.
     let OFFSET = 8
-
-    /// Content view for the cell, the rest will be a border around the cell.
-    let dataView = UIView()
 
     /// This will be used to display the users profile picture.
     let img = UIImageView()
@@ -111,50 +98,66 @@ class HCLeagueTableViewCell: UITableViewCell {
         name.font = UIFont.systemFontOfSize(22, weight: UIFontWeightLight)
         rank.font = UIFont.systemFontOfSize(16, weight: UIFontWeightLight)
 
-        dataView.backgroundColor = UIColor.whiteColor()
-        dataView.layer.cornerRadius = 2
-        dataView.clipsToBounds = true
-        addSubview(dataView)
-        dataView.snp_makeConstraints(closure: { make in
-            make.left.equalTo(self.snp_left).offset(OFFSET)
-            make.right.equalTo(self.snp_right).offset(-OFFSET)
-            make.top.equalTo(self.snp_top).offset(OFFSET)
-            make.bottom.equalTo(self.snp_bottom)
-        })
-
         // just for testing right now, I'll clean it up later
         img.contentMode = .ScaleAspectFill
         img.clipsToBounds = true
+        img.layer.borderColor = UIColor(white: 0.9, alpha: 1.0).CGColor
+        img.layer.borderWidth = 1
 
-        dataView.addSubview(img)
+        addSubview(img)
         img.snp_makeConstraints { (make) in
-            make.left.equalTo(dataView.snp_left).offset(OFFSET)
-            make.top.equalTo(dataView.snp_top).offset(OFFSET)
-            make.bottom.equalTo(dataView.snp_bottom).offset(-OFFSET)
+            make.left.equalTo(self.snp_left).offset(OFFSET)
+            make.top.equalTo(self.snp_top).offset(3 * OFFSET)
+            make.bottom.equalTo(self.snp_bottom).offset(3 * -OFFSET)
             make.width.equalTo(img.snp_height)
         }
 
-        dataView.addSubview(details)
+        addSubview(details)
         details.snp_makeConstraints { (make) in
-            make.top.bottom.right.equalTo(dataView)
-            make.width.equalTo(120)
+            make.top.bottom.right.equalTo(self)
+            make.width.equalTo(100)
         }
 
-        dataView.addSubview(name)
+        addSubview(name)
         name.snp_makeConstraints { (make) in
-            make.left.equalTo(img.snp_right).offset(OFFSET)
+            make.left.equalTo(img.snp_right).offset(2 * OFFSET)
             make.right.equalTo(details.snp_left)
-            make.top.equalTo(dataView).offset(1.5 * Double(OFFSET))
-            make.height.equalTo(dataView.snp_height).dividedBy(2)
+            make.top.equalTo(self).offset(1.5 * Double(OFFSET))
+            make.height.equalTo(self.snp_height).dividedBy(2)
         }
 
-        dataView.addSubview(rank)
+        addSubview(rank)
         rank.snp_makeConstraints { (make) in
-            make.left.equalTo(img.snp_right).offset(OFFSET)
+            make.left.equalTo(name)
             make.right.equalTo(details.snp_left)
-            make.bottom.equalTo(dataView).offset(1.5 * Double(-OFFSET))
-            make.height.equalTo(dataView.snp_height).dividedBy(2)
+            make.bottom.equalTo(self).offset(1.5 * Double(-OFFSET))
+            make.height.equalTo(self.snp_height).dividedBy(2)
         }
+
+        // add a small border to the bottom of the cell
+        let bottom = UIView()
+        bottom.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
+        addSubview(bottom)
+        bottom.snp_makeConstraints { (make) in
+            make.left.right.bottom.equalTo(self)
+            make.height.equalTo(1)
+        }
+
+        // add a top border, this will overlap the bottom border
+        // of the cell above this one, but will be visible on the first cell
+        let top = UIView()
+        top.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
+        addSubview(top)
+        top.snp_makeConstraints { (make) in
+            make.left.right.equalTo(self)
+            make.bottom.equalTo(self.snp_top)
+            make.height.equalTo(1)
+        }
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        img.layer.cornerRadius = img.frame.size.height / 2
     }
 
     /// Setup this cell for the given user.

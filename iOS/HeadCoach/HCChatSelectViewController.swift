@@ -24,19 +24,21 @@ class HCChatSelectCell: UITableViewCell {
     /// Preview text label.
     let preview = UILabel()
 
-    /// Displays the total number of messages in this conversation.
-    let count = UILabel()
+    /// Displays the time the last message was sent
+    let time = UILabel()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         // setup our labels
         name.textColor = UIColor.blackColor()
-        name.font = UIFont.systemFontOfSize(20)
-        preview.textColor = UIColor(white: 0.2, alpha: 1.0)
-        preview.font = UIFont.systemFontOfSize(13, weight: UIFontWeightLight)
-        count.textAlignment = .Right
-        count.textColor = UIColor(white: 0.4, alpha: 1.0)
+        preview.font = UIFont.systemFontOfSize(16, weight: UIFontWeightLight)
+        time.textAlignment = .Right
+        time.font = UIFont.systemFontOfSize(14, weight: UIFontWeightLight)
+        img.contentMode = .ScaleAspectFill
+        img.clipsToBounds = true
+        img.layer.borderColor = UIColor(white: 0.8, alpha: 1.0).CGColor
+        img.layer.borderWidth = 1
 
         // add and layout the subviews
         addSubview(img)
@@ -46,8 +48,8 @@ class HCChatSelectCell: UITableViewCell {
             make.width.equalTo(img.snp_height)
         }
 
-        addSubview(count)
-        count.snp_makeConstraints { (make) in
+        addSubview(time)
+        time.snp_makeConstraints { (make) in
             make.top.bottom.equalTo(self)
             make.right.equalTo(self.contentView.snp_right).offset(-HCChatSelectCell.OFFSET)
             make.width.equalTo(80)
@@ -56,18 +58,41 @@ class HCChatSelectCell: UITableViewCell {
         addSubview(name)
         name.snp_makeConstraints { (make) in
             make.top.equalTo(self).offset(HCChatSelectCell.OFFSET)
-            make.right.equalTo(count.snp_left)
+            make.right.equalTo(time.snp_left)
             make.left.equalTo(img.snp_right).offset(HCChatSelectCell.OFFSET)
             make.height.equalTo(self.snp_height).dividedBy(2).offset(-HCChatSelectCell.OFFSET)
         }
 
         addSubview(preview)
         preview.snp_makeConstraints { (make) in
-            make.bottom.equalTo(self).offset(-HCChatSelectCell.OFFSET)
-            make.right.equalTo(count.snp_left)
+            make.bottom.equalTo(self).offset(Double(-HCChatSelectCell.OFFSET) * 1.4)
+            make.right.equalTo(time.snp_left)
             make.left.equalTo(img.snp_right).offset(HCChatSelectCell.OFFSET)
             make.height.equalTo(name)
         }
+
+        // add a little iOS style border on the bottom
+        let bottom = UIView()
+        bottom.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
+        addSubview(bottom)
+        bottom.snp_makeConstraints { (make) in
+            make.right.bottom.equalTo(contentView)
+            make.left.equalTo(img.snp_right)
+            make.height.equalTo(0.8)
+        }
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        name.font = UIFont.systemFontOfSize(20, weight: UIFontWeightLight)
+        time.textColor = UIColor(white: 0.2, alpha: 1.0)
+        preview.textColor = UIColor(white: 0.2, alpha: 1.0)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        img.layer.cornerRadius = img.frame.size.height / 2
     }
 
     /// This shit is required.
@@ -176,21 +201,41 @@ class HCChatSelectViewController: UIViewController, UITableViewDelegate, UITable
         return CELL_HEIGHT
     }
 
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+
+        let vc = HCChatViewController()
+        let key = keys[indexPath.row]
+
+        if let user = getUserByID(key) {
+            vc.user = user
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(KEY, forIndexPath: indexPath) as! HCChatSelectCell
-        cell.backgroundColor = indexPath.row % 2 == 0 ? UIColor.whiteColor() : UIColor(white: 0.97, alpha: 1.0)
+        cell.backgroundColor = UIColor.whiteColor()
 
         let key = keys[indexPath.row]
         if let user = getUserByID(key) {
-            cell.img.layer.cornerRadius = CELL_HEIGHT / 2 - CGFloat(HCChatSelectCell.OFFSET)
             cell.name.text = user.name
             cell.img.load(user.img_url)
 
-            let count = convos[key]!.count
-            cell.count.text = count > 0 ? String(count) : ""
-
             if let msg = convos[key]?.last {
                 cell.preview.text = msg.message
+
+                let formatter = NSDateFormatter()
+                if NSCalendar.currentCalendar().isDateInToday(msg.time_stamp) {
+                    formatter.dateFormat = "hh:mm a"
+                } else {
+                    formatter.dateFormat = "MMMM dd"
+                }
+
+                cell.time.text = formatter.stringFromDate(msg.time_stamp)
+                cell.name.font = msg.has_read ? UIFont.systemFontOfSize(20, weight: UIFontWeightLight) : UIFont.systemFontOfSize(20, weight: UIFontWeightMedium)
+                cell.time.textColor = msg.has_read ? UIColor(white: 0.2, alpha: 1.0) : UIColor.footballColor(1.0)
+                cell.preview.textColor = msg.has_read ? UIColor(white: 0.2, alpha: 1.0) : UIColor.blackColor()
             }
         }
 
