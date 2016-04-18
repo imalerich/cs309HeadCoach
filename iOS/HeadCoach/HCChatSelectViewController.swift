@@ -73,7 +73,7 @@ class HCChatSelectCell: UITableViewCell {
 
         // add a little iOS style border on the bottom
         let bottom = UIView()
-        bottom.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
+        bottom.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
         addSubview(bottom)
         bottom.snp_makeConstraints { (make) in
             make.right.bottom.equalTo(contentView)

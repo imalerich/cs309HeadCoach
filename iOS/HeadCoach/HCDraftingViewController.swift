@@ -35,7 +35,6 @@ class HCDraftingViewController: UIViewController, UITableViewDataSource, UITable
             })
             
             HCFantasyDataProvider().getPlayerDetails(){(responseString:String?) in
-                print(responseString)
                 self.progress.removeFromSuperview()
                 self.progress.stopAnimating()
             }

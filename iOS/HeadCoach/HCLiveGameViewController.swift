@@ -26,10 +26,9 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         self.title = "Live"
         
         // add chat button
-        let chatButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Compose, target: self, action: "chatMethod")
+        let chatButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Compose, target: self, action: #selector(self.chatMethod))
         navigationItem.rightBarButtonItem = chatButton
-        
-        
+
         tableView.delegate = self
         tableView.dataSource = self
         self.view.addSubview(tableView)

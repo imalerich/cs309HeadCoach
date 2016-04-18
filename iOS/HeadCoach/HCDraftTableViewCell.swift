@@ -56,7 +56,7 @@ class HCDraftTableViewCell : UITableViewCell{
         button.setTitleColor(UIColor.blackColor(), forState: .Normal)
         button.layer.borderColor = UIColor.blackColor().CGColor
         button.layer.borderWidth = 1
-        button.addTarget(self, action: "pressed:", forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(self.pressed(_:)), forControlEvents: .TouchUpInside)
         button.snp_makeConstraints { (make) in
             make.size.equalTo(CGSizeMake(50, 30))
             make.right.equalTo(self.leftBox)

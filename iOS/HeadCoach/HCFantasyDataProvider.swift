@@ -53,7 +53,6 @@ class HCFantasyDataProvider{
 
         Alamofire.request(.GET, url, headers: headers)
             .responseJSON { response in
-                print(response)
                 if let json = response.result.value as? Array<AnyObject> {
                     handler(id, json)
                 }
@@ -66,7 +65,6 @@ class HCFantasyDataProvider{
         let headers = ["Ocp-Apim-Subscription-Key": key]
         Alamofire.request(.GET, "\(api)/PlayerSeasonStatsByPlayerID/2015/\(id)", headers: headers)
             .responseJSON { response in
-                print(String(response))
                 if let json = response.result.value as? Array<Dictionary<String, AnyObject>> {
                     for item in json{
                         handler(item)

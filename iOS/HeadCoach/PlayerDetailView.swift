@@ -194,7 +194,6 @@ class PlayerDetailView: UIView {
         stat3Label.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
         stat3Label.font = stat3Label.font.fontWithSize(15)
         stat3Label.sizeToFit()
-        let random = arc4random_uniform(12)
         stat3Container.addSubview(stat3Label)
         
         stat3Text = UILabel()
