@@ -5,6 +5,9 @@ import SnapKit
 import Alamofire
 
 class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource  {
+
+    /// send a notification when the current user drafts a player
+    static let DRAFT_NOTIFICATION = "UserDidDraftPlayer"
     
     let statPickerData = ["General", "Scoring", "Passing", "Receiving", "Defense", "Rushing", "Kicking", "Punting"]
     var currentCat: String!
@@ -71,7 +74,8 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
     func draftPlayer() {
         let dp = HCHeadCoachDataProvider.sharedInstance
         dp.draftPlayerForUser(dp.league!, user: dp.user!, player: hcplayer) { (err) in
-            // TODO - might have to do something here
+            self.detail.draftButton.hidden = true
+            NSNotificationCenter.defaultCenter().postNotificationName(HCPlayerMoreDetailController.DRAFT_NOTIFICATION, object: self)
         }
     }
     

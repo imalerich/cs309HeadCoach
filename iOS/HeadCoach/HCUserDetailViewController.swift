@@ -12,6 +12,99 @@ import BetweenKit
 import Foundation
 import Alamofire
 
+// MARK: HCUserDetailPlayerCell
+
+class HCUserDetailPlayerCell: UITableViewCell {
+
+    let OFFSET = 4
+
+    /// The position this player fills in a users roster.
+    let pos = UILabel()
+
+    /// Photo for this player.
+    let photo = UIImageView()
+
+    /// Name label for this player.
+    let name = UILabel()
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?){
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.backgroundColor = UIColor.whiteColor()
+        
+        initViews()
+        layoutViews()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    internal func initViews(){
+        name.text = "Name"
+        name.textAlignment = .Left
+        name.font = UIFont.systemFontOfSize(18, weight: UIFontWeightLight)
+
+        pos.textAlignment = .Center
+        pos.font = UIFont.systemFontOfSize(16, weight: UIFontWeightLight)
+        pos.textColor = UIColor(white: 0.4, alpha: 1.0)
+        pos.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
+
+        photo.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+        photo.contentMode = .ScaleAspectFill
+        photo.clipsToBounds = true
+    }
+    
+    internal func layoutViews(){
+        addSubview(photo)
+        photo.snp_makeConstraints { (make) in
+            make.left.top.bottom.equalTo(self)
+            make.height.equalTo(photo.snp_width)
+        }
+
+        // add a little right border next to the photo
+        let right = UIView()
+        right.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
+        addSubview(right)
+        right.snp_makeConstraints { (make) in
+            make.top.bottom.equalTo(photo)
+            make.right.equalTo(photo.snp_right)
+            make.width.equalTo(1)
+        }
+
+        addSubview(pos)
+        pos.snp_makeConstraints { (make) in
+            make.top.equalTo(self).offset(OFFSET)
+            make.right.equalTo(self.contentView).offset(-OFFSET)
+            make.bottom.equalTo(self.contentView).offset(-OFFSET)
+            make.width.equalTo(pos.snp_height).multipliedBy(1.2)
+        }
+
+        addSubview(name)
+        name.snp_makeConstraints { (make) in
+            make.right.equalTo(pos.snp_left).offset(OFFSET)
+            make.left.equalTo(photo.snp_right).offset(OFFSET)
+            make.bottom.top.equalTo(self)
+        }
+
+        // add a little bottom border
+        let bottom = UIView()
+        bottom.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
+        addSubview(bottom)
+        bottom.snp_makeConstraints { (make) in
+            make.left.bottom.right.equalTo(self)
+            make.height.equalTo(1)
+        }
+    }
+    
+    func setPlayer(player: HCPlayer){
+        photo.load(player.img)
+        name.text = player.name
+        pos.text = HCPositionUtil.positionToString(player.position)
+    }
+}
+
+// MARK: HCUserDetailViewController
+
 class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewDelegate,UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
 
     /// Height of the top bar containing the user details information
@@ -75,6 +168,8 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
 
         bench.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
         active.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+        bench.separatorStyle = .None
+        active.separatorStyle = .None
         
         profileImage.contentMode = .ScaleAspectFill
         profileImage.clipsToBounds = true
@@ -232,8 +327,8 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         // I do not have any idea what this shit is trying to do.
         
         gestureCoordinator = I3GestureCoordinator.basicGestureCoordinatorFromViewController(self, withCollections:[self.active,self.bench], withRecognizer: UILongPressGestureRecognizer.init())
-        active.registerClass(PlayerTableViewCell.classForCoder(), forCellReuseIdentifier: "test1")
-        bench.registerClass(PlayerTableViewCell.classForCoder(), forCellReuseIdentifier: "test1")
+        active.registerClass(HCUserDetailPlayerCell.self, forCellReuseIdentifier: "test1")
+        bench.registerClass(HCUserDetailPlayerCell.self, forCellReuseIdentifier: "test1")
         gestureCoordinator.renderDelegate = I3BasicRenderDelegate.init()
         gestureCoordinator.dragDataSource = self
         active.dataSource = self
@@ -242,8 +337,22 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         active.delegate = self
         profileImage.load((user?.img_url)!)
 
+        loadCurrentDraft()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.loadCurrentDraft), name:
+            HCPlayerMoreDetailController.DRAFT_NOTIFICATION,
+            object: nil)
+    }
+
+    /// Reload the current draft, we will need to do this every time the current 
+    /// players draft changes.
+    func loadCurrentDraft() {
         let dp = HCHeadCoachDataProvider.sharedInstance
-        dp.getAllPlayersForUserFromLeague(dp.league!, user: dp.user! ) { (error, players) in
+        dp.getAllPlayersForUserFromLeague(dp.league!, user: self.user! ) { (error, players) in
+            // remove all the players we had in our arrays
+            self.benchedPlayers.removeAllObjects()
+            self.activePlayers.removeAllObjects()
+
+            // and add all the new ones
             for player in players {
                 if (player.isOnBench) {
                     self.benchedPlayers.addObject(player)
@@ -252,10 +361,10 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
                 }
             }
 
+            // data source has changed, reload the table views
             self.active.reloadData()
             self.bench.reloadData()
         }
-    
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -352,22 +461,24 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let player = self.dataForCollection(tableView)[indexPath.row] as! HCPlayer
         let vc = HCPlayerMoreDetailController(forHCPlayer: player)
         navigationController?.pushViewController(vc, animated: true)
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("test1", forIndexPath: indexPath) as! PlayerTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("test1", forIndexPath: indexPath) as! HCUserDetailPlayerCell
         let player = self.dataForCollection(tableView)[indexPath.row] as! HCPlayer
 
-        cell.textLabel!.text = player.name
-        cell.playerImage.load(player.img)
-
-        cell.textLabel?.textColor = UIColor.blackColor()
+        // I assume this is here for a reason
         cell.separatorInset = UIEdgeInsetsZero
         cell.layoutMargins = UIEdgeInsetsZero
         cell.preservesSuperviewLayoutMargins = false
+
+        // but this is all we really need
+        cell.backgroundColor = UIColor.whiteColor()
+        cell.setPlayer(player)
 
         return cell
     }
