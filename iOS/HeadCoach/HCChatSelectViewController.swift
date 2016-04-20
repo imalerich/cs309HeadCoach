@@ -145,7 +145,10 @@ class HCChatSelectViewController: UIViewController, UITableViewDelegate, UITable
         tableView.snp_makeConstraints { (make) in
             make.edges.equalTo(view)
         }
+    }
 
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(true)
         getConversations()
         getUsersList()
     }
@@ -206,6 +209,7 @@ class HCChatSelectViewController: UIViewController, UITableViewDelegate, UITable
 
         let vc = HCChatViewController()
         let key = keys[indexPath.row]
+        vc.convos = convos
 
         if let user = getUserByID(key) {
             vc.user = user

@@ -29,7 +29,7 @@ extension UIColor {
     }
 
     class func footballColor(s: CGFloat) -> UIColor {
-        return UIColor(red: 0, green: s * 92/222.0, blue: s * 9/255.0, alpha: 1.0)
+        return UIColor(red: 0, green: s * 105/255.0, blue: s * 9/255.0, alpha: 1.0)
     }
 }
 
