@@ -113,7 +113,7 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
         let cell = tableView.dequeueReusableCellWithIdentifier("BasicCell")
             as! HCLandingPageDetailCellTableViewCell
 
-        let tap = UITapGestureRecognizer(target: self, action: #selector(HCLandingViewController.openLiveGameView))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(HCLandingViewController.tapped(_:)))
         cell.addGestureRecognizer(tap)
         cell.setGame(games[indexPath.row])
 
@@ -255,8 +255,21 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
 
     /// Opens the HCLiveGameViewController
     /// This view will be pushed on the current navigation controller.
-    func openLiveGameView() {
+    func openLiveGameView(forGame game: HCGameResult) {
+        print("open")
         let vc = HCLiveGameViewController()
+        vc.game = game
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func tapped(sender: UITapGestureRecognizer)
+    {
+        //using sender, we can get the point in respect to the table view
+        let tapLocation = sender.locationInView(self.tableView)
+        
+        //using the tapLocation, we retrieve the corresponding indexPath
+        let indexPath = self.tableView.indexPathForRowAtPoint(tapLocation)
+        
+        openLiveGameView(forGame: games[indexPath!.row])
     }
 }
