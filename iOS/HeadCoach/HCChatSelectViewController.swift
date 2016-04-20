@@ -160,6 +160,7 @@ class HCChatSelectViewController: UIViewController, UITableViewDelegate, UITable
         if let user = dp.user {
             dp.getMessages(user, completion: { (err, convos) in
                 self.convos = convos
+                self.keys.removeAll()
                 for key in convos.keys {
                     self.keys.append(key)
                 }
@@ -224,7 +225,9 @@ class HCChatSelectViewController: UIViewController, UITableViewDelegate, UITable
         let key = keys[indexPath.row]
         if let user = getUserByID(key) {
             cell.name.text = user.name
-            cell.img.load(user.img_url)
+            if cell.img.image == nil {
+                cell.img.load(user.img_url)
+            }
 
             if let msg = convos[key]?.last {
                 cell.preview.text = msg.message

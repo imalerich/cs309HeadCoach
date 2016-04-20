@@ -168,10 +168,9 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor.whiteColor()
         title = user.name
-
         chatView.backgroundColor = UIColor(white: 244/255.0, alpha: 1.0)
+        view.backgroundColor = chatView.backgroundColor
 
         view.addSubview(tableView)
         view.addSubview(chatView)
@@ -183,6 +182,7 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 20
         tableView.registerClass(HCChatBubbleCell.self, forCellReuseIdentifier: CELL_ID)
+        tableView.backgroundColor = UIColor.whiteColor()
 
         tableView.snp_makeConstraints { (make) in
             make.top.right.left.equalTo(view)
@@ -258,17 +258,6 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let _ = NSTimer(timeInterval: 3, target: self, selector: #selector(self.updateConversations), userInfo: nil, repeats: true)
     }
 
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-
-        let count = tableView.numberOfRowsInSection(0)
-        if count > 0 {
-            self.tableView.scrollToRowAtIndexPath(
-                NSIndexPath(forRow: count - 1, inSection: 0),
-                atScrollPosition: .Bottom, animated: false)
-        }
-    }
-
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
@@ -294,9 +283,9 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     self.tableView.insertRowsAtIndexPaths([index], withRowAnimation: .Bottom)
                 }
                 self.tableView.endUpdates()
-                self.tableView.scrollToRowAtIndexPath(
-                    NSIndexPath(forRow: count - 1, inSection: 0),
-                    atScrollPosition: .Bottom, animated: true)
+//                self.tableView.scrollToRowAtIndexPath(
+//                    NSIndexPath(forRow: count - 1, inSection: 0),
+//                    atScrollPosition: .Bottom, animated: true)
             })
         }
     }
@@ -312,12 +301,18 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @objc private func sendMessage() {
         // send the message and update the table view
         if let msg = text.text {
+            if msg.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).characters.count == 0 {
+                return
+            }
+
             let dp = HCHeadCoachDataProvider.sharedInstance
             dp.sendMessage(dp.user!, to: user, message: msg) { (err) in
                 if !err {
                     self.updateConversations()
                 }
             }
+        } else {
+            return
         }
 
         // animate the text box
@@ -379,7 +374,7 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let rect = val?.CGRectValue()
 
         keyboardVisible = true
-        keyboardHeight = rect!.size.height + 2
+        keyboardHeight = rect!.size.height + 9
 
         UIView.animateWithDuration(0.3) {
             let y = self.view.frame.size.height - self.keyboardHeight - self.CHAT_HEIGHT
