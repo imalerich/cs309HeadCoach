@@ -15,6 +15,7 @@
 		B47ACD0F1CBCA7AC00F3D52E /* HCPlayerListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47ACD0E1CBCA7AC00F3D52E /* HCPlayerListViewController.swift */; };
 		B48FFE581CBD859B00E175C5 /* HCPositionMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48FFE571CBD859B00E175C5 /* HCPositionMenu.swift */; };
 		B48FFE5A1CBD85BC00E175C5 /* HCPlayerListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48FFE591CBD85BC00E175C5 /* HCPlayerListCell.swift */; };
+		B4A293E11CC2DD3200762679 /* HCRandomInsultGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A293E01CC2DD3200762679 /* HCRandomInsultGenerator.swift */; };
 		B4FAF10F1CB06CD100C130F9 /* HCDraftTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FAF10E1CB06CD100C130F9 /* HCDraftTableViewCell.swift */; };
 		B90472E91CC14D65006D4CCF /* HCMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90472E81CC14D65006D4CCF /* HCMessage.swift */; };
 		B90B6B2B1CC4A18700E57BFF /* HCChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90B6B2A1CC4A18700E57BFF /* HCChatViewController.swift */; };
@@ -68,6 +69,7 @@
 		B47ACD0E1CBCA7AC00F3D52E /* HCPlayerListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPlayerListViewController.swift; sourceTree = "<group>"; };
 		B48FFE571CBD859B00E175C5 /* HCPositionMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPositionMenu.swift; sourceTree = "<group>"; };
 		B48FFE591CBD85BC00E175C5 /* HCPlayerListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCPlayerListCell.swift; sourceTree = "<group>"; };
+		B4A293E01CC2DD3200762679 /* HCRandomInsultGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCRandomInsultGenerator.swift; sourceTree = "<group>"; };
 		B4FAF10E1CB06CD100C130F9 /* HCDraftTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCDraftTableViewCell.swift; sourceTree = "<group>"; };
 		B90472E81CC14D65006D4CCF /* HCMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCMessage.swift; sourceTree = "<group>"; };
 		B90B6B2A1CC4A18700E57BFF /* HCChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCChatViewController.swift; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 				B96E55FA1CA850AB001A4017 /* LaunchScreen.storyboard */,
 				B96E55FD1CA850AB001A4017 /* Info.plist */,
 				B94C49DA1CA8539B00F2C2F0 /* HCUtil.swift */,
+				B4A293E01CC2DD3200762679 /* HCRandomInsultGenerator.swift */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -383,6 +386,7 @@
 				B94C49E51CA8539B00F2C2F0 /* HCHeachCoachDataProvider.swift in Sources */,
 				B94C49EF1CA8539B00F2C2F0 /* HCPlayerMoreDetailViewController.swift in Sources */,
 				B94C49F41CA8539B00F2C2F0 /* HCUserDetailViewController.swift in Sources */,
+				B4A293E11CC2DD3200762679 /* HCRandomInsultGenerator.swift in Sources */,
 				B94C49EC1CA8539B00F2C2F0 /* HCPlayer.swift in Sources */,
 				B94C49F61CA8539B00F2C2F0 /* PlayerDetailView.swift in Sources */,
 				B94C49F51CA8539B00F2C2F0 /* HCUtil.swift in Sources */,

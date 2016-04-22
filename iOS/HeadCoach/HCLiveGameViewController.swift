@@ -30,8 +30,8 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         self.title = "Live"
         
         // add chat button
-//        let chatButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Compose, target: self, action: #selector(self.chatMethod))
-//        navigationItem.rightBarButtonItem = chatButton
+        let chatButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Compose, target: self, action: #selector(self.chatMethod))
+        navigationItem.rightBarButtonItem = chatButton
 
         tableView.delegate = self
         tableView.dataSource = self
@@ -61,6 +61,11 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
                 }
             }
         }
+    }
+    
+    // method for performing live player chat actions
+    func chatMethod(){
+        print(HCRandomInsultGenerator.sharedInstance.generateInsult())]
     }
     
     func onFDPlayerResult(player: FDPlayer){

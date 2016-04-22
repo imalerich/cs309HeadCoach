@@ -145,7 +145,10 @@ class HCChatSelectViewController: UIViewController, UITableViewDelegate, UITable
         tableView.snp_makeConstraints { (make) in
             make.edges.equalTo(view)
         }
+    }
 
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(true)
         getConversations()
         getUsersList()
     }
@@ -157,6 +160,7 @@ class HCChatSelectViewController: UIViewController, UITableViewDelegate, UITable
         if let user = dp.user {
             dp.getMessages(user, completion: { (err, convos) in
                 self.convos = convos
+                self.keys.removeAll()
                 for key in convos.keys {
                     self.keys.append(key)
                 }
@@ -206,6 +210,7 @@ class HCChatSelectViewController: UIViewController, UITableViewDelegate, UITable
 
         let vc = HCChatViewController()
         let key = keys[indexPath.row]
+        vc.convos = convos
 
         if let user = getUserByID(key) {
             vc.user = user
@@ -220,7 +225,24 @@ class HCChatSelectViewController: UIViewController, UITableViewDelegate, UITable
         let key = keys[indexPath.row]
         if let user = getUserByID(key) {
             cell.name.text = user.name
-            cell.img.load(user.img_url)
+            if cell.img.image == nil {
+                cell.img.load(user.img_url)
+            }
+
+            // look for received messages that have not yet been read
+            // ignore sent messages
+            var has_read = true
+            for msg in convos[key]! {
+                // pull the has_read property for this message
+                if msg.to.id == HCHeadCoachDataProvider.sharedInstance.user!.id {
+                    has_read = msg.has_read
+                }
+
+                // if it hasn't been read, we have all the information we need
+                if !has_read {
+                    break
+                }
+            }
 
             if let msg = convos[key]?.last {
                 cell.preview.text = msg.message
@@ -233,9 +255,9 @@ class HCChatSelectViewController: UIViewController, UITableViewDelegate, UITable
                 }
 
                 cell.time.text = formatter.stringFromDate(msg.time_stamp)
-                cell.name.font = msg.has_read ? UIFont.systemFontOfSize(20, weight: UIFontWeightLight) : UIFont.systemFontOfSize(20, weight: UIFontWeightMedium)
-                cell.time.textColor = msg.has_read ? UIColor(white: 0.2, alpha: 1.0) : UIColor.footballColor(1.0)
-                cell.preview.textColor = msg.has_read ? UIColor(white: 0.2, alpha: 1.0) : UIColor.blackColor()
+                cell.name.font = has_read ? UIFont.systemFontOfSize(20, weight: UIFontWeightLight) : UIFont.systemFontOfSize(20, weight: UIFontWeightMedium)
+                cell.time.textColor = has_read ? UIColor(white: 0.2, alpha: 1.0) : UIColor.footballColor(1.0)
+                cell.preview.textColor = has_read ? UIColor(white: 0.2, alpha: 1.0) : UIColor.blackColor()
             }
         }
 

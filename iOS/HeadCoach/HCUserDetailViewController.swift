@@ -172,6 +172,8 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         active.backgroundColor = UIColor.whiteColor()
         bench.separatorStyle = .None
         active.separatorStyle = .None
+        active.showsVerticalScrollIndicator = false
+        bench.showsVerticalScrollIndicator = false
         
         profileImage.contentMode = .ScaleAspectFill
         profileImage.clipsToBounds = true
