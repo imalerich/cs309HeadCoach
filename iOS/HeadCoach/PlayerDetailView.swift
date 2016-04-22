@@ -69,7 +69,6 @@ class PlayerDetailView: UIView {
         addCustomView(delegate)
         setPlayer(player)
         currentSheetVisibility = SheetVisibility.Mid
-        draftButton.hidden = hc_player.user_id > 0
     }
     
     required init(coder aDecoder: NSCoder) {

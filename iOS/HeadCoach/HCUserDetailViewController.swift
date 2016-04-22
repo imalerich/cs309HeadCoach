@@ -129,6 +129,9 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
     let record = UILabel()
     let position = UILabel()
 
+    var draftErrorContainer = UIView()
+    var draftError = UILabel()
+
     var gestureCoordinator = I3GestureCoordinator.init()
     var imagePicker = UIImagePickerController()
     let upload = UIButton()
@@ -267,13 +270,33 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
             make.height.equalTo(OPTIONS_HEIGHT)
         }
 
-        // TODO - current draft status bar
+        // current draft status bar
+
+        draftErrorContainer.backgroundColor = UIColor(red: 191/255.0, green: 38/255.0, blue: 38/255.0, alpha: 1.0)
+
+        draftError.textAlignment = .Center
+        draftError.textColor = UIColor.whiteColor()
+        draftError.adjustsFontSizeToFitWidth = true
+        draftError.font = UIFont.systemFontOfSize(16, weight: UIFontWeightLight)
+
+        view.addSubview(draftErrorContainer)
+        draftErrorContainer.snp_makeConstraints { (make) in
+            make.left.right.equalTo(view)
+            make.top.equalTo(draft.snp_bottom)
+            make.height.equalTo(0)
+        }
+
+        draftErrorContainer.addSubview(draftError)
+        draftError.snp_makeConstraints { (make) in
+            make.left.top.equalTo(draftErrorContainer).offset(8)
+            make.right.bottom.equalTo(draftErrorContainer).offset(-8)
+        }
 
         // and last we have the table views
         
         container.snp_makeConstraints { (make) in
             make.left.right.equalTo(view)
-            make.top.equalTo(upload.snp_bottom)
+            make.top.equalTo(draftErrorContainer.snp_bottom)
             make.bottom.equalTo(view.snp_bottom)
         }
 
@@ -345,9 +368,14 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.loadCurrentDraft), name:
             HCPlayerMoreDetailController.DRAFT_NOTIFICATION,
             object: nil)
+
+        validateCurrentDraft()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.validateCurrentDraft), name:
+            HCPlayerMoreDetailController.DRAFT_NOTIFICATION,
+            object: nil)
     }
 
-    /// Reload the current draft, we will need to do this every time the current 
+    /// Reload the current draft, we will need to do this every time the current
     /// players draft changes.
     func loadCurrentDraft() {
         let dp = HCHeadCoachDataProvider.sharedInstance
@@ -368,6 +396,81 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
             // data source has changed, reload the table views
             self.active.reloadData()
             self.bench.reloadData()
+        }
+    }
+
+    /// Checks whether or not the current draft is valid.
+    /// This will update a label that will appear with
+    /// the details of the users draft, if the draft is invalid.
+    @objc private func validateCurrentDraft() {
+        let dp = HCHeadCoachDataProvider.sharedInstance
+
+        /// only validate the draft if this is the current users profile.
+        if user?.id == dp.user!.id {
+            dp.isUserDraftValid(dp.league!, user: dp.user!, completion: { (err, valid, remaining, required) in
+                // draft is valid, no need to do anything
+                if valid {
+                    self.setDraftError("", valid: true)
+                    return
+                }
+
+                // find the first invalid position
+                // and set the error label
+                for (pos, count) in remaining! {
+                    if self.getErrorForPos(pos, count: count) {
+                        return
+                    }
+                }
+            })
+        }
+    }
+
+    /// Does the brunt work of setting an error if one is present.
+    /// Thes method return 'true' if an error was found in this 
+    /// Position, 'false' if there on errors were found.
+    private func getErrorForPos(pos: Position, count: Int) -> Bool {
+        if pos == Position.Bench {
+            // bench is allowed to have more than 0 remaining positions
+            if count < 0 {
+                setDraftError("\(abs(count)) too many Benched Players.", valid: false)
+                return true
+            }
+        } else {
+            // all other positions must be 0
+            if count < 0 {
+                setDraftError("\(abs(count)) too many \(HCPositionUtil.positionToName(pos)) Player's.", valid: false)
+                return true
+            } else if count > 0 {
+                setDraftError("\(abs(count)) too few \(HCPositionUtil.positionToName(pos)) Player's.", valid: false)
+                return true
+            }
+        }
+
+        return false
+    }
+
+    /// Updates our error label with the given draft error.
+    private func setDraftError(error: String, valid: Bool) {
+        draftErrorContainer.snp_removeConstraints()
+        draftErrorContainer.snp_makeConstraints(closure: { (make) in
+            make.left.right.equalTo(view)
+            make.top.equalTo(draft.snp_bottom)
+
+            // change the height to show or hide this view
+            // depending on whether or not the draft is valid
+            // we need this to adjust the bounds of the table view
+            // that resides beneath this view
+            if valid {
+                make.height.equalTo(0)
+            } else {
+                make.height.equalTo(40)
+            }
+        })
+
+        draftErrorContainer.hidden = valid
+
+        if !valid {
+            draftError.text = error
         }
     }
 
@@ -442,14 +545,12 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
         
         if(fromTable==self.active) {
             HCHeadCoachDataProvider.sharedInstance.movePlayerToBench(self.activePlayers[from.row] as! HCPlayer, league: HCHeadCoachDataProvider.sharedInstance.league!, completion: { (error) in
-                print("move to bench")
-                print(error)
+                self.validateCurrentDraft()
             })
 
         } else {
             HCHeadCoachDataProvider.sharedInstance.movePlayerToActive(self.benchedPlayers[from.row] as! HCPlayer, league: HCHeadCoachDataProvider.sharedInstance.league!, completion: { (error) in
-                print("move to active")
-                print(error)
+                self.validateCurrentDraft()
             })
         }
         

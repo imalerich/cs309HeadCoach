@@ -44,6 +44,10 @@ for ($i = 0; $i < 5; $i++) {
 	}
 }
 
+if ($_GET["user"] == 0) {
+	$user_found = True;
+}
+
 // throw an error if the user is not a member of the given league
 if (!$user_found) {
 	echo json_encode(

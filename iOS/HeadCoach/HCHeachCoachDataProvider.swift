@@ -329,7 +329,7 @@ class HCHeadCoachDataProvider: NSObject {
     // MARK: Drafting related network requests.
     // ----------------------------------------
 
-    /// Given league, draft the player in that league to the given user.
+    /// Given a league, draft the player in that league to the given user.
     /// The user must be a member of the input league and the player must be
     /// undrafted.
     internal func draftPlayerForUser(league: HCLeague, user: HCUser, player: HCPlayer, completion: (Bool) -> Void) {
@@ -337,13 +337,34 @@ class HCHeadCoachDataProvider: NSObject {
 
         // check locally that the user_id is set to 0 (undrafted)
         // the server will do the same, but we would like to fail early if we can
-        if player.user_id == user.id  {
+        if player.user_id == user.id {
             completion(false)
             return
         }
 
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Dictionary<String, AnyObject> {
+                player.user_id = user.id
+                completion(json["error"] as! Bool)
+            } else {
+                completion(false)
+            }
+        }
+    }
+
+    /// Given a league, remove the player from whichever users has drafted that player.
+    /// The player must be undrafted, and the input league must be valid.
+    internal func undraftPlayerInLeague(league: HCLeague, player: HCPlayer, completion: (Bool) -> Void) {
+        let url = "\(api)/draft/draftPlayerToUser.php?user=\(0)&league=\(league.id)&player=\(player.id)"
+
+        if player.user_id == 0 {
+            completion(false)
+            return
+        }
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            if let json = response.result.value as? Dictionary<String, AnyObject> {
+                player.user_id = 0
                 completion(json["error"] as! Bool)
             } else {
                 completion(false)
@@ -455,10 +476,10 @@ class HCHeadCoachDataProvider: NSObject {
     ///     Dictionary<Position, Int> - required: The number of required players in 
     ///         each position, with the exception of 'Bench' which represents the 
     ///         maximum numeber of players that may be on the bench at a given time.
-    private func isUserDraftValid(league: HCLeague, user: HCUser,
+    internal func isUserDraftValid(league: HCLeague, user: HCUser,
                                   completion: (Bool, Bool,
                                 Dictionary<Position, Int>?, Dictionary<Position, Int>?) -> Void) {
-        let url = "\(api)/draft/isUsersDraftValid.php?league=\(league.id)&player=\(user.id)"
+        let url = "\(api)/draft/isUsersDraftValid.php?league=\(league.id)&user=\(user.id)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Dictionary<String, AnyObject> {

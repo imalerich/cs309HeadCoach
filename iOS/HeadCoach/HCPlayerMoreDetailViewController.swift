@@ -65,17 +65,43 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
             make.edges.equalTo(view)
         }
 
-        detail.draftButton.addTarget(self, action: #selector(self.draftPlayer), forControlEvents: .TouchUpInside)
+        setDraftButtonStatus()
         requestPlayerStats(fdplayer.id)
         requestGameData()
     }
 
     /// Drafts this player to the current user.
-    func draftPlayer() {
+    @objc private func draftPlayer() {
         let dp = HCHeadCoachDataProvider.sharedInstance
         dp.draftPlayerForUser(dp.league!, user: dp.user!, player: hcplayer) { (err) in
+            if !err {
+                self.setDraftButtonStatus()
+                NSNotificationCenter.defaultCenter().postNotificationName(HCPlayerMoreDetailController.DRAFT_NOTIFICATION, object: self)
+            }
+        }
+    }
+
+    /// Remove this player from the current user's draft.
+    @objc private func undraftPlayer() {
+        let dp = HCHeadCoachDataProvider.sharedInstance
+        dp.undraftPlayerInLeague(dp.league!, player: hcplayer) { (err) in
+            if !err {
+                self.setDraftButtonStatus()
+                NSNotificationCenter.defaultCenter().postNotificationName(HCPlayerMoreDetailController.DRAFT_NOTIFICATION, object: self)
+            }
+        }
+    }
+
+    /// Updates the draft button to reflect the current drafting status of the player.
+    private func setDraftButtonStatus() {
+        if self.hcplayer.user_id == 0 {
+            detail.draftButton.setTitle("Draft", forState: UIControlState.Normal)
+            detail.draftButton.addTarget(self, action: #selector(self.draftPlayer), forControlEvents: .TouchUpInside)
+        } else if self.hcplayer.user_id == HCHeadCoachDataProvider.sharedInstance.user!.id {
+            detail.draftButton.setTitle("Undraft", forState: UIControlState.Normal)
+            detail.draftButton.addTarget(self, action: #selector(self.undraftPlayer), forControlEvents: .TouchUpInside)
+        } else {
             self.detail.draftButton.hidden = true
-            NSNotificationCenter.defaultCenter().postNotificationName(HCPlayerMoreDetailController.DRAFT_NOTIFICATION, object: self)
         }
     }
     

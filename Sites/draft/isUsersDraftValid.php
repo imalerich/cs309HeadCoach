@@ -57,6 +57,7 @@ while ($player = mysqli_fetch_assoc($result)) {
 $required = array(
 	"QB" => 1,
 	"RB" => 2,
+	"OL" => 0,
 	"WR" => 3,
 	"TE" => 1,
 	"K" => 1,
