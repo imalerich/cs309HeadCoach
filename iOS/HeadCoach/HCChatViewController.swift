@@ -27,17 +27,12 @@ class HCChatBubbleCell: UITableViewCell {
     /// This will contain the primary content source for our cell.
     let content = UILabel()
 
-    /// Gradient layer, this will only be visible on the 'away' bubbles.
-    let gradient = CAGradientLayer()
-
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .None
 
-        gradient.colors = [UIColor.clearColor().CGColor, UIColor.clearColor().CGColor]
         dataView.backgroundColor = UIColor(white: 229/255.0, alpha: 1.0)
         dataView.layer.cornerRadius = 20
-        dataView.layer.addSublayer(gradient)
         dataView.clipsToBounds = true
 
         content.numberOfLines = 0
@@ -95,7 +90,6 @@ class HCChatBubbleCell: UITableViewCell {
             })
 
             content.textColor = UIColor.blackColor()
-            gradient.colors = [UIColor.clearColor().CGColor, UIColor.clearColor().CGColor]
             tail.tintColor = dataView.backgroundColor
         } else {
             dataView.backgroundColor = UIColor.footballColor(2.0)
@@ -113,17 +107,12 @@ class HCChatBubbleCell: UITableViewCell {
             })
 
             // add a muted gradient
-            let c = UIColor.footballColor(1.7)
-            gradient.colors = [dataView.backgroundColor!.CGColor, c.CGColor]
-            tail.tintColor = c
             content.textColor = UIColor.whiteColor()
         }
+
+        tail.tintColor = dataView.backgroundColor
     }
 
-    override func layoutSubviews() {
-        gradient.frame = dataView.bounds
-    }
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -159,6 +148,9 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     /// Whether or not the keybroad is visible.
     var keyboardVisible = false
+
+    /// Limit how fast the user can send messages.
+    var sendingMessage = false
 
     /// This is a list of all conversations, the data provider 
     /// will update this Dictionary periodically to account for new messages
@@ -263,29 +255,29 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
         let dp = HCHeadCoachDataProvider.sharedInstance
         dp.readConversation(dp.user!, user1: user) { (err) in /* nothing to do */ }
+        scrollToBottom(false)
+    }
+
+    /// Scroll to the bottom of the tableView, this has been pretty buggy for some reason.
+    func scrollToBottom(animated: Bool) {
+        if let messages = convos[user.id] {
+            let count = messages.count
+            tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: count - 1, inSection: 0), atScrollPosition: .Bottom, animated: animated)
+        }
     }
 
     /// Periodically update the conversations so the output of
     /// the chat appears to be 'live'.
     @objc private func updateConversations() {
         let dp = HCHeadCoachDataProvider.sharedInstance
-        let oldCount = self.tableView(tableView, numberOfRowsInSection: 0)
 
         if let user = dp.user {
             dp.getMessages(user, completion: { (err, convos) in
                 self.convos = convos
+                self.sendingMessage = false
 
-                // animate all the new messages
-                let count = self.tableView(self.tableView, numberOfRowsInSection: 0)
-                self.tableView.beginUpdates()
-                for i in oldCount...(count-1) {
-                    let index = NSIndexPath(forRow: i, inSection: 0)
-                    self.tableView.insertRowsAtIndexPaths([index], withRowAnimation: .Bottom)
-                }
-                self.tableView.endUpdates()
-//                self.tableView.scrollToRowAtIndexPath(
-//                    NSIndexPath(forRow: count - 1, inSection: 0),
-//                    atScrollPosition: .Bottom, animated: true)
+                self.tableView.reloadData()
+                self.scrollToBottom(false)
             })
         }
     }
@@ -301,9 +293,14 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @objc private func sendMessage() {
         // send the message and update the table view
         if let msg = text.text {
-            if msg.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).characters.count == 0 {
+            // the user is not allowed to send an empty message
+            // the user must not be currently sending a message
+            if msg.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).characters.count == 0 ||
+                    sendingMessage {
                 return
             }
+
+            sendingMessage = true
 
             let dp = HCHeadCoachDataProvider.sharedInstance
             dp.sendMessage(dp.user!, to: user, message: msg) { (err) in

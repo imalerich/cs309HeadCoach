@@ -229,6 +229,21 @@ class HCChatSelectViewController: UIViewController, UITableViewDelegate, UITable
                 cell.img.load(user.img_url)
             }
 
+            // look for received messages that have not yet been read
+            // ignore sent messages
+            var has_read = true
+            for msg in convos[key]! {
+                // pull the has_read property for this message
+                if msg.to.id == HCHeadCoachDataProvider.sharedInstance.user!.id {
+                    has_read = msg.has_read
+                }
+
+                // if it hasn't been read, we have all the information we need
+                if !has_read {
+                    break
+                }
+            }
+
             if let msg = convos[key]?.last {
                 cell.preview.text = msg.message
 
@@ -240,9 +255,9 @@ class HCChatSelectViewController: UIViewController, UITableViewDelegate, UITable
                 }
 
                 cell.time.text = formatter.stringFromDate(msg.time_stamp)
-                cell.name.font = msg.has_read ? UIFont.systemFontOfSize(20, weight: UIFontWeightLight) : UIFont.systemFontOfSize(20, weight: UIFontWeightMedium)
-                cell.time.textColor = msg.has_read ? UIColor(white: 0.2, alpha: 1.0) : UIColor.footballColor(1.0)
-                cell.preview.textColor = msg.has_read ? UIColor(white: 0.2, alpha: 1.0) : UIColor.blackColor()
+                cell.name.font = has_read ? UIFont.systemFontOfSize(20, weight: UIFontWeightLight) : UIFont.systemFontOfSize(20, weight: UIFontWeightMedium)
+                cell.time.textColor = has_read ? UIColor(white: 0.2, alpha: 1.0) : UIColor.footballColor(1.0)
+                cell.preview.textColor = has_read ? UIColor(white: 0.2, alpha: 1.0) : UIColor.blackColor()
             }
         }
 
