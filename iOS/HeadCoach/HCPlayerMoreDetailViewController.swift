@@ -4,7 +4,7 @@ import UIKit
 import SnapKit
 import Alamofire
 
-class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource  {
+class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     /// send a notification when the current user drafts a player
     static let DRAFT_NOTIFICATION = "UserDidDraftPlayer"
@@ -60,6 +60,7 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
     
     func build(player: FDPlayer){
         detail = PlayerDetailView(player: player, hc_player: hcplayer, delegate: self)
+        detail.delegate = self
         view.addSubview(detail)
         detail.snp_makeConstraints { (make) in
             make.edges.equalTo(view)
@@ -174,36 +175,7 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
-    
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return statPickerData.capacity
-    }
-    
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        currentCat = statPickerData[row]
-        detail.statCatButton.setTitle(currentCat, forState: UIControlState.Normal)
-        detail.statTable.reloadData()
-        UIView.animateWithDuration(0.5, animations: {
-            self.detail.statCatPicker.alpha = 0.0
-            }, completion: { b in
-                if(b){
-                    self.detail.statCatPicker.hidden = true
-                }
-        })
-    }
-    
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return statPickerData[row]
-    }
-    
-    func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        return NSAttributedString(string: statPickerData[row])
-    }
-    
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
+
     func statsForCategory(cat: String) ->[String]{
         switch(cat){
         case "General": return generalStats

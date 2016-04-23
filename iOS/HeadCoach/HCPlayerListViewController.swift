@@ -10,7 +10,6 @@ import UIKit
 import SnapKit
 import RealmSwift
 
-
 class HCPlayerListViewController : UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let tableView = UITableView()

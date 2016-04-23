@@ -2,9 +2,11 @@
 import Foundation
 import UIKit
 import SnapKit
+import ActionSheetPicker_3_0
 
 class PlayerDetailView: UIView {
-    
+
+    var delegate: HCPlayerMoreDetailController?
     var playerImage: UIImageView!
     var nameLabel: UILabel!
     var teamLabel: UILabel!
@@ -21,7 +23,6 @@ class PlayerDetailView: UIView {
     var statusText: UILabel!
     var statusTextContainer: UIView!
     var detailContainer: UIView!
-    let statCatPicker = UIPickerView()
     let statCatLabel = UILabel()
     var statCatButton: UIButton!
     var statOverviewContainer: UIView!
@@ -371,14 +372,7 @@ class PlayerDetailView: UIView {
         gameTable.delegate = delegate
         gameTable.hidden = true
         bottom.addSubview(gameTable)
-        
-        statCatPicker.dataSource = delegate
-        statCatPicker.delegate = delegate
-        statCatPicker.hidden = true
-        addSubview(statCatPicker)
-//        table = UITableView()
-//        addSubview(table)
-        
+
         moreStatsButton.addTarget(self, action: #selector(PlayerDetailView.buttonClicked(_:)), forControlEvents: .TouchUpInside)
         moreGamesButton.addTarget(self, action: #selector(PlayerDetailView.buttonClicked(_:)), forControlEvents: .TouchUpInside)
         statCatButton.addTarget(self, action: #selector(PlayerDetailView.buttonClicked(_:)), forControlEvents: .TouchUpInside)
@@ -629,11 +623,6 @@ class PlayerDetailView: UIView {
             make.bottom.equalTo(bottom)
             make.top.equalTo(moreGamesButton.snp_bottom)
         }
-        statCatPicker.snp_makeConstraints { (make) in
-            make.bottom.equalTo(self)
-            make.left.equalTo(self)
-            make.right.equalTo(self)
-        }
     }
     
     override func layoutSubviews(){
@@ -691,16 +680,20 @@ class PlayerDetailView: UIView {
                 updateSheet(SheetVisibility.Mid)
             }
         }else if sender === statCatButton{
-            showPicker()
+            showPicker(sender as! UIView)
         }
     }
     
-    func showPicker(){
-        if(statCatPicker.hidden == true){
-            statCatPicker.hidden = false
-            UIView.animateWithDuration(0.5, animations: {
-                self.statCatPicker.alpha = 1.0
-            })
+    func showPicker(sender: UIView) {
+        if let vc = delegate {
+            var index = vc.statPickerData.indexOf(vc.currentCat)
+            if index == nil { index = 0 }
+
+            ActionSheetStringPicker.showPickerWithTitle("Stats", rows: vc.statPickerData, initialSelection: index!, doneBlock: { (picker, index, str) in
+                vc.currentCat = vc.statPickerData[index]
+                self.statCatButton.setTitle(vc.currentCat, forState: .Normal)
+                self.statTable.reloadData()
+             }, cancelBlock: { (picker) in }, origin: sender)
         }
     }
     
