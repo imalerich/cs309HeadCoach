@@ -256,7 +256,7 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
 
     /// Opens the HCLiveGameViewController
     /// This view will be pushed on the current navigation controller.
-    func openLiveGameView(forGame game: HCGameResult) {
+    func openLiveGameView(game: HCGameResult) {
         print("open")
         let vc = HCLiveGameViewController()
         vc.game = game
@@ -270,7 +270,10 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
         
         //using the tapLocation, we retrieve the corresponding indexPath
         let indexPath = self.tableView.indexPathForRowAtPoint(tapLocation)
-        
-        openLiveGameView(forGame: games[indexPath!.row])
+
+        let game = games[indexPath!.row]
+        if game.completed {
+            openLiveGameView(game)
+        }
     }
 }

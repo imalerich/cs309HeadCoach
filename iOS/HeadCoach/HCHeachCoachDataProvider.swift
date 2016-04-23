@@ -30,19 +30,11 @@ class HCHeadCoachDataProvider: NSObject {
     /// http://localhost/ can be used for testing new changes
     /// to the server. Otherwise the CS309 server should be used.
     let api =
-//        "http://proj-309-08.cs.iastate.edu"
-        "http://localhost"
+        "http://proj-309-08.cs.iastate.edu"
+//        "http://localhost"
 
-    /// When the shared instance is first created,
-    /// send a request to the server to update all of its
-    /// internal schedule data, the server will NOT automatically
-    /// update its data, as it expects this app to give it 
-    /// arbitrary dates for debug purposes
     override init() {
         super.init()
-
-        let url = "\(api)/schedule/update.php?week=5"
-        Alamofire.request(.GET, url).responseJSON { response in }
 
         // make sure the curent league data is up to date
         if league != nil && league?.name != nil {
@@ -141,6 +133,17 @@ class HCHeadCoachDataProvider: NSObject {
         NSUserDefaults.standardUserDefaults().setValue(nil, forKey: "HC.LEAGUE.USERS")
     }
 
+    /// Debug call to update all leagues in the HeadCoach backend to
+    /// the given week, note the backend internally uses the last
+    /// completed season available to it.
+    internal func updateLeaguesToWeek(week: Int, completion: (Bool) -> Void) {
+        let url = "\(api)/schedule/update.php?week=\(week)"
+
+        Alamofire.request(.GET, url).responseJSON { response in
+            NSNotificationCenter.defaultCenter().postNotificationName(HCHeadCoachDataProvider.LeagueDidUpdate, object: self)
+        }
+    }
+
     // -------------------------------------
     // MARK: User related network requests.
     // -------------------------------------
@@ -149,7 +152,8 @@ class HCHeadCoachDataProvider: NSObject {
     /// The service will assign a unique id that can be retrieved with the
     /// 'getUserID' call, provided the user knows their account name.
     internal func getUserID(userName: String, completion: (Bool, HCUser?) -> Void) {
-        let url = "\(api)/users/get.php?name=\(userName)"
+        let user = userName.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+        let url = "\(api)/users/get.php?name=\(user!)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Array<Dictionary<String, String>> {
@@ -169,7 +173,8 @@ class HCHeadCoachDataProvider: NSObject {
     /// username (and if time permits password), their HCUser representation
     /// will then be stored in the 'user' property to be used in other API calls.
     internal func registerUser(userName: String, completion: (Bool) -> Void) {
-        let url = "\(api)/users/create.php?name=\(userName)"
+        let user = userName.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+        let url = "\(api)/users/create.php?name=\(user!)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Dictionary<String, AnyObject> {
@@ -228,7 +233,8 @@ class HCHeadCoachDataProvider: NSObject {
     /// The service will assign a unique id that can be retrieved with the
     /// 'getLeagueID' call, provided the user knows the league name.
     internal func registerLeague(leagueName: String, completion: (Bool) -> Void) {
-        let url = "\(api)/leagues/create.php?name=\(leagueName)&drafting=\(1)"
+        let league = leagueName.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+        let url = "\(api)/leagues/create.php?name=\(league!)&drafting=\(1)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Dictionary<String, AnyObject> {
@@ -243,7 +249,8 @@ class HCHeadCoachDataProvider: NSObject {
     /// the given league name. This HCLeague can be used to
     /// make additional API calls.
     internal func getLeagueID(leagueName: String, completion: (Bool, HCLeague?) -> Void) {
-        let url = "\(api)/leagues/get.php?name=\(leagueName)"
+        let league = leagueName.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+        let url = "\(api)/leagues/get.php?name=\(league!)"
 
         Alamofire.request(.GET, url).responseJSON { response in
             if let json = response.result.value as? Dictionary<String, String> {

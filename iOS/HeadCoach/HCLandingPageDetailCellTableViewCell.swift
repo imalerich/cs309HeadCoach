@@ -111,9 +111,13 @@ class HCLandingPageDetailCellTableViewCell: UITableViewCell {
         if game.completed {
             weekContainer.backgroundColor = UIColor(white: 0.70, alpha: 1.0)
             week.textColor = UIColor(white: 0.3, alpha: 1.0)
+            player0.score.hidden = false
+            player1.score.hidden = false
         } else {
             weekContainer.backgroundColor = UIColor(white: 0.86, alpha: 1.0)
             week.textColor = UIColor(white: 0.3, alpha: 1.0)
+            player0.score.hidden = true
+            player1.score.hidden = true
         }
     }
 

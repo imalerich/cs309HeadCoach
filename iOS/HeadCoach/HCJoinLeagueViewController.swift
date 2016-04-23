@@ -24,7 +24,7 @@ class HCJoinLeagueViewController: UIViewController, UITableViewDataSource, UITab
     var imagePicker = UIImagePickerController()
     let upload = UIButton()
 
-    var selected = Set<NSIndexPath>()
+    var selected = NSMutableOrderedSet()
     var leagues = [HCLeague]()
 
     override func viewDidLoad() {
@@ -153,7 +153,7 @@ class HCJoinLeagueViewController: UIViewController, UITableViewDataSource, UITab
             displayError("Please enter a valid name.")
         }
 
-        let loading = HCLoadingView(info: "Creating your League.\n(this may take a while)")
+        let loading = HCLoadingView(info: "Creating your League.\nThis may take a while.")
         loading.present(self.view, animated: true)
         let name = createName.text!.stringByReplacingOccurrencesOfString(" ", withString: "_")
         HCHeadCoachDataProvider.sharedInstance.registerLeague(name) { (err) in
@@ -190,7 +190,8 @@ class HCJoinLeagueViewController: UIViewController, UITableViewDataSource, UITab
         HCHeadCoachDataProvider.sharedInstance.league = leagues[0]
 
         for i in 0...(selected.count-1) {
-            HCHeadCoachDataProvider.sharedInstance.addUserToLeague(user!, league: leagues[i], completion: { (err) in })
+            let index = (selected[i] as! NSIndexPath).row
+            HCHeadCoachDataProvider.sharedInstance.addUserToLeague(user!, league: leagues[index], completion: { (err) in })
         }
 
         self.pageController?.dismissViewControllerAnimated(true, completion: nil)
@@ -215,7 +216,7 @@ class HCJoinLeagueViewController: UIViewController, UITableViewDataSource, UITab
         cell.backgroundColor = UIColor.clearColor()
         cell.selectionStyle = .None
 
-        if selected.contains(indexPath) {
+        if selected.containsObject(indexPath) {
             cell.accessoryType = .Checkmark
         } else {
             cell.accessoryType = .None
@@ -225,10 +226,10 @@ class HCJoinLeagueViewController: UIViewController, UITableViewDataSource, UITab
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if selected.contains(indexPath) {
-            selected.remove(indexPath)
+        if selected.containsObject(indexPath) {
+            selected.removeObject(indexPath)
         } else {
-            selected.insert(indexPath)
+            selected.addObject(indexPath)
         }
 
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)

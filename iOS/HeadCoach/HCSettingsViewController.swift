@@ -46,6 +46,160 @@ class HCButtonCell: UITableViewCell {
     }
 }
 
+
+// ------------------------------
+// MARK: HCSettingsUpdateCell
+// ------------------------------
+
+class HCSettingsUpdateCell: UITableViewCell {
+    /// The minimum week we can update a league too.
+    let MINIMUM_WEEK = 0
+
+    /// The maximum week we can update a league too.
+    let MAXIMUM_WEEK = 17
+
+    /// Button to decrement the current week index.
+    let decrement = UIButton()
+
+    /// Button to increment the current week index.
+    let increment = UIButton()
+
+    /// UILabel for displaying the 'week' property.
+    let weekLabel = UILabel()
+
+    /// Pressing this button will update all leagues in
+    /// the HeadCoach service to the week given by this
+    /// cells 'week' parameter.
+    let update = UIButton()
+
+    /// The current week number to display.
+    /// This is not actually the current week for the league,
+    /// it is the week we wish to set all leagues to when we hit
+    /// the 'update' button.
+    var week = 0
+
+    /// Parent view controller. When the update button is pressed
+    /// we will need this reference to present a loading screen
+    /// over the display.
+    var vc: UIViewController?
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        backgroundColor = UIColor(white: 0.9, alpha: 1.0)
+
+        // Get a starting week from the data provider if it is available.
+        let dp = HCHeadCoachDataProvider.sharedInstance
+        if let league = dp.league {
+            week = league.week_number
+            validateWeek()
+        }
+
+        // setup our labels and buttons
+
+        let s = CGFloat(0.8)
+        update.setTitleColor(UIColor.footballColor(s), forState: .Normal)
+        update.layer.borderColor = UIColor.footballColor(s).CGColor
+        update.backgroundColor = UIColor.clearColor()
+        update.setTitle("Update", forState: .Normal)
+        update.layer.cornerRadius = 6
+        update.layer.borderWidth = 1
+        update.clipsToBounds = true
+        update.addTarget(self, action: #selector(self.updateLeagues), forControlEvents: .TouchUpInside)
+        update.addTouchEvents()
+
+        increment.setTitle("+", forState: .Normal)
+        increment.titleLabel?.font = UIFont.systemFontOfSize(18, weight: UIFontWeightHeavy)
+        increment.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        increment.backgroundColor = UIColor.footballColor(s)
+        increment.addTouchEvents()
+        increment.addTarget(self, action: #selector(self.incrementWeek), forControlEvents: .TouchUpInside)
+
+        decrement.setTitle("-", forState: .Normal)
+        decrement.titleLabel?.font = UIFont.systemFontOfSize(18, weight: UIFontWeightHeavy)
+        decrement.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        decrement.backgroundColor = UIColor.footballColor(s)
+        decrement.addTouchEvents()
+        decrement.addTarget(self, action: #selector(self.decrementWeek), forControlEvents: .TouchUpInside)
+
+        weekLabel.font = UIFont.systemFontOfSize(20, weight: UIFontWeightLight)
+        weekLabel.textColor = UIColor.footballColor(s)
+        weekLabel.textAlignment = .Center
+        weekLabel.text = "\(week)"
+
+        // layout the labels and buttons
+
+        // offset parameter for our view layouts
+        let OFFSET = 8
+
+        addSubview(decrement)
+        decrement.snp_makeConstraints { (make) in
+            make.left.bottom.top.equalTo(self)
+            make.width.equalTo(self.snp_height)
+        }
+
+        addSubview(weekLabel)
+        weekLabel.snp_makeConstraints { (make) in
+            make.left.equalTo(decrement.snp_right)
+            make.bottom.top.equalTo(self)
+            make.width.equalTo(self.snp_height)
+        }
+
+        addSubview(increment)
+        increment.snp_makeConstraints { (make) in
+            make.left.equalTo(weekLabel.snp_right)
+            make.bottom.top.equalTo(self)
+            make.width.equalTo(self.snp_height)
+        }
+
+        addSubview(update)
+        update.snp_makeConstraints { (make) in
+            make.left.equalTo(increment.snp_right).offset(OFFSET)
+            make.right.equalTo(self).offset(-OFFSET)
+            make.top.equalTo(self)
+            make.bottom.equalTo(self)
+        }
+    }
+
+    @objc private func updateLeagues() {
+        // we need the parent view controller to display the loading view
+        if vc == nil {
+            exit(EXIT_FAILURE)
+        }
+
+        let dp = HCHeadCoachDataProvider.sharedInstance
+        let loading = HCLoadingView(info: "Updating.\nThis may take a while.")
+        loading.present(vc!.view, animated: true)
+        dp.updateLeaguesToWeek(week) { (err) in
+            loading.dismiss(true)
+        }
+    }
+
+    /// Increment the 'week' value, validate the week number, and update the label.
+    @objc private func incrementWeek() {
+        week += 1
+        validateWeek()
+        weekLabel.text = "\(week)"
+    }
+
+    /// Decrement the 'week' value, validate the week number, and update the label.
+    @objc private func decrementWeek() {
+        week -= 1
+        validateWeek()
+        weekLabel.text = "\(week)"
+    }
+
+    /// Make's sure the 'week' parameter is within the bounds
+    /// of the 'MINIMUM_WEEK' and 'MAXIMUM_WEEK'.
+    @objc private func validateWeek() {
+        week = min(max(week, MINIMUM_WEEK), MAXIMUM_WEEK)
+    }
+
+    // this shit is required
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 // ------------------------------
 // MARK: HCLeagueSelectionCell
 // ------------------------------
@@ -162,6 +316,7 @@ class HCSettingsViewController: UIViewController, UITableViewDelegate, UITableVi
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.registerClass(HCLeagueSelectionCell.self, forCellReuseIdentifier: "LeagueCell")
         tableView.registerClass(HCButtonCell.self, forCellReuseIdentifier: "ButtonCell")
+        tableView.registerClass(HCSettingsUpdateCell.self, forCellReuseIdentifier: "UpdateCell")
 
         // setup the constraints for our table view
         view.addSubview(tableView)
@@ -201,7 +356,7 @@ class HCSettingsViewController: UIViewController, UITableViewDelegate, UITableVi
     // ----------------------------------------
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -211,6 +366,9 @@ class HCSettingsViewController: UIViewController, UITableViewDelegate, UITableVi
 
         case 1:
             return 2 + usersLeagues.count
+
+        case 2:
+            return 1
 
         default:
             return 0
@@ -232,6 +390,10 @@ class HCSettingsViewController: UIViewController, UITableViewDelegate, UITableVi
         if (indexPath.section == 0 && (indexPath.row == 2)) ||
             (indexPath.section == 1 && (indexPath.row == 1 + usersLeagues.count)) {
             id = "ButtonCell"
+        }
+
+        if indexPath.section == 2 {
+            id = "UpdateCell"
         }
 
         let cell = tableView.dequeueReusableCellWithIdentifier(id, forIndexPath: indexPath)
@@ -313,6 +475,13 @@ class HCSettingsViewController: UIViewController, UITableViewDelegate, UITableVi
 
                 break
             }
+
+        case 2:
+            if let updateCell = cell as? HCSettingsUpdateCell {
+                updateCell.vc = self
+            }
+
+            break
 
         default:
             break
