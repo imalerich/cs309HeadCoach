@@ -262,7 +262,9 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func scrollToBottom(animated: Bool) {
         if let messages = convos[user.id] {
             let count = messages.count
-            tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: count - 1, inSection: 0), atScrollPosition: .Bottom, animated: animated)
+            if count > 0 {
+                tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: count - 1, inSection: 0), atScrollPosition: .Bottom, animated: animated)
+            }
         }
     }
 

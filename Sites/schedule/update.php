@@ -1,5 +1,7 @@
 <?php
 
+// header("Content-Type: application/json");
+
 // this call will take in the current date (in a production environment this
 // would not be needed) and updates all the scores in each league
 // since that league was last updated
@@ -88,7 +90,7 @@ function resetLeagueForWeek($league, $week, $db) {
 		die("Database query failed with errer: " . mysqli_error($db));
 	}
 
-	while ($match = mysql_fetch_assoc($result)) {
+	while ($match = mysqli_fetch_assoc($result)) {
 		$query  = "UPDATE {$league["name"]}_schedule";
 		$query .= " SET score_0=0, score_1=0, completed=0";
 		$query .= " WHERE id={$match["id"]}";
@@ -132,11 +134,11 @@ if (!$result) {
 	die("Database query failed with errer: " . mysqli_error($db));
 }
 
-// this call has no return value
-// the client is expected to be responsible for
-// updating the server (ideally they wouldn't be, but
-// I'm just gonna use it for now) but are not expected
-// to 'respond' to the update
+echo json_encode(
+	array(
+		"error" => False
+	)
+);
 
 mysqli_close($db);
 
