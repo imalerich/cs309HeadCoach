@@ -43,6 +43,7 @@ class HCUserDetailPlayerCell: UITableViewCell {
         name.text = "Name"
         name.textAlignment = .Left
         name.adjustsFontSizeToFitWidth = true
+        name.minimumScaleFactor = 12 / 18.0
         name.font = UIFont.systemFontOfSize(18, weight: UIFontWeightLight)
 
         pos.textAlignment = .Center
@@ -110,7 +111,7 @@ class HCUserDetailPlayerCell: UITableViewCell {
 class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewDelegate,UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
 
     /// Height of the top bar containing the user details information
-    let USER_DETAILS_HEIGHT = 100
+    let USER_DETAILS_HEIGHT = CGFloat(100)
 
     /// Below that will be the two action buttons 
     /// to change the profile picture, and the drafting linuxb
@@ -223,33 +224,35 @@ class HCUserDetailViewController: UIViewController,I3DragDataSource,UITableViewD
 
 
         // first is the details bar
-    
+
+        let OFFSET = CGFloat(12)
+        profileImage.layer.cornerRadius = (USER_DETAILS_HEIGHT - 2 * OFFSET) / 2.0
         profileImage.snp_makeConstraints { (make) in
-            make.top.left.equalTo(view)
-            make.height.width.equalTo(USER_DETAILS_HEIGHT)
+            make.left.top.equalTo(view).offset(OFFSET)
+            make.height.equalTo(USER_DETAILS_HEIGHT - 2 * OFFSET)
+            make.width.equalTo(USER_DETAILS_HEIGHT - 2 * OFFSET)
         }
 
         record.snp_makeConstraints { (make) in
-            make.top.height.equalTo(profileImage)
-            make.right.equalTo(view)
-            make.left.equalTo(profileImage.snp_right).offset(12)
+            make.top.right.equalTo(view)
+            make.height.equalTo(USER_DETAILS_HEIGHT)
+            make.left.equalTo(profileImage.snp_right).offset(OFFSET)
         }
 
         // add a little background image behind the record view
         let bg = UIView()
         bg.backgroundColor = UIColor.blackColor()
-        view.insertSubview(bg, belowSubview: record)
+        view.insertSubview(bg, belowSubview: profileImage)
         bg.snp_makeConstraints { (make) in
-            make.top.height.equalTo(profileImage)
-            make.right.equalTo(view)
-            make.left.equalTo(profileImage.snp_right)
+            make.top.height.equalTo(record)
+            make.left.right.equalTo(view)
         }
 
         let img_bg = UIImageView(image: UIImage(named: "blurred_background"))
         img_bg.contentMode = .ScaleAspectFill
         img_bg.clipsToBounds = true
         img_bg.alpha = 0.4
-        view.insertSubview(img_bg, aboveSubview: record)
+        view.insertSubview(img_bg, aboveSubview: bg)
         img_bg.snp_makeConstraints { (make) in
             make.edges.equalTo(bg)
         }
