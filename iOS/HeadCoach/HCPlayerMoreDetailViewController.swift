@@ -30,6 +30,7 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
     convenience init(forHCPlayer player: HCPlayer){
         self.init()
         self.hcplayer = player
+        self.title = player.name
     }
     
     override func viewDidLoad() {
@@ -95,14 +96,32 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
 
     /// Updates the draft button to reflect the current drafting status of the player.
     private func setDraftButtonStatus() {
+        detail.draftButton.hidden = false
+        detail.draftButton.removeTarget(self, action: #selector(self.undraftPlayer), forControlEvents: .TouchUpInside)
+        detail.draftButton.removeTarget(self, action: #selector(self.draftPlayer), forControlEvents: .TouchUpInside)
+
         if self.hcplayer.user_id == 0 {
             detail.draftButton.setTitle("Draft", forState: UIControlState.Normal)
+            detail.draftButton.backgroundColor = UIColor.footballColor(1.5)
             detail.draftButton.addTarget(self, action: #selector(self.draftPlayer), forControlEvents: .TouchUpInside)
+            showDraftButton(true)
         } else if self.hcplayer.user_id == HCHeadCoachDataProvider.sharedInstance.user!.id {
             detail.draftButton.setTitle("Undraft", forState: UIControlState.Normal)
+            detail.draftButton.backgroundColor = UIColor.init(red: 188/255.0, green: 81.0/255.0, blue: 81.0/255.0, alpha: 1.0)
             detail.draftButton.addTarget(self, action: #selector(self.undraftPlayer), forControlEvents: .TouchUpInside)
+            showDraftButton(true)
         } else {
-            self.detail.draftButton.hidden = true
+            showDraftButton(false)
+        }
+    }
+
+    /// Set the visiblity of the draft button in the detail view.
+    private func showDraftButton(visible: Bool) {
+        detail.draftButton.snp_removeConstraints()
+        detail.draftButton.snp_makeConstraints { (make) in
+            make.top.equalTo(detail.headerLabelContainer.snp_bottom)
+            make.height.equalTo(visible ? detail.DRAFT_HEIGHT : 0)
+            make.left.right.equalTo(detail)
         }
     }
     
