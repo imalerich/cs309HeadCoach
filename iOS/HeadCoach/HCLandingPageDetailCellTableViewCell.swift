@@ -29,6 +29,8 @@ class HCLandingPageDetailCellTableViewCell: UITableViewCell {
 
     /// Player1 detail view
     let player1 = HCPlayerMatchView()
+    
+    var delegate: UIViewController?
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -119,4 +121,5 @@ class HCLandingPageDetailCellTableViewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
 }
