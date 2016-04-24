@@ -59,9 +59,9 @@ class LiveGameTableViewCell: UITableViewCell{
         position.text = HCPositionUtil.positionToString(hcplayer.position)
         name.text = fdplayer.name
         points.text = String(pts)
-        backgroundColor = winner ? UIColor.footballColor(1).colorWithAlphaComponent(0.5) : UIColor.whiteColor()
-        name.textColor = winner ? UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.8) : UIColor.footballColor(1)
-        points.textColor = winner ? UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.6) : UIColor.footballColor(1).colorWithAlphaComponent(0.8)
+        backgroundColor = winner ? UIColor.footballColor(1) : UIColor.whiteColor()
+        name.textColor = winner ? UIColor.whiteColor().colorWithAlphaComponent(0.75) : UIColor.footballColor(1)
+        points.textColor = winner ? UIColor.whiteColor().colorWithAlphaComponent(0.75) : UIColor.footballColor(1).colorWithAlphaComponent(0.8)
     }
     
     
