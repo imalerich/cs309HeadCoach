@@ -79,7 +79,10 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
     
     // method for performing live player chat actions
     func chatMethod(){
-        print(HCRandomInsultGenerator.sharedInstance.generateInsult())
+        let vc = HCChatViewController()
+        vc.user = game!.users.0.id == HCHeadCoachDataProvider.sharedInstance.user!.id ? game!.users.1: game!.users.0
+        vc.updateConversations()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     ///Called on result of FDPlayer request

@@ -47,7 +47,6 @@ class LiveGameHeaderView: UIView {
             make.top.equalTo(self)
         }
         
-//        let u1Image = UIImageView()
         addSubview(u1Image)
         u1Image.load(game.users.0.img_url)
         u1Image.layer.cornerRadius = (HEADER_HEIGHT - 2 * OFFSET) / 2.0
@@ -62,7 +61,6 @@ class LiveGameHeaderView: UIView {
             make.width.equalTo(HEADER_HEIGHT - 2 * OFFSET)
         }
         
-//        let u2Image = UIImageView()
         addSubview(u2Image)
         u2Image.load(game.users.1.img_url)
         u2Image.layer.cornerRadius = (HEADER_HEIGHT - 2 * OFFSET) / 2.0
@@ -109,7 +107,7 @@ class LiveGameHeaderView: UIView {
         
         let vsTextBg = UIView()
         addSubview(vsTextBg)
-        vsTextBg.backgroundColor = UIColor.lightGrayColor()
+        vsTextBg.backgroundColor = UIColor.whiteColor()
         vsTextBg.layer.cornerRadius = 5
         vsTextBg.layer.masksToBounds = true
         
@@ -117,7 +115,7 @@ class LiveGameHeaderView: UIView {
         addSubview(vsText)
         vsText.font = UIFont.systemFontOfSize(18)
         vsText.text = "vs"
-        vsText.textColor = UIColor.whiteColor()
+        vsText.textColor = winnerBGColor
         vsText.sizeToFit()
         vsText.snp_makeConstraints { (make) in
             make.center.equalTo(header)
@@ -192,18 +190,6 @@ class LiveGameHeaderView: UIView {
             make.top.equalTo(u1Pts)
             make.left.equalTo(ptsLabel.snp_right)
         }
-        
-//        win.snp_makeConstraints { (make) in
-//            make.height.equalTo(20)
-//            make.width.equalTo(20)
-//            make.centerY.equalTo(ptsBar)
-//            if u1Won{
-//                make.right.equalTo(ptsLabel.snp_left)
-//            }
-//            else{
-//                make.left.equalTo(ptsLabel.snp_right)
-//            }
-//        }
         
     }
     

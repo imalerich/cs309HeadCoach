@@ -270,7 +270,7 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     /// Periodically update the conversations so the output of
     /// the chat appears to be 'live'.
-    @objc private func updateConversations() {
+    internal func updateConversations() {
         let dp = HCHeadCoachDataProvider.sharedInstance
 
         if let user = dp.user {

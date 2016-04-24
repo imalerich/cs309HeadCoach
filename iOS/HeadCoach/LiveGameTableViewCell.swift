@@ -28,7 +28,7 @@ class LiveGameTableViewCell: UITableViewCell{
         
         name.textAlignment = .Left
         name.font = UIFont.systemFontOfSize(20, weight: UIFontWeightLight)
-        name.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.9)
+        name.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
         name.sizeToFit()
         
         points.textAlignment = .Left
@@ -59,9 +59,9 @@ class LiveGameTableViewCell: UITableViewCell{
         position.text = HCPositionUtil.positionToString(hcplayer.position)
         name.text = fdplayer.name
         points.text = String(pts)
-        backgroundColor = winner ? UIColor.footballColor(1) : UIColor.whiteColor()
-        name.textColor = winner ? UIColor.whiteColor().colorWithAlphaComponent(0.75) : UIColor.footballColor(1)
-        points.textColor = winner ? UIColor.whiteColor().colorWithAlphaComponent(0.75) : UIColor.footballColor(1).colorWithAlphaComponent(0.8)
+        backgroundColor = winner ? UIColor.footballColor(1).colorWithAlphaComponent(0.25) : UIColor.whiteColor()
+//        name.textColor = winner ? UIColor.whiteColor().colorWithAlphaComponent(0.75) : UIColor.footballColor(1)
+        points.textColor = name.textColor
     }
     
     
