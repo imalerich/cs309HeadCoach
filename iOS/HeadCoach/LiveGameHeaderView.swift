@@ -15,6 +15,10 @@ class LiveGameHeaderView: UIView {
     
     var u1Won = true
     let header = UIView()
+    let winnerBGColor = UIColor.footballColor(1)
+    let loserBGColor = UIColor.whiteColor()
+    let u1Image = UIImageView()
+    let u2Image = UIImageView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -35,7 +39,7 @@ class LiveGameHeaderView: UIView {
         let HEADER_HEIGHT = CGFloat(100)
         let PTS_HEIGHT = CGFloat(25)
         
-        backgroundColor = u1Won ? UIColor.whiteColor() : UIColor.footballColor(1)
+        backgroundColor = u1Won ? loserBGColor : winnerBGColor
         addSubview(header)
         header.snp_makeConstraints { (make) in
             make.width.equalTo(self)
@@ -43,11 +47,11 @@ class LiveGameHeaderView: UIView {
             make.top.equalTo(self)
         }
         
-        let u1Image = UIImageView()
+//        let u1Image = UIImageView()
         addSubview(u1Image)
         u1Image.load(game.users.0.img_url)
         u1Image.layer.cornerRadius = (HEADER_HEIGHT - 2 * OFFSET) / 2.0
-        u1Image.layer.borderColor = u1Won ? UIColor.whiteColor().CGColor : UIColor.footballColor(1).CGColor
+        u1Image.layer.borderColor = u1Won ? loserBGColor.colorWithAlphaComponent(0.8).CGColor : winnerBGColor.colorWithAlphaComponent(0.8).CGColor
         u1Image.layer.borderWidth = 1
         u1Image.contentMode = .ScaleAspectFill
         u1Image.clipsToBounds = true
@@ -58,11 +62,11 @@ class LiveGameHeaderView: UIView {
             make.width.equalTo(HEADER_HEIGHT - 2 * OFFSET)
         }
         
-        let u2Image = UIImageView()
+//        let u2Image = UIImageView()
         addSubview(u2Image)
         u2Image.load(game.users.1.img_url)
         u2Image.layer.cornerRadius = (HEADER_HEIGHT - 2 * OFFSET) / 2.0
-        u2Image.layer.borderColor = !u1Won ? UIColor.whiteColor().CGColor : UIColor.footballColor(1).CGColor
+        u2Image.layer.borderColor = !u1Won ? loserBGColor.colorWithAlphaComponent(0.8).CGColor : winnerBGColor.colorWithAlphaComponent(0.8).CGColor
         u2Image.layer.borderWidth = 1
         u2Image.contentMode = .ScaleAspectFill
         u2Image.clipsToBounds = true
@@ -85,7 +89,7 @@ class LiveGameHeaderView: UIView {
         addSubview(u1Name)
         u1Name.font = UIFont.systemFontOfSize(20)
         u1Name.text = game.users.0.name
-        u1Name.textColor = u1Won ? UIColor.whiteColor() : UIColor.footballColor(1)
+        u1Name.textColor = u1Won ? loserBGColor : winnerBGColor
         u1Name.sizeToFit()
         u1Name.snp_makeConstraints { (make) in
             make.left.equalTo(u1Image.snp_right).offset(OFFSET / 2)
@@ -96,7 +100,7 @@ class LiveGameHeaderView: UIView {
         addSubview(u2Name)
         u2Name.font = UIFont.systemFontOfSize(20)
         u2Name.text = game.users.1.name
-        u2Name.textColor = !u1Won ? UIColor.whiteColor() : UIColor.footballColor(1)
+        u2Name.textColor = !u1Won ? loserBGColor : winnerBGColor
         u2Name.sizeToFit()
         u2Name.snp_makeConstraints { (make) in
             make.right.equalTo(u2Image.snp_left).offset(-OFFSET / 2)
@@ -105,7 +109,7 @@ class LiveGameHeaderView: UIView {
         
         let vsTextBg = UIView()
         addSubview(vsTextBg)
-        vsTextBg.backgroundColor = UIColor.footballColor(0.8)
+        vsTextBg.backgroundColor = UIColor.lightGrayColor()
         vsTextBg.layer.cornerRadius = 5
         vsTextBg.layer.masksToBounds = true
         
@@ -120,11 +124,14 @@ class LiveGameHeaderView: UIView {
         }
         
         vsTextBg.snp_makeConstraints { (make) in
+            make.top.equalTo(vsText).offset(-2)
+            make.bottom.equalTo(vsText).offset(2)
+            make.right.equalTo(vsText).offset(2)
+            make.left.equalTo(vsText).offset(-2)
             make.center.equalTo(vsText)
-            make.width.equalTo(vsText).multipliedBy(1.2)
-            make.height.equalTo(vsText).multipliedBy(1.1)
         }
         
+        //background for points display
         let ptsBar = UIView()
         addSubview(ptsBar)
         ptsBar.backgroundColor = UIColor.footballColor(1)
@@ -203,7 +210,7 @@ class LiveGameHeaderView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        ///add user 1 background shape
+        //add user 1 background shape
         let u1bgLayer = CAShapeLayer()
         let diag = UIBezierPath()
         diag.moveToPoint(CGPointMake(0, 0))
@@ -212,7 +219,7 @@ class LiveGameHeaderView: UIView {
         diag.addLineToPoint(CGPointMake(header.frame.width * (2/3), 0))
         diag.closePath()
         u1bgLayer.path = diag.CGPath
-        u1bgLayer.fillColor = u1Won ? UIColor.footballColor(1).CGColor : UIColor.whiteColor().CGColor
+        u1bgLayer.fillColor = u1Won ? UIColor.footballColor(0.8).CGColor : loserBGColor.CGColor
         u1bgLayer.strokeColor = nil
         header.layer.addSublayer(u1bgLayer)
     }

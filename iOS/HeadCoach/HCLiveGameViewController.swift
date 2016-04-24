@@ -11,14 +11,26 @@ import SnapKit
 
 class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
+    ///Game to display data for
     var game: HCGameResult?
     
-    var header: UIView?
+    ///Header view
+    var header: LiveGameHeaderView?
+    
+    ///TableView containing players on both teams, sorted by points in this game
     let tableView = UITableView()
+    
+    ///white background to cover tableView while loading
     let loadingBg = UIView()
+    
+    ///loading view
     let loading = HCLoadingView.init(info: "Loading")
+    
+    ///array of pair objects representing scores for all players involved in this game
+    /// in the form (playerID, score)
     var pScores = [(Int, UInt32)]()
     
+    ///Arrays for all players involved in game
     var HCPlayerList: [HCPlayer]?
     var FDPlayerList: [FDPlayer]?
     
@@ -38,6 +50,8 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         pScores.removeAll()
         HCPlayerList = [HCPlayer]()
         FDPlayerList = [FDPlayer]()
+        
+        //request HCPlayer data for both users
         HCHeadCoachDataProvider.sharedInstance.getAllPlayersForUserFromLeague(HCHeadCoachDataProvider.sharedInstance.league!, user: game!.users.0, completion: HCLiveGameViewController.onHDPlayerListResult(self))
         HCHeadCoachDataProvider.sharedInstance.getAllPlayersForUserFromLeague(HCHeadCoachDataProvider.sharedInstance.league!, user: game!.users.1, completion: HCLiveGameViewController.onHDPlayerListResult(self))
     }
@@ -68,6 +82,7 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         print(HCRandomInsultGenerator.sharedInstance.generateInsult())
     }
     
+    ///Called on result of FDPlayer request
     func onFDPlayerResult(player: FDPlayer){
         FDPlayerList?.append(player)
         FDPlayerList?.sortInPlace({ (p1, p2) -> Bool in
@@ -89,20 +104,102 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
-    func getFDPlayerIndexForHCPlayer(player: HCPlayer) -> Int{
-        for fdplayer in FDPlayerList!{
-            if fdplayer.id == player.fantasy_id{
-                return FDPlayerList!.indexOf({ (fdplayer) -> Bool in
-                    return true
-                })!
+    ///Returns index of equivalent FDPlayer object in FDPlayerList array
+    func findFDIndex(playerId: Int) -> Int{
+        for i in 0...FDPlayerList!.count{
+            if FDPlayerList![i].id == playerId{
+                return i
             }
-            else{ return FDPlayerList!.count + 1 }
         }
-        return FDPlayerList!.count + 1
+        return -1
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+    ///Searches pScores and returns score pair in form (playerID, score) for given playerId
+    func findScore(playerId: Int) -> (index: Int, score: UInt32){
+        for i in 0...pScores.count-1{
+            if pScores[i].0 == playerId{
+                return (i, pScores[i].1)
+            }
+        }
+        return (-1, 0)
+    }
+    
+    ///Set up all subviews
+    func setUpSubViews(){
+        setUpGameHeader()
+        setUpTableView()
+        setUpLoadingBg()
+        setUpLoading()
+    }
+    
+    ///Set up loading view
+    func setUpLoading(){
+        self.view.addSubview(loading)
+        loading.snp_makeConstraints { (make) in
+            make.edges.equalTo(self.view)
+        }
+    }
+    
+    ///Set up loading background, covers only tableView
+    func setUpLoadingBg(){
+        loadingBg.backgroundColor = UIColor.whiteColor()
+        self.view.addSubview(loadingBg)
+        loadingBg.snp_makeConstraints { (make) in
+            make.left.equalTo(self.view)
+            make.right.equalTo(self.view)
+            make.bottom.equalTo(self.view)
+            make.top.equalTo(header!.snp_bottom)
+        }
+    }
+    
+    ///Set up player table view
+    func setUpTableView(){
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.allowsSelection = false
+        self.view.addSubview(tableView)
+        tableView.snp_makeConstraints { (make) -> Void in
+            make.left.equalTo(self.view)
+            make.right.equalTo(self.view)
+            make.bottom.equalTo(self.view)
+            make.top.equalTo(header!.snp_bottom)
+        }
+        self.tableView.registerClass(LiveGameTableViewCell.self, forCellReuseIdentifier: "LiveCell")
+    }
+    
+    ///Set up user info header
+    func setUpGameHeader(){
+        header = LiveGameHeaderView(game: self.game!)
+        view.addSubview(header!)
+        header!.snp_makeConstraints { (make) in
+            make.height.equalTo(125)
+            make.width.equalTo(self.view)
+            make.top.equalTo(self.view)
+        }
+        
+        let userTap = UITapGestureRecognizer(target: self, action: #selector(HCLiveGameViewController.userTapped(_:)))
+        header?.addGestureRecognizer(userTap)
+    }
+    
+    ///Called on tap of header to open relevant user detail
+    func userTapped(sender: UITapGestureRecognizer){
+        let tapLocation = sender.locationInView(self.header!.u1Image)
+        if(header!.u1Image.pointInside(tapLocation, withEvent: nil)){
+            openUserDetailView(game!.users.0)
+        }
+        else{
+            let tapLocation = sender.locationInView(self.header!.u2Image)
+            if(header!.u2Image.pointInside(tapLocation, withEvent: nil)){
+                openUserDetailView(game!.users.1)
+            }
+        }
+    }
+    
+    ///Open user detail for user
+    func openUserDetailView(forUser: HCUser) {
+        let vc = HCUserDetailViewController()
+        vc.user = forUser
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -110,13 +207,13 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         if (cell == nil)
         {
             cell = LiveGameTableViewCell(style: UITableViewCellStyle.Default,
-                                   reuseIdentifier:"LiveCell")
+                                         reuseIdentifier:"LiveCell")
         }
         let player = FDPlayerList![indexPath.row]
         let winningTeam = HCPlayerList?[indexPath.row].user_id == (game?.scores.0 > game?.scores.1 ? game?.users.0.id : game?.users.1.id)
         cell?.setPlayer(player, hcplayer: HCPlayerList![indexPath.row], pts: findScore(player.id).score, winner: winningTeam)
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(HCLiveGameViewController.tapped(_:)))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(HCLiveGameViewController.cellTapped(_:)))
         cell?.addGestureRecognizer(tap)
         return cell!
     }
@@ -126,7 +223,8 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func tapped(sender: UITapGestureRecognizer)
+    ///tableView cell tap
+    func cellTapped(sender: UITapGestureRecognizer)
     {
         //using sender, we can get the point in respect to the table view
         let tapLocation = sender.locationInView(self.tableView)
@@ -149,189 +247,7 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         return "Player List"
     }
     
-    func findFDIndex(playerId: Int) -> Int{
-        for i in 0...FDPlayerList!.count{
-            if FDPlayerList![i].id == playerId{
-                return i
-            }
-        }
-        return -1
-    }
-    
-    func findScore(playerId: Int) -> (index: Int, score: UInt32){
-        for i in 0...pScores.count-1{
-            if pScores[i].0 == playerId{
-                return (i, pScores[i].1)
-            }
-        }
-        return (-1, 0)
-    }
-    
-    func setUpSubViews(){
-        addGameHeader()
-        setUpTableView()
-        setUpLoadingBg()
-        setUpLoading()
-    }
-    
-    func setUpLoading(){
-        self.view.addSubview(loading)
-        loading.snp_makeConstraints { (make) in
-            make.edges.equalTo(self.view)
-        }
-    }
-    
-    func setUpLoadingBg(){
-        loadingBg.backgroundColor = UIColor.whiteColor()
-        self.view.addSubview(loadingBg)
-        loadingBg.snp_makeConstraints { (make) in
-            make.left.equalTo(self.view)
-            make.right.equalTo(self.view)
-            make.bottom.equalTo(self.view)
-            make.top.equalTo(header!.snp_bottom)
-        }
-    }
-    
-    func setUpTableView(){
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.allowsSelection = false
-        self.view.addSubview(tableView)
-        tableView.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(self.view)
-            make.right.equalTo(self.view)
-            make.bottom.equalTo(self.view)
-            make.top.equalTo(header!.snp_bottom)
-        }
-        self.tableView.registerClass(LiveGameTableViewCell.self, forCellReuseIdentifier: "LiveCell")
-    }
-    
-    func addGameHeader(){
-        
-        header = LiveGameHeaderView(game: self.game!)
-        self.view.addSubview(header!)
-        header!.snp_makeConstraints { (make) in
-            make.height.equalTo(125)
-            make.width.equalTo(self.view)
-            make.top.equalTo(self.view)
-        }
-        
-//        let u1bg = UIView()
-//        let u2bg = UIView()
-//        let u1Name = UILabel()
-//        let u2Name = UILabel()
-//        let u1Score = UILabel()
-//        let u2Score = UILabel()
-//        let divider = UIView()
-//        /// A little star icon that will show up next to the winners score.
-//        let win = UIImageView()
-//        
-//        self.view.addSubview(u1bg)
-//        self.view.addSubview(u2bg)
-//        self.view.addSubview(u1Name)
-//        self.view.addSubview(u2Name)
-//        self.view.addSubview(u1Score)
-//        self.view.addSubview(u2Score)
-//        self.view.addSubview(win)
-//        self.view.addSubview(divider)
-//        
-//        u1bg.snp_makeConstraints { (make) in
-//            make.left.equalTo(header)
-//            make.right.equalTo(divider.snp_left)
-//            make.top.equalTo(header)
-//            make.bottom.equalTo(header)
-//        }
-//        let u1bgLayer = CAShapeLayer()
-//        let diag = UIBezierPath()
-//        header.layer.addSublayer(u1bgLayer)
-//        diag.moveToPoint(CGPointMake(0, 0))
-//        diag.addLineToPoint(CGPointMake(0, header.frame.height))
-//        print("header vals- x: \(header.frame.width) y: \(header.frame.height)")
-//        print("want header vals- x: \(header.frame.width * (3/5)) y: \(header.frame.height)")
-//        print("want header vals- x: \(header.frame.width * (2/5)) y: \(header.frame.height)")
-//        diag.addLineToPoint(CGPointMake(header.frame.width * CGFloat(3/5), header.frame.height))
-//        diag.addLineToPoint(CGPointMake(header.frame.width * CGFloat(2/5), 0))
-//        diag.closePath()
-//        u1bgLayer.path = diag.CGPath
-//        u1bgLayer.fillColor = game?.scores.0 > game?.scores.1 ? UIColor.footballColor(1).CGColor : UIColor.whiteColor().CGColor
-//        u1bgLayer.strokeColor = nil
-//        header.backgroundColor = game?.scores.0 > game?.scores.1 ? UIColor.whiteColor() : UIColor.footballColor(1)
-//
-//        u2bg.snp_makeConstraints { (make) in
-//            make.left.equalTo(divider.snp_right)
-//            make.right.equalTo(header)
-//            make.top.equalTo(header)
-//            make.bottom.equalTo(header)
-//        }
-//        
-//        divider.backgroundColor = UIColor.whiteColor()
-//        divider.snp_makeConstraints { (make) in
-//            make.center.equalTo(self.header)
-//            make.width.equalTo(1)
-//            make.height.equalTo(self.header).multipliedBy(0.8)
-//        }
-//        
-//        win.snp_makeConstraints { (make) in
-//            make.height.equalTo(20)
-//            make.width.equalTo(20)
-//            make.centerY.equalTo(header)
-//            if game?.scores.0 > game?.scores.1{
-//                make.right.equalTo(divider.snp_left).offset(-3)
-//            }
-//            else{
-//                make.left.equalTo(divider.snp_right).offset(3)
-//            }
-//        }
-//        
-//        u1Name.text = game!.users.0.name
-//        u1Name.font = UIFont.systemFontOfSize(20)
-//        u1Name.textColor = game?.scores.0 > game?.scores.1 ? UIColor.whiteColor() : UIColor.footballColor(1)
-////        u1bg.backgroundColor = game?.scores.0 > game?.scores.1 ? UIColor.footballColor(1) : UIColor.whiteColor()
-//        u1Name.sizeToFit()
-//        u1Name.snp_makeConstraints { (make) in
-//            make.centerY.equalTo(header)
-//            if game?.scores.0 > game?.scores.1{
-//                make.right.equalTo(win.snp_left).offset(-5)
-//            }
-//            else{
-//                make.right.equalTo(divider.snp_left).offset(-5)
-//            }
-//        }
-//        
-//        u2Name.text = game!.users.1.name
-//        u2Name.font = UIFont.systemFontOfSize(20)
-//        u2Name.textColor = game?.scores.1 > game?.scores.0 ? UIColor.whiteColor() : UIColor.footballColor(1)
-////        u2bg.backgroundColor = game?.scores.1 > game?.scores.0 ? UIColor.footballColor(1) : UIColor.whiteColor()
-//        u2Name.sizeToFit()
-//        u2Name.snp_makeConstraints { (make) in
-//            make.centerY.equalTo(header)
-//            if game?.scores.1 > game?.scores.0{
-//                make.left.equalTo(win.snp_right).offset(5)
-//            }
-//            else{
-//                make.left.equalTo(divider.snp_right).offset(5)
-//            }
-//        }
-//        
-//        u1Score.text = String(game!.scores.0)
-//        u1Score.font = UIFont.systemFontOfSize(20)
-//        u1Score.textColor = game?.scores.0 > game?.scores.1 ? UIColor.whiteColor() : UIColor.footballColor(1)
-//        u1Score.sizeToFit()
-//        u1Score.snp_makeConstraints { (make) in
-//            make.left.equalTo(header).offset(15)
-//            make.centerY.equalTo(header)
-//        }
-//        
-//        u2Score.text = String(game!.scores.1)
-//        u2Score.font = UIFont.systemFontOfSize(20)
-//        u2Score.textColor = game?.scores.1 > game?.scores.0 ? UIColor.whiteColor() : UIColor.footballColor(1)
-//        u2Score.snp_makeConstraints { (make) in
-//            make.right.equalTo(header).offset(-15)
-//            make.centerY.equalTo(header)
-//        }
-//        
-//        win.image = UIImage(named: "win")
-//        win.contentMode = .ScaleAspectFill
-//        
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
     }
 }
