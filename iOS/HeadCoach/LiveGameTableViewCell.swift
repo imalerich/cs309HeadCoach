@@ -50,15 +50,18 @@ class LiveGameTableViewCell: UITableViewCell{
         }
         addSubview(points)
         points.snp_makeConstraints { (make) in
-            make.right.equalTo(self).inset(20)
+            make.right.equalTo(self).inset(15)
             make.centerY.equalTo(self)
         }
     }
     
-    func setPlayer(fdplayer: FDPlayer, hcplayer: HCPlayer, pts: UInt32){
+    func setPlayer(fdplayer: FDPlayer, hcplayer: HCPlayer, pts: UInt32, winner: Bool){
         position.text = HCPositionUtil.positionToString(hcplayer.position)
         name.text = fdplayer.name
         points.text = String(pts)
+        backgroundColor = winner ? UIColor.footballColor(1).colorWithAlphaComponent(0.5) : UIColor.whiteColor()
+        name.textColor = winner ? UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.8) : UIColor.footballColor(1)
+        points.textColor = winner ? UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.6) : UIColor.footballColor(1).colorWithAlphaComponent(0.8)
     }
     
     

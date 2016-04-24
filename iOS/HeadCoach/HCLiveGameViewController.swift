@@ -15,6 +15,7 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
     
     let header = UIView()
     let tableView = UITableView()
+    let loadingBg = UIView()
     let loading = HCLoadingView.init(info: "Loading")
     var pScores = [(Int, UInt32)]()
     
@@ -32,24 +33,7 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         let chatButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Compose, target: self, action: #selector(self.chatMethod))
         navigationItem.rightBarButtonItem = chatButton
         
-        addGameHeader()
-
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.allowsSelection = false
-        self.view.addSubview(tableView)
-        tableView.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(self.view)
-            make.right.equalTo(self.view)
-            make.bottom.equalTo(self.view)
-            make.top.equalTo(header.snp_bottom)
-        }
-        self.tableView.registerClass(LiveGameTableViewCell.self, forCellReuseIdentifier: "LiveCell")
-        
-        self.view.addSubview(loading)
-        loading.snp_makeConstraints { (make) in
-            make.edges.equalTo(self.view)
-        }
+        setUpSubViews()
         
         pScores.removeAll()
         HCPlayerList = [HCPlayer]()
@@ -61,20 +45,20 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
     func onHDPlayerListResult(empty: Bool, players: [HCPlayer]){
         if !empty {
             var gameScore = UInt32(players[0].user_id == game!.users.0.id ? game!.scores.0 : game!.scores.1)
-            print("\(gameScore)")
             for player in players{
-                //add player score and sort
-                let points = arc4random_uniform(gameScore)
-                gameScore -= points
-                print("update \(gameScore)")
-                pScores.append((player.fantasy_id, points))
-                
-                //add player and request equivalent FDplayer
-                HCPlayerList?.append(player)
-                HCFantasyDataProvider.sharedInstance.getFDPlayerFromHCPlayer(player, completion: HCLiveGameViewController.onFDPlayerResult(self))
-                pScores.sortInPlace({ (s1, s2) -> Bool in
-                    s1.1 > s2.1
-                })
+                //add player score and sort if active
+                if !player.isOnBench {
+                    let points = arc4random_uniform(gameScore)
+                    gameScore -= points
+                    pScores.append((player.fantasy_id, points))
+                    
+                    //add player and request equivalent FDplayer
+                    HCPlayerList?.append(player)
+                    HCFantasyDataProvider.sharedInstance.getFDPlayerFromHCPlayer(player, completion: HCLiveGameViewController.onFDPlayerResult(self))
+                    pScores.sortInPlace({ (s1, s2) -> Bool in
+                        s1.1 > s2.1
+                    })
+                }
             }
         }
     }
@@ -93,6 +77,13 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         if(FDPlayerList?.count == HCPlayerList?.count){
             HCPlayerList?.sortInPlace({ (p1, p2) -> Bool in
                 findFDIndex(p1.fantasy_id) < findFDIndex(p2.fantasy_id)
+            })
+            UIView.animateWithDuration(0.5, animations: { 
+                self.loadingBg.alpha = 0.0
+                }, completion: { (b) in
+                    if b {
+                        self.loadingBg.hidden = true
+                    }
             })
             loading.dismiss(true)
         }
@@ -122,24 +113,35 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
                                    reuseIdentifier:"LiveCell")
         }
         let player = FDPlayerList![indexPath.row]
+        let winningTeam = HCPlayerList?[indexPath.row].user_id == (game?.scores.0 > game?.scores.1 ? game?.users.0.id : game?.users.1.id)
+        cell?.setPlayer(player, hcplayer: HCPlayerList![indexPath.row], pts: findScore(player.id).score, winner: winningTeam)
         
-        cell?.setPlayer(player, hcplayer: HCPlayerList![indexPath.row], pts: findScore(player.id).score)
-        let winnerId = game!.scores.0 > game!.scores.1 ? game!.users.0.id : game!.users.1.id
-        cell?.backgroundColor = HCPlayerList?[indexPath.row].user_id == winnerId ? UIColor.whiteColor() : UIColor.footballColor(1.5).colorWithAlphaComponent(0.3)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(HCLiveGameViewController.tapped(_:)))
+        cell?.addGestureRecognizer(tap)
         return cell!
     }
     
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let vc = HCPlayerMoreDetailController(forHCPlayer: HCPlayerList![indexPath.row])
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func tapped(sender: UITapGestureRecognizer)
+    {
+        //using sender, we can get the point in respect to the table view
+        let tapLocation = sender.locationInView(self.tableView)
+        
+        //using the tapLocation, we retrieve the corresponding indexPath
+        let indexPath = self.tableView.indexPathForRowAtPoint(tapLocation)
+        let vc = HCPlayerMoreDetailController(forHCPlayer: HCPlayerList![indexPath!.row])
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if(section == 0){
-//            return 2
-//        }
         return (FDPlayerList?.count)!
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-//        if(indexPath.section == 0 && indexPath.row == 0){
-//            return 60
-//        }
         return 60
     }
     
@@ -163,6 +165,45 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
             }
         }
         return (-1, 0)
+    }
+    
+    func setUpSubViews(){
+        addGameHeader()
+        setUpTableView()
+        setUpLoadingBg()
+        setUpLoading()
+    }
+    
+    func setUpLoading(){
+        self.view.addSubview(loading)
+        loading.snp_makeConstraints { (make) in
+            make.edges.equalTo(self.view)
+        }
+    }
+    
+    func setUpLoadingBg(){
+        loadingBg.backgroundColor = UIColor.whiteColor()
+        self.view.addSubview(loadingBg)
+        loadingBg.snp_makeConstraints { (make) in
+            make.left.equalTo(self.view)
+            make.right.equalTo(self.view)
+            make.bottom.equalTo(self.view)
+            make.top.equalTo(header.snp_bottom)
+        }
+    }
+    
+    func setUpTableView(){
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.allowsSelection = false
+        self.view.addSubview(tableView)
+        tableView.snp_makeConstraints { (make) -> Void in
+            make.left.equalTo(self.view)
+            make.right.equalTo(self.view)
+            make.bottom.equalTo(self.view)
+            make.top.equalTo(header.snp_bottom)
+        }
+        self.tableView.registerClass(LiveGameTableViewCell.self, forCellReuseIdentifier: "LiveCell")
     }
     
     func addGameHeader(){
@@ -206,7 +247,6 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
             make.bottom.equalTo(header)
         }
         
-//        divider.backgroundColor = UIColor.init(white: 0.2, alpha: 0.2)
         divider.backgroundColor = UIColor.whiteColor()
         divider.snp_makeConstraints { (make) in
             make.center.equalTo(self.header)
@@ -228,8 +268,8 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         
         u1Name.text = game!.users.0.name
         u1Name.font = UIFont.systemFontOfSize(20)
-        u1Name.textColor = UIColor(white: 0.2, alpha: 1.0)
-        u1bg.backgroundColor = game?.scores.0 > game?.scores.1 ? UIColor.footballColor(1.5).colorWithAlphaComponent(0.3) : UIColor.whiteColor()
+        u1Name.textColor = game?.scores.0 > game?.scores.1 ? UIColor.whiteColor() : UIColor.footballColor(1)
+        u1bg.backgroundColor = game?.scores.0 > game?.scores.1 ? UIColor.footballColor(1) : UIColor.whiteColor()
         u1Name.sizeToFit()
         u1Name.snp_makeConstraints { (make) in
             make.centerY.equalTo(header)
@@ -237,14 +277,14 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
                 make.right.equalTo(win.snp_left).offset(-5)
             }
             else{
-                make.right.equalTo(divider.snp_left).offset(5)
+                make.right.equalTo(divider.snp_left).offset(-5)
             }
         }
         
         u2Name.text = game!.users.1.name
         u2Name.font = UIFont.systemFontOfSize(20)
-        u2Name.textColor = UIColor(white: 0.2, alpha: 1.0)
-        u2bg.backgroundColor = game?.scores.1 > game?.scores.0 ? UIColor.footballColor(1.5).colorWithAlphaComponent(0.3) : UIColor.whiteColor()
+        u2Name.textColor = game?.scores.1 > game?.scores.0 ? UIColor.whiteColor() : UIColor.footballColor(1)
+        u2bg.backgroundColor = game?.scores.1 > game?.scores.0 ? UIColor.footballColor(1) : UIColor.whiteColor()
         u2Name.sizeToFit()
         u2Name.snp_makeConstraints { (make) in
             make.centerY.equalTo(header)
@@ -258,18 +298,18 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         
         u1Score.text = String(game!.scores.0)
         u1Score.font = UIFont.systemFontOfSize(20)
-        u1Score.textColor = UIColor.blackColor()
+        u1Score.textColor = game?.scores.0 > game?.scores.1 ? UIColor.whiteColor() : UIColor.footballColor(1)
         u1Score.sizeToFit()
         u1Score.snp_makeConstraints { (make) in
-            make.left.equalTo(header).offset(10)
+            make.left.equalTo(header).offset(15)
             make.centerY.equalTo(header)
         }
         
         u2Score.text = String(game!.scores.1)
         u2Score.font = UIFont.systemFontOfSize(20)
-        u2Score.textColor = UIColor.blackColor()
+        u2Score.textColor = game?.scores.1 > game?.scores.0 ? UIColor.whiteColor() : UIColor.footballColor(1)
         u2Score.snp_makeConstraints { (make) in
-            make.right.equalTo(header).offset(-10)
+            make.right.equalTo(header).offset(-15)
             make.centerY.equalTo(header)
         }
         
