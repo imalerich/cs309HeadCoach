@@ -247,7 +247,7 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
                                                          name: UIKeyboardWillHideNotification, object: nil)
 
         addProfileButton()
-        let _ = NSTimer(timeInterval: 1, target: self, selector: #selector(self.updateConversations), userInfo: nil, repeats: true)
+        let _ = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: #selector(self.updateConversations), userInfo: nil, repeats: true)
     }
 
     override func viewDidAppear(animated: Bool) {
