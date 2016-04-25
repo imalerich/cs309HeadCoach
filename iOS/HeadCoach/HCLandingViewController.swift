@@ -244,7 +244,6 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
     func openChatView() {
         let vc = HCChatSelectViewController()
         self.navigationController?.pushViewController(vc, animated: true)
-//        print(HCRandomInsultGenerator.sharedInstance.generateInsult())
     }
 
     /// Opens the HCDraftingViewController
