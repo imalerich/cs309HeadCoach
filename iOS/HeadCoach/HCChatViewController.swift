@@ -73,7 +73,7 @@ class HCChatBubbleCell: UITableViewCell {
     /// If 'user' is false, the bubble will point to the right and have a
     /// light green color.
     func setBubbleDirection(user: Bool) {
-        if user {
+        if !user {
             dataView.backgroundColor = UIColor(white: 229/255.0, alpha: 1.0)
             tail.transform = CGAffineTransformMakeScale(-1, 1)
 
