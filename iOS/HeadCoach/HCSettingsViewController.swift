@@ -291,6 +291,9 @@ class HCSettingsViewController: UIViewController, UITableViewDelegate, UITableVi
     /// will be set to nil until the next change occurs.
     var newLeague: HCLeague?
 
+    /// Totally not used for anything, not ever, nope, I swear.
+    var notActuallyUsedForAnything = 0
+
     /// The settings view is presented modally, calling this method will
     /// dismiss the modal view.
     internal func dismiss() {
@@ -348,6 +351,21 @@ class HCSettingsViewController: UIViewController, UITableViewDelegate, UITableVi
                     self.tableView.reloadData()
                 }
             }
+        }
+    }
+
+    // ----------------------------------------
+    // MARK: Useless section
+    //  This section does not do anything
+    // ----------------------------------------
+
+    /// This method does not do anything important.
+    func didTapUser() {
+        notActuallyUsedForAnything += 1
+        if notActuallyUsedForAnything > 4 {
+            notActuallyUsedForAnything = 0
+            let vc = HCMiniGameViewController()
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
 
@@ -502,6 +520,11 @@ class HCSettingsViewController: UIViewController, UITableViewDelegate, UITableVi
             newLeague = HCHeadCoachDataProvider.sharedInstance.league
 
             tableView.reloadSections(NSIndexSet(index: indexPath.section), withRowAnimation: .None)
+        }
+
+        // Not sure why this code is here, it TOTALLY does not do anything.
+        if indexPath.section == 0 && indexPath.row == 1 {
+            didTapUser()
         }
     }
 
