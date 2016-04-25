@@ -22,7 +22,7 @@ class HCLandingPageDetailCellTableViewCell: UITableViewCell {
     let weekContainer = UIView()
 
     /// The week the game took place.
-    let week = UITextView()
+    let week = UILabel()
 
     /// Player0 detail view
     let player0 = HCPlayerMatchView()
