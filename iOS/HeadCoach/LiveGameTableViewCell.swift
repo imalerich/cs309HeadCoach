@@ -61,7 +61,7 @@ class LiveGameTableViewCell: UITableViewCell{
         points.text = String(pts)
         backgroundColor = winner ? UIColor.footballColor(1).colorWithAlphaComponent(0.25) : UIColor.whiteColor()
 //        name.textColor = winner ? UIColor.whiteColor().colorWithAlphaComponent(0.75) : UIColor.footballColor(1)
-        points.textColor = name.textColor
+        points.textColor = winner ? UIColor.footballColor(1) : UIColor(red: 0, green: 0, blue: 0, alpha: 0.75)
     }
     
     
