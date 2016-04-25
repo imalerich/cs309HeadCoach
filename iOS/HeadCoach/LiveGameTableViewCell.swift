@@ -28,7 +28,7 @@ class LiveGameTableViewCell: UITableViewCell{
         
         name.textAlignment = .Left
         name.font = UIFont.systemFontOfSize(20, weight: UIFontWeightLight)
-        name.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.9)
+        name.textColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75)
         name.sizeToFit()
         
         points.textAlignment = .Left
@@ -50,15 +50,18 @@ class LiveGameTableViewCell: UITableViewCell{
         }
         addSubview(points)
         points.snp_makeConstraints { (make) in
-            make.right.equalTo(self).inset(20)
+            make.right.equalTo(self).inset(15)
             make.centerY.equalTo(self)
         }
     }
     
-    func setPlayer(fdplayer: FDPlayer, hcplayer: HCPlayer, pts: UInt32){
+    func setPlayer(fdplayer: FDPlayer, hcplayer: HCPlayer, pts: Float, winner: Bool){
         position.text = HCPositionUtil.positionToString(hcplayer.position)
         name.text = fdplayer.name
         points.text = String(pts)
+        backgroundColor = winner ? UIColor.footballColor(1).colorWithAlphaComponent(0.25) : UIColor.whiteColor()
+//        name.textColor = winner ? UIColor.whiteColor().colorWithAlphaComponent(0.75) : UIColor.footballColor(1)
+        points.textColor = winner ? UIColor.footballColor(1) : UIColor(red: 0, green: 0, blue: 0, alpha: 0.75)
     }
     
     

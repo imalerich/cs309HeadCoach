@@ -59,6 +59,7 @@
 		C808336F1CACCB5D006F8CAC /* HCTradeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C808336E1CACCB5D006F8CAC /* HCTradeDetailViewController.swift */; };
 		C89B056A1CBAA2B0007EE6C3 /* GameStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B05691CBAA2B0007EE6C3 /* GameStatView.swift */; };
 		C89B056C1CC9EC65007EE6C3 /* LiveGameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B056B1CC9EC65007EE6C3 /* LiveGameTableViewCell.swift */; };
+		C89B05701CCC8D62007EE6C3 /* LiveGameHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B056F1CCC8D62007EE6C3 /* LiveGameHeaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -118,6 +119,7 @@
 		C808336E1CACCB5D006F8CAC /* HCTradeDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCTradeDetailViewController.swift; sourceTree = "<group>"; };
 		C89B05691CBAA2B0007EE6C3 /* GameStatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatView.swift; sourceTree = "<group>"; };
 		C89B056B1CC9EC65007EE6C3 /* LiveGameTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveGameTableViewCell.swift; sourceTree = "<group>"; };
+		C89B056F1CCC8D62007EE6C3 /* LiveGameHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveGameHeaderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +187,7 @@
 				B48FFE571CBD859B00E175C5 /* HCPositionMenu.swift */,
 				B48FFE591CBD85BC00E175C5 /* HCPlayerListCell.swift */,
 				C89B056B1CC9EC65007EE6C3 /* LiveGameTableViewCell.swift */,
+				C89B056F1CCC8D62007EE6C3 /* LiveGameHeaderView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -426,6 +429,7 @@
 				B94C49FA1CA8539B00F2C2F0 /* UserDetailTableViewCell.swift in Sources */,
 				C89B056C1CC9EC65007EE6C3 /* LiveGameTableViewCell.swift in Sources */,
 				B94C49E41CA8539B00F2C2F0 /* HCFantasyDataProvider.swift in Sources */,
+				C89B05701CCC8D62007EE6C3 /* LiveGameHeaderView.swift in Sources */,
 				B94C49F81CA8539B00F2C2F0 /* TradeDetailView.swift in Sources */,
 				B95496421CB84CBF00AA9F01 /* HCSetupViewController.swift in Sources */,
 				B94C49F91CA8539B00F2C2F0 /* UserDetailCollectionItemView.swift in Sources */,

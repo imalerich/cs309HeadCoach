@@ -27,6 +27,7 @@ class FDPlayer: Object {
     dynamic var byeWeek:Int = 0
     dynamic var firstName:String = ""
     dynamic var lastName:String = ""
+    var pts: Float = 0;
 
     override static func primaryKey() -> String?{
         return "id"
@@ -104,6 +105,10 @@ class FDPlayer: Object {
         if let byeWeek = json["ByeWeek"] as? Int {
             self.byeWeek = byeWeek
         }
+    }
+    
+    func setPoints(pts: Float){
+        self.pts = pts
     }
     
     required init() {

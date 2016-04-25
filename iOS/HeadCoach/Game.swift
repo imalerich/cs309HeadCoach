@@ -15,7 +15,7 @@ class Game{
     var rushTds: Int?
     var score: Int?
     var oppScore: Int?
-    var pts: Float?
+    var pts: Float
     var fg0to19: Int?
     var fg20to29:Int?
     var fg30to39:Int?
@@ -24,6 +24,7 @@ class Game{
     var started:String?
     
     init(week: Int, opp:String, homeOrAway:String, passYds:Int, passTds:Int, passInts:Int, recYds:Int, recTds:Int, recInts:Int, rushYds:Int, rushTds:Int, score:Int, oppScore:Int, fg0to19:Int, fg20to29:Int, fg30to39:Int, fg40to49:Int, fg50plus:Int, started:Int){
+        pts = 0;
         self.week = week
         self.opp = opp
         self.homeOrAway = homeOrAway
@@ -37,7 +38,6 @@ class Game{
         self.rushTds = rushTds
         self.score = score
         self.oppScore = oppScore
-        self.pts = 21.80
         self.fg0to19 = fg0to19
         self.fg20to29 = fg20to29
         self.fg30to39 = fg30to39
@@ -51,6 +51,7 @@ class Game{
     }
     
     init(json: Dictionary<String, AnyObject>){
+        pts = 0;
         if let e = json["Week"] as? Int{
             self.week = e
         }
@@ -62,12 +63,15 @@ class Game{
         }
         if let e = json["PassingYards"] as? Int{
             self.passYds = e
+            pts += floor(Float(e / 25))
         }
         if let e = json["PassingTouchdowns"] as? Int{
             self.passTds = e
+            pts += floor(Float(e * 4))
         }
         if let e = json["PassingInterceptions"] as? Int{
             self.passInts = e
+            pts += floor(Float(e * -2))
         }
         if let e = json["ReceivingYards"] as? Int{
             self.recYds = e
@@ -80,9 +84,42 @@ class Game{
         }
         if let e = json["RushingYards"] as? Int{
             self.rushYds = e
+            pts += floor(Float(e / 10))
         }
         if let e = json["RushingTouchdowns"] as? Int{
             self.rushTds = e
+            pts += floor(Float(e * 6))
+        }
+        if let e = json["FumbleReturnTouchdowns"] as? Int{
+            pts += floor(Float(e * 6))
+        }
+        if let e = json["TwoPointConversionPasses"] as? Int{
+            pts += floor(Float(e * 2))
+        }
+        if let e = json["FumblesLost"] as? Int{
+            pts += floor(Float(e * -2))
+        }
+        if let e = json["FieldGoalsMade"] as? Int{
+            pts += floor(Float(e * 3))
+        }
+        if let e = json["Sacks"] as? Int{
+            pts += floor(Float(e * 1))
+        }
+        if let e = json["Interceptions"] as? Int{
+            pts += floor(Float(e * 2))
+        }
+        if let e = json["FumblesRecovered"] as? Int{
+            pts += floor(Float(e * 2))
+        }
+        if let e = json["Safeties"] as? Int{
+            pts += floor(Float(e * 2))
+        }
+        
+        if let e = json["DefensiveTouchdowns"] as? Int{
+            pts += floor(Float(e * 6))
+        }
+        if let e = json["KickReturnTouchdowns"] as? Int{
+            pts += floor(Float(e * 6))
         }
         if let e = json["FieldGoalsMade0to19"] as? Int{
             self.fg0to19 = e

@@ -11,13 +11,22 @@ import SnapKit
 
 class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
+    ///Game to display data for
     var game: HCGameResult?
     
-    let header = UIView()
-    let tableView = UITableView()
-    let loading = HCLoadingView.init(info: "Loading")
-    var pScores = [(Int, UInt32)]()
+    ///Header view
+    var header: LiveGameHeaderView?
     
+    ///TableView containing players on both teams, sorted by points in this game
+    let tableView = UITableView()
+    
+    ///white background to cover tableView while loading
+    let loadingBg = UIView()
+    
+    ///loading view
+    let loading = HCLoadingView.init(info: "Loading")
+    
+    ///Arrays for all players involved in game
     var HCPlayerList: [HCPlayer]?
     var FDPlayerList: [FDPlayer]?
     
@@ -26,14 +35,103 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         self.edgesForExtendedLayout = UIRectEdge.None
         
         // change title of window
-        self.title = "Game"
+        self.title = "Week \(game!.week)"
         
         // add chat button
         let chatButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Compose, target: self, action: #selector(self.chatMethod))
         navigationItem.rightBarButtonItem = chatButton
         
-        addGameHeader()
-
+        setUpSubViews()
+        
+        HCPlayerList = [HCPlayer]()
+        FDPlayerList = [FDPlayer]()
+        
+        //request HCPlayer data for both users
+        HCHeadCoachDataProvider.sharedInstance.getAllPlayersForUserFromLeague(HCHeadCoachDataProvider.sharedInstance.league!, user: game!.users.0, completion: HCLiveGameViewController.onHDPlayerListResult(self))
+        HCHeadCoachDataProvider.sharedInstance.getAllPlayersForUserFromLeague(HCHeadCoachDataProvider.sharedInstance.league!, user: game!.users.1, completion: HCLiveGameViewController.onHDPlayerListResult(self))
+    }
+    
+    func onHDPlayerListResult(empty: Bool, players: [HCPlayer]){
+        if !empty {
+            for player in players{
+                //add player score and sort if active
+                if !player.isOnBench {
+                    //add player and request equivalent FDplayer
+                    HCPlayerList?.append(player)
+                    HCFantasyDataProvider.sharedInstance.getFDPlayerFromHCPlayer(player, completion: HCLiveGameViewController.onFDPlayerResult(self))
+                }
+            }
+        }
+    }
+    
+    // method for performing live player chat actions
+    func chatMethod(){
+        let vc = HCChatViewController()
+        vc.user = game!.users.0.id == HCHeadCoachDataProvider.sharedInstance.user!.id ? game!.users.1: game!.users.0
+        vc.updateConversations()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    ///Called on result of FDPlayer request
+    func onFDPlayerResult(player: FDPlayer){
+        FDPlayerList?.append(player)
+        requestGameData(forPlayer: player.id)
+        if(FDPlayerList?.count == HCPlayerList?.count){
+            HCPlayerList?.sortInPlace({ (p1, p2) -> Bool in
+                findFDIndex(p1.fantasy_id) < findFDIndex(p2.fantasy_id)
+            })
+            UIView.animateWithDuration(0.5, animations: {
+                self.loadingBg.alpha = 0.0
+                }, completion: { (b) in
+                    if b {
+                        self.loadingBg.hidden = true
+                    }
+            })
+            loading.dismiss(true)
+        }
+        tableView.reloadData()
+    }
+    
+    ///Returns index of equivalent FDPlayer object in FDPlayerList array
+    func findFDIndex(playerId: Int) -> Int{
+        for i in 0...FDPlayerList!.count-1{
+            if FDPlayerList![i].id == playerId{
+                return i
+            }
+        }
+        return -1
+    }
+    
+    ///Set up all subviews
+    func setUpSubViews(){
+        setUpGameHeader()
+        setUpTableView()
+        setUpLoadingBg()
+        setUpLoading()
+    }
+    
+    ///Set up loading view
+    func setUpLoading(){
+        self.view.addSubview(loading)
+        loading.snp_makeConstraints { (make) in
+            make.edges.equalTo(self.view)
+        }
+    }
+    
+    ///Set up loading background, covers only tableView
+    func setUpLoadingBg(){
+        loadingBg.backgroundColor = UIColor.whiteColor()
+        self.view.addSubview(loadingBg)
+        loadingBg.snp_makeConstraints { (make) in
+            make.left.equalTo(self.view)
+            make.right.equalTo(self.view)
+            make.bottom.equalTo(self.view)
+            make.top.equalTo(header!.snp_bottom)
+        }
+    }
+    
+    ///Set up player table view
+    func setUpTableView(){
         tableView.delegate = self
         tableView.dataSource = self
         tableView.allowsSelection = false
@@ -42,76 +140,44 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
             make.left.equalTo(self.view)
             make.right.equalTo(self.view)
             make.bottom.equalTo(self.view)
-            make.top.equalTo(header.snp_bottom)
+            make.top.equalTo(header!.snp_bottom)
         }
         self.tableView.registerClass(LiveGameTableViewCell.self, forCellReuseIdentifier: "LiveCell")
-        
-        self.view.addSubview(loading)
-        loading.snp_makeConstraints { (make) in
-            make.edges.equalTo(self.view)
-        }
-        
-        pScores.removeAll()
-        HCPlayerList = [HCPlayer]()
-        FDPlayerList = [FDPlayer]()
-        HCHeadCoachDataProvider.sharedInstance.getAllPlayersForUserFromLeague(HCHeadCoachDataProvider.sharedInstance.league!, user: game!.users.0, completion: HCLiveGameViewController.onHDPlayerListResult(self))
-        HCHeadCoachDataProvider.sharedInstance.getAllPlayersForUserFromLeague(HCHeadCoachDataProvider.sharedInstance.league!, user: game!.users.1, completion: HCLiveGameViewController.onHDPlayerListResult(self))
     }
     
-    func onHDPlayerListResult(empty: Bool, players: [HCPlayer]){
-        if !empty {
-            var gameScore = UInt32(players[0].user_id == game!.users.0.id ? game!.scores.0 : game!.scores.1)
-            print("\(gameScore)")
-            for player in players{
-                //add player score and sort
-                let points = arc4random_uniform(gameScore)
-                gameScore -= points
-                print("update \(gameScore)")
-                pScores.append((player.fantasy_id, points))
-                
-                //add player and request equivalent FDplayer
-                HCPlayerList?.append(player)
-                HCFantasyDataProvider.sharedInstance.getFDPlayerFromHCPlayer(player, completion: HCLiveGameViewController.onFDPlayerResult(self))
-                pScores.sortInPlace({ (s1, s2) -> Bool in
-                    s1.1 > s2.1
-                })
+    ///Set up user info header
+    func setUpGameHeader(){
+        header = LiveGameHeaderView(game: self.game!)
+        view.addSubview(header!)
+        header!.snp_makeConstraints { (make) in
+            make.height.equalTo(125)
+            make.width.equalTo(self.view)
+            make.top.equalTo(self.view)
+        }
+        
+        let userTap = UITapGestureRecognizer(target: self, action: #selector(HCLiveGameViewController.userTapped(_:)))
+        header?.addGestureRecognizer(userTap)
+    }
+    
+    ///Called on tap of header to open relevant user detail
+    func userTapped(sender: UITapGestureRecognizer){
+        let tapLocation = sender.locationInView(self.header!.u1Image)
+        if(header!.u1Image.pointInside(tapLocation, withEvent: nil)){
+            openUserDetailView(game!.users.0)
+        }
+        else{
+            let tapLocation = sender.locationInView(self.header!.u2Image)
+            if(header!.u2Image.pointInside(tapLocation, withEvent: nil)){
+                openUserDetailView(game!.users.1)
             }
         }
     }
     
-    // method for performing live player chat actions
-    func chatMethod(){
-        print(HCRandomInsultGenerator.sharedInstance.generateInsult())
-    }
-    
-    func onFDPlayerResult(player: FDPlayer){
-        FDPlayerList?.append(player)
-        FDPlayerList?.sortInPlace({ (p1, p2) -> Bool in
-            findScore(p1.id).index < findScore(p2.id).index
-        })
-        tableView.reloadData()
-        if(FDPlayerList?.count == HCPlayerList?.count){
-            HCPlayerList?.sortInPlace({ (p1, p2) -> Bool in
-                findFDIndex(p1.fantasy_id) < findFDIndex(p2.fantasy_id)
-            })
-            loading.dismiss(true)
-        }
-    }
-    
-    func getFDPlayerIndexForHCPlayer(player: HCPlayer) -> Int{
-        for fdplayer in FDPlayerList!{
-            if fdplayer.id == player.fantasy_id{
-                return FDPlayerList!.indexOf({ (fdplayer) -> Bool in
-                    return true
-                })!
-            }
-            else{ return FDPlayerList!.count + 1 }
-        }
-        return FDPlayerList!.count + 1
-    }
-    
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+    ///Open user detail for user
+    func openUserDetailView(forUser: HCUser) {
+        let vc = HCUserDetailViewController()
+        vc.user = forUser
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -119,27 +185,39 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         if (cell == nil)
         {
             cell = LiveGameTableViewCell(style: UITableViewCellStyle.Default,
-                                   reuseIdentifier:"LiveCell")
+                                         reuseIdentifier:"LiveCell")
         }
         let player = FDPlayerList![indexPath.row]
+        let winningTeam = HCPlayerList?[indexPath.row].user_id == (game?.scores.0 > game?.scores.1 ? game?.users.0.id : game?.users.1.id)
+        cell?.setPlayer(player, hcplayer: HCPlayerList![indexPath.row], pts: player.pts, winner: winningTeam)
         
-        cell?.setPlayer(player, hcplayer: HCPlayerList![indexPath.row], pts: findScore(player.id).score)
-        let winnerId = game!.scores.0 > game!.scores.1 ? game!.users.0.id : game!.users.1.id
-        cell?.backgroundColor = HCPlayerList?[indexPath.row].user_id == winnerId ? UIColor.whiteColor() : UIColor.footballColor(1.5).colorWithAlphaComponent(0.3)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(HCLiveGameViewController.cellTapped(_:)))
+        cell?.addGestureRecognizer(tap)
         return cell!
     }
     
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let vc = HCPlayerMoreDetailController(forHCPlayer: HCPlayerList![indexPath.row])
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    ///tableView cell tap
+    func cellTapped(sender: UITapGestureRecognizer)
+    {
+        //using sender, we can get the point in respect to the table view
+        let tapLocation = sender.locationInView(self.tableView)
+        
+        //using the tapLocation, we retrieve the corresponding indexPath
+        let indexPath = self.tableView.indexPathForRowAtPoint(tapLocation)
+        let vc = HCPlayerMoreDetailController(forHCPlayer: HCPlayerList![indexPath!.row])
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if(section == 0){
-//            return 2
-//        }
         return (FDPlayerList?.count)!
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-//        if(indexPath.section == 0 && indexPath.row == 0){
-//            return 60
-//        }
         return 60
     }
     
@@ -147,134 +225,23 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         return "Player List"
     }
     
-    func findFDIndex(playerId: Int) -> Int{
-        for i in 0...FDPlayerList!.count{
-            if FDPlayerList![i].id == playerId{
-                return i
-            }
-        }
-        return -1
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
     }
     
-    func findScore(playerId: Int) -> (index: Int, score: UInt32){
-        for i in 0...pScores.count-1{
-            if pScores[i].0 == playerId{
-                return (i, pScores[i].1)
-            }
-        }
-        return (-1, 0)
+    func requestGameData(forPlayer playerId: Int){
+        HCFantasyDataProvider.sharedInstance.getGameData(forWeek: (game?.week)!, forPlayer: playerId, handler: self.handleGameResponse)
     }
     
-    func addGameHeader(){
-        self.view.addSubview(header)
-        header.backgroundColor = UIColor.whiteColor()
-        header.snp_makeConstraints { (make) in
-            make.height.equalTo(60)
-            make.width.equalTo(self.view)
-            make.top.equalTo(self.view)
-        }
-        let u1bg = UIView()
-        let u2bg = UIView()
-        let u1Name = UILabel()
-        let u2Name = UILabel()
-        let u1Score = UILabel()
-        let u2Score = UILabel()
-        let divider = UIView()
-        /// A little star icon that will show up next to the winners score.
-        let win = UIImageView()
-        
-        self.view.addSubview(u1bg)
-        self.view.addSubview(u2bg)
-        self.view.addSubview(u1Name)
-        self.view.addSubview(u2Name)
-        self.view.addSubview(u1Score)
-        self.view.addSubview(u2Score)
-        self.view.addSubview(win)
-        self.view.addSubview(divider)
-        
-        u1bg.snp_makeConstraints { (make) in
-            make.left.equalTo(header)
-            make.right.equalTo(divider.snp_left)
-            make.top.equalTo(header)
-            make.bottom.equalTo(header)
-        }
-        
-        u2bg.snp_makeConstraints { (make) in
-            make.left.equalTo(divider.snp_right)
-            make.right.equalTo(header)
-            make.top.equalTo(header)
-            make.bottom.equalTo(header)
-        }
-        
-//        divider.backgroundColor = UIColor.init(white: 0.2, alpha: 0.2)
-        divider.backgroundColor = UIColor.whiteColor()
-        divider.snp_makeConstraints { (make) in
-            make.center.equalTo(self.header)
-            make.width.equalTo(1)
-            make.height.equalTo(self.header).multipliedBy(0.8)
-        }
-        
-        win.snp_makeConstraints { (make) in
-            make.height.equalTo(20)
-            make.width.equalTo(20)
-            make.centerY.equalTo(header)
-            if game?.scores.0 > game?.scores.1{
-                make.right.equalTo(divider.snp_left).offset(-3)
-            }
-            else{
-                make.left.equalTo(divider.snp_right).offset(3)
-            }
-        }
-        
-        u1Name.text = game!.users.0.name
-        u1Name.font = UIFont.systemFontOfSize(20)
-        u1Name.textColor = UIColor(white: 0.2, alpha: 1.0)
-        u1bg.backgroundColor = game?.scores.0 > game?.scores.1 ? UIColor.footballColor(1.5).colorWithAlphaComponent(0.3) : UIColor.whiteColor()
-        u1Name.sizeToFit()
-        u1Name.snp_makeConstraints { (make) in
-            make.centerY.equalTo(header)
-            if game?.scores.0 > game?.scores.1{
-                make.right.equalTo(win.snp_left).offset(-5)
-            }
-            else{
-                make.right.equalTo(divider.snp_left).offset(5)
-            }
-        }
-        
-        u2Name.text = game!.users.1.name
-        u2Name.font = UIFont.systemFontOfSize(20)
-        u2Name.textColor = UIColor(white: 0.2, alpha: 1.0)
-        u2bg.backgroundColor = game?.scores.1 > game?.scores.0 ? UIColor.footballColor(1.5).colorWithAlphaComponent(0.3) : UIColor.whiteColor()
-        u2Name.sizeToFit()
-        u2Name.snp_makeConstraints { (make) in
-            make.centerY.equalTo(header)
-            if game?.scores.1 > game?.scores.0{
-                make.left.equalTo(win.snp_right).offset(5)
-            }
-            else{
-                make.left.equalTo(divider.snp_right).offset(5)
-            }
-        }
-        
-        u1Score.text = String(game!.scores.0)
-        u1Score.font = UIFont.systemFontOfSize(20)
-        u1Score.textColor = UIColor.blackColor()
-        u1Score.sizeToFit()
-        u1Score.snp_makeConstraints { (make) in
-            make.left.equalTo(header).offset(10)
-            make.centerY.equalTo(header)
-        }
-        
-        u2Score.text = String(game!.scores.1)
-        u2Score.font = UIFont.systemFontOfSize(20)
-        u2Score.textColor = UIColor.blackColor()
-        u2Score.snp_makeConstraints { (make) in
-            make.right.equalTo(header).offset(-10)
-            make.centerY.equalTo(header)
-        }
-        
-        win.image = UIImage(named: "win")
-        win.contentMode = .ScaleAspectFill
-        
+    func handleGameResponse(index: Int, playerId: Int, data: Dictionary<String, AnyObject>){
+        let game = Game(json: data)
+        FDPlayerList?[findFDIndex(playerId)].pts = game.pts
+        FDPlayerList?.sortInPlace({ (p1, p2) -> Bool in
+            p1.pts > p2.pts
+        })
+        HCPlayerList?.sortInPlace({ (p1, p2) -> Bool in
+            findFDIndex(p1.fantasy_id) < findFDIndex(p2.fantasy_id)
+        })
+        tableView.reloadData()
     }
 }

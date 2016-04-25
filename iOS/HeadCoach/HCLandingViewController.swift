@@ -256,7 +256,6 @@ class HCLandingViewController: UIViewController, UITableViewDataSource, UITableV
     /// Opens the HCLiveGameViewController
     /// This view will be pushed on the current navigation controller.
     func openLiveGameView(game: HCGameResult) {
-        print("open")
         let vc = HCLiveGameViewController()
         vc.game = game
         self.navigationController?.pushViewController(vc, animated: true)

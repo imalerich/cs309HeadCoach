@@ -307,35 +307,35 @@ class PlayerDetailView: UIView {
         gameDetailContainer.backgroundColor = UIColor.whiteColor()
         bottom.addSubview(gameDetailContainer)
         
-        gameDetailLabels = GameStatView()
+        gameDetailLabels = GameStatView(style: UITableViewCellStyle.Default, reuseIdentifier: "game")
         gameDetailLabels.week.text = "Week"
         gameDetailLabels.opp.text = "Opp"
         gameDetailLabels.points.text = "Pts"
         gameDetailLabels.started.text = "Started"
-        gameDetailLabels.setTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5))
+        gameDetailLabels.setCustomTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5))
         gameDetailContainer.addSubview(gameDetailLabels)
         
         gameDetail1 = GameStatView()
-        gameDetailLabels.setTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
+        gameDetailLabels.setCustomTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
         gameDetailContainer.addSubview(gameDetail1)
         
         gameDetail2 = GameStatView()
-        gameDetailLabels.setTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
+        gameDetailLabels.setCustomTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
         gameDetailContainer.addSubview(gameDetail2)
         
         gameDetail3 = GameStatView()
-        gameDetailLabels.setTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
+        gameDetailLabels.setCustomTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
         gameDetailContainer.addSubview(gameDetail3)
         
         gameDetail4 = GameStatView()
-        gameDetailLabels.setTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
+        gameDetailLabels.setCustomTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
         gameDetailContainer.addSubview(gameDetail4)
         
         gameDetail5 = GameStatView()
-        gameDetailLabels.setTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
+        gameDetailLabels.setCustomTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.75))
         gameDetailContainer.addSubview(gameDetail5)
         
-        gameTable.registerClass(GameTableViewDetail.self, forCellReuseIdentifier: "game")
+        gameTable.registerClass(GameStatView.self, forCellReuseIdentifier: "game")
         gameTable.dataSource = delegate
         gameTable.delegate = delegate
         gameTable.hidden = true
@@ -649,11 +649,11 @@ class PlayerDetailView: UIView {
     func setOverviewGameData(forGameStatView gameStatViewNum: Int, game: Game){
         var gsv: GameStatView!
         switch(gameStatViewNum){
-        case 1: gsv = gameDetail1
-        case 2: gsv = gameDetail2
-        case 3: gsv = gameDetail3
-        case 4: gsv = gameDetail4
-        case 5: gsv = gameDetail5
+        case 0: gsv = gameDetail1
+        case 1: gsv = gameDetail2
+        case 2: gsv = gameDetail3
+        case 3: gsv = gameDetail4
+        case 4: gsv = gameDetail5
         default: gsv = gameDetail1
         }
         gsv.setGame(game)
