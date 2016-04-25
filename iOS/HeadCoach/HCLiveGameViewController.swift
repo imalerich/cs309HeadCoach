@@ -26,10 +26,6 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
     ///loading view
     let loading = HCLoadingView.init(info: "Loading")
     
-    ///array of pair objects representing scores for all players involved in this game
-    /// in the form (playerID, score)
-    var pScores = [(Int, UInt32)]()
-    
     ///Arrays for all players involved in game
     var HCPlayerList: [HCPlayer]?
     var FDPlayerList: [FDPlayer]?
@@ -47,7 +43,6 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         
         setUpSubViews()
         
-        pScores.removeAll()
         HCPlayerList = [HCPlayer]()
         FDPlayerList = [FDPlayer]()
         
@@ -58,20 +53,12 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
     
     func onHDPlayerListResult(empty: Bool, players: [HCPlayer]){
         if !empty {
-            var gameScore = UInt32(players[0].user_id == game!.users.0.id ? game!.scores.0 : game!.scores.1)
             for player in players{
                 //add player score and sort if active
                 if !player.isOnBench {
-                    let points = arc4random_uniform(gameScore)
-                    gameScore -= points
-                    pScores.append((player.fantasy_id, points))
-                    
                     //add player and request equivalent FDplayer
                     HCPlayerList?.append(player)
                     HCFantasyDataProvider.sharedInstance.getFDPlayerFromHCPlayer(player, completion: HCLiveGameViewController.onFDPlayerResult(self))
-                    pScores.sortInPlace({ (s1, s2) -> Bool in
-                        s1.1 > s2.1
-                    })
                 }
             }
         }
@@ -88,15 +75,12 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
     ///Called on result of FDPlayer request
     func onFDPlayerResult(player: FDPlayer){
         FDPlayerList?.append(player)
-        FDPlayerList?.sortInPlace({ (p1, p2) -> Bool in
-            findScore(p1.id).index < findScore(p2.id).index
-        })
-        tableView.reloadData()
+        requestGameData(forPlayer: player.id)
         if(FDPlayerList?.count == HCPlayerList?.count){
             HCPlayerList?.sortInPlace({ (p1, p2) -> Bool in
                 findFDIndex(p1.fantasy_id) < findFDIndex(p2.fantasy_id)
             })
-            UIView.animateWithDuration(0.5, animations: { 
+            UIView.animateWithDuration(0.5, animations: {
                 self.loadingBg.alpha = 0.0
                 }, completion: { (b) in
                     if b {
@@ -105,26 +89,17 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
             })
             loading.dismiss(true)
         }
+        tableView.reloadData()
     }
     
     ///Returns index of equivalent FDPlayer object in FDPlayerList array
     func findFDIndex(playerId: Int) -> Int{
-        for i in 0...FDPlayerList!.count{
+        for i in 0...FDPlayerList!.count-1{
             if FDPlayerList![i].id == playerId{
                 return i
             }
         }
         return -1
-    }
-    
-    ///Searches pScores and returns score pair in form (playerID, score) for given playerId
-    func findScore(playerId: Int) -> (index: Int, score: UInt32){
-        for i in 0...pScores.count-1{
-            if pScores[i].0 == playerId{
-                return (i, pScores[i].1)
-            }
-        }
-        return (-1, 0)
     }
     
     ///Set up all subviews
@@ -214,7 +189,7 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
         }
         let player = FDPlayerList![indexPath.row]
         let winningTeam = HCPlayerList?[indexPath.row].user_id == (game?.scores.0 > game?.scores.1 ? game?.users.0.id : game?.users.1.id)
-        cell?.setPlayer(player, hcplayer: HCPlayerList![indexPath.row], pts: findScore(player.id).score, winner: winningTeam)
+        cell?.setPlayer(player, hcplayer: HCPlayerList![indexPath.row], pts: player.pts, winner: winningTeam)
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(HCLiveGameViewController.cellTapped(_:)))
         cell?.addGestureRecognizer(tap)
@@ -252,5 +227,21 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
+    }
+    
+    func requestGameData(forPlayer playerId: Int){
+        HCFantasyDataProvider.sharedInstance.getGameData(forWeek: (game?.week)!, forPlayer: playerId, handler: self.handleGameResponse)
+    }
+    
+    func handleGameResponse(index: Int, playerId: Int, data: Dictionary<String, AnyObject>){
+        let game = Game(json: data)
+        FDPlayerList?[findFDIndex(playerId)].pts = game.pts
+        FDPlayerList?.sortInPlace({ (p1, p2) -> Bool in
+            p1.pts > p2.pts
+        })
+        HCPlayerList?.sortInPlace({ (p1, p2) -> Bool in
+            findFDIndex(p1.fantasy_id) < findFDIndex(p2.fantasy_id)
+        })
+        tableView.reloadData()
     }
 }

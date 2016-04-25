@@ -127,14 +127,15 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
     
     func requestGameData(){
         self.games = [Game]()
-        for index in 0...20{
+        if let end = HCHeadCoachDataProvider.sharedInstance.league?.week_number{
             let dp = HCFantasyDataProvider.sharedInstance
-            dp.getGameData(forWeek: index, forPlayer: fdplayer.id, handler: self.handleGameResponse)
+            for index in 0...end{
+                dp.getGameData(forWeek: index, forPlayer: fdplayer.id, handler: self.handleGameResponse)
+            }
         }
-
     }
 
-    func handleGameResponse(index: Int, data: Dictionary<String, AnyObject>){
+    func handleGameResponse(index: Int, playerId: Int, data: Dictionary<String, AnyObject>){
         let game = Game(json: data)
         self.games.append(game)
         self.games = games.sort { (g1, g2) -> Bool in
@@ -164,7 +165,7 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
         if(tableView === detail.statTable){
             return statsForCategory(currentCat).count
         }
-        else{ return games.count }
+        else{ return games.count + 1 }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -185,8 +186,13 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
             return cell
         }
         else{
-            let cell = tableView.dequeueReusableCellWithIdentifier("game") as! GameTableViewDetail
-            cell.game = games[indexPath.row]
+            let cell = tableView.dequeueReusableCellWithIdentifier("game") as! GameStatView
+            if(indexPath.row == 0){
+                cell.setAsHeader()
+            }
+            else{
+                cell.setGame(games[indexPath.row-1])
+            }
             return cell
         }
     }
@@ -212,6 +218,8 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
     func parseStatisticalData(json: Dictionary<String, AnyObject>) {
         statistics = Dictionary<String, Dictionary<String, String>>()
         
+        var pts: Float = 0
+        
         var general = Dictionary<String, String>()
         generalStats = [String]()
         if let g = json["Played"]{
@@ -232,11 +240,13 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
         }
         if let g = json["Touchdowns"]{
             generalStats.append("Touchdowns")
+            pts += floor(Float(g as! Int * 6))
             general.updateValue(String(g as! Int), forKey: "Touchdowns")
         }
         if let g = json["FieldGoalsMade"]{
             generalStats.append("Field Goals Made")
             general.updateValue(String(g as! Int), forKey: "Field Goals Made")
+            pts += floor(Float(g as! Int * 3))
         }
         if let g = json["Fumbles"]{
             generalStats.append("Fumbles")
@@ -321,6 +331,7 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
         }
         if let p1 = json["PassingInterceptions"]{
             passingStats.append("Passing Interceptions")
+            pts += floor(Float(p1 as! Int * -2))
             passing.updateValue(String(p1 as! Int), forKey: "Passing Interceptions")
         }
         if let p1 = json["PassingRating"]{
@@ -338,6 +349,44 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
         if let p1 = json["TwoPointConversionPasses"]{
             passingStats.append("2pt Conversion Passes")
             passing.updateValue(String(p1 as! Int), forKey: "2pt Conversion Passes")
+            pts += floor(Float(p1 as! Int * 2))
+        }
+        
+        if let e = json["RushingYards"] as? Int{
+            pts += floor(Float(e / 10))
+        }
+        if let e = json["RushingTouchdowns"] as? Int{
+            pts += floor(Float(e * 6))
+        }
+        if let e = json["FumbleReturnTouchdowns"] as? Int{
+            pts += floor(Float(e * 6))
+        }
+        if let e = json["TwoPointConversionPasses"] as? Int{
+            pts += floor(Float(e * 2))
+        }
+        if let e = json["FumblesLost"] as? Int{
+            pts += floor(Float(e * -2))
+        }
+        if let e = json["FieldGoalsMade"] as? Int{
+            pts += floor(Float(e * 3))
+        }
+        if let e = json["Sacks"] as? Int{
+            pts += floor(Float(e * 1))
+        }
+        if let e = json["Interceptions"] as? Int{
+            pts += floor(Float(e * 2))
+        }
+        if let e = json["FumblesRecovered"] as? Int{
+            pts += floor(Float(e * 2))
+        }
+        if let e = json["Safeties"] as? Int{
+            pts += floor(Float(e * 2))
+        }
+        if let e = json["DefensiveTouchdowns"] as? Int{
+            pts += floor(Float(e * 6))
+        }
+        if let e = json["KickReturnTouchdowns"] as? Int{
+            pts += floor(Float(e * 6))
         }
         statistics.updateValue(passing, forKey: "Passing")
         
@@ -378,6 +427,7 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
         if let d = json["Sacks"]{
             defensiveStats.append("Sacks")
             def.updateValue(String(d as! Int), forKey: "Sacks")
+            pts += floor(Float(d as! Int))
         }
         if let d = json["PassesDefended"]{
             defensiveStats.append("Passes Defended")
@@ -415,17 +465,21 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
         
         var rush = Dictionary<String, String>()
         rushStats = [String]()
+        var att = -1;
         if let r = json["RushingAttempts"]{
             rushStats.append("Rush Attempts")
             rush.updateValue(String(r as! Int), forKey: "Rushing Attempts")
+            att = r as! Int
         }
         if let r = json["RushingYardsPerAttempts"]{
             rushStats.append("Rush Yards/Attempt")
             rush.updateValue(String(r as! Float), forKey: "Rushing Yards/Attempt")
+            if(att >= 0){ pts += floor(r as! Float / 10) }
         }
         if let r = json["RushingTouchdowns"]{
             rushStats.append("Rush Touchdowns")
             rush.updateValue(String(r as! Int), forKey: "Rushing Touchdowns")
+            pts += floor(Float(r as! Int * 6))
         }
         if let r = json["RushingLong"]{
             rushStats.append("Longest Rush")

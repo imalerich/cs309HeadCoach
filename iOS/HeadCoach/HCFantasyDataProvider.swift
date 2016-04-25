@@ -74,7 +74,7 @@ class HCFantasyDataProvider{
         }
     }
 
-    func getGameData(forWeek week: Int, forPlayer playerId: Int, handler: (Int, Dictionary<String, AnyObject>) -> Void){
+    func getGameData(forWeek week: Int, forPlayer playerId: Int, handler: (Int, Int, Dictionary<String, AnyObject>) -> Void){
         let headers = ["Ocp-Apim-Subscription-Key" : key]
         let url = "\(api)/PlayerGameStatsByPlayerID/2015/\(String(week))/\(String(playerId))"
 
@@ -83,7 +83,7 @@ class HCFantasyDataProvider{
                 switch response.result {
                 case .Success(let JSON):
                     let data = JSON as! Dictionary<String, AnyObject>
-                    handler(week, data)
+                    handler(week, playerId, data)
 
                 case .Failure(let error):
                     print("Week \(week) game data request failed with error: \(error)")

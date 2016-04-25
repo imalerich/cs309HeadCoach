@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import SnapKit
 
-class GameStatView: UIView {
+class GameStatView: UITableViewCell{
     
     var week: UILabel!
     var opp: UILabel!
@@ -10,20 +10,17 @@ class GameStatView: UIView {
     var started: UILabel!
     
     func setGame(game: Game){
-        setTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5))
+        setCustomTextColor(UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5))
         week.text = String(game.week!)
         opp.text = game.opp
-        points.text = String(32.20)
+        points.text = String(game.pts)
         started.text = game.started
     }
-
-    override init (frame : CGRect) {
-        super.init(frame : frame)
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         addCustomView()
-    }
-
-    convenience init () {
-        self.init(frame:CGRectZero)
+        setConstraints()
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -87,8 +84,15 @@ class GameStatView: UIView {
             make.width.equalTo(week)
         }
     }
+    
+    func setAsHeader(){
+        week.text = "Week"
+        opp.text = "Opp"
+        points.text = "Pts"
+        started.text = "Started"
+    }
 
-    func setTextColor(color: UIColor){
+    func setCustomTextColor(color: UIColor){
         week.textColor = color
         opp.textColor = color
         points.textColor = color
