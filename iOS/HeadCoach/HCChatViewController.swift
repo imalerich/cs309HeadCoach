@@ -126,7 +126,7 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
     let CELL_ID = "MessagingCell"
 
     /// The height of our text field.
-    let CHAT_HEIGHT = CGFloat(60)
+    let CHAT_HEIGHT = CGFloat(50)
 
     // Offset bounds for the text field inside of the 'chatView'.
     let TEXT_OFFSET = CGFloat(8)
@@ -163,6 +163,7 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         title = user.name
         chatView.backgroundColor = UIColor(white: 244/255.0, alpha: 1.0)
         view.backgroundColor = chatView.backgroundColor
+        edgesForExtendedLayout = .None
 
         view.addSubview(tableView)
         view.addSubview(chatView)
@@ -175,6 +176,7 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.estimatedRowHeight = 20
         tableView.registerClass(HCChatBubbleCell.self, forCellReuseIdentifier: CELL_ID)
         tableView.backgroundColor = UIColor.whiteColor()
+        tableView.transform = CGAffineTransformMakeScale(1, -1)
 
         tableView.snp_makeConstraints { (make) in
             make.top.right.left.equalTo(view)
@@ -247,6 +249,7 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
                                                          name: UIKeyboardWillHideNotification, object: nil)
 
         addProfileButton()
+        updateConversations()
         let _ = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: #selector(self.updateConversations), userInfo: nil, repeats: true)
     }
 
@@ -255,17 +258,6 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
         let dp = HCHeadCoachDataProvider.sharedInstance
         dp.readConversation(dp.user!, user1: user) { (err) in /* nothing to do */ }
-        scrollToBottom(false)
-    }
-
-    /// Scroll to the bottom of the tableView, this has been pretty buggy for some reason.
-    func scrollToBottom(animated: Bool) {
-        if let messages = convos[user.id] {
-            let count = messages.count
-            if count > 0 {
-                tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: count - 1, inSection: 0), atScrollPosition: .Bottom, animated: animated)
-            }
-        }
     }
 
     /// Periodically update the conversations so the output of
@@ -276,11 +268,18 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if let user = dp.user {
             dp.getMessages(user, completion: { (err, convos) in
                 self.convos = convos
+                self.reverseConvos()
                 self.sendingMessage = false
 
                 self.tableView.reloadData()
-                self.scrollToBottom(false)
             })
+        }
+    }
+
+    /// Reverses the order of all messages.
+    internal func reverseConvos() {
+        for key in convos.keys {
+            convos[key] = convos[key]?.reverse()
         }
     }
 
@@ -408,6 +407,7 @@ class HCChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(CELL_ID, forIndexPath: indexPath) as! HCChatBubbleCell
+        cell.transform = CGAffineTransformMakeScale(1, -1)
 
         if let messages = convos[user.id] {
             let msg = messages[indexPath.row]

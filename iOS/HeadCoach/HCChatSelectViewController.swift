@@ -210,7 +210,6 @@ class HCChatSelectViewController: UIViewController, UITableViewDelegate, UITable
 
         let vc = HCChatViewController()
         let key = keys[indexPath.row]
-        vc.convos = convos
 
         if let user = getUserByID(key) {
             vc.user = user
