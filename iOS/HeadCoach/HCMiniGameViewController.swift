@@ -43,7 +43,7 @@ class HCMiniGameViewController: UIViewController {
     var cycleDuration = CGFloat(3.0)
 
     /// The time the current cycle of the goal post started on.
-    var cycleStartTime = NSDate()
+    var cycleStartTime = NSTimeInterval(0)
 
     /// Only allowed to kick while the football is 
     /// not animating.
@@ -167,7 +167,7 @@ class HCMiniGameViewController: UIViewController {
     /// score.
     private func checkIfScored() {
         // Height of the horizontal beam of the goal gost.
-        let scoreLine = CGFloat(8 + 100 * 0.51)
+        let scoreLine = CGFloat(8 + 200 * 0.51)
 
         // We need to know when the ball will be at the score line.
         let dpPerSec = view.frame.size.height / CGFloat(KICK_SPEED)
@@ -178,34 +178,34 @@ class HCMiniGameViewController: UIViewController {
 
         // Horizontal boundig box for the ball.
         let ballWidth = CGFloat(100 * 0.583)
-        let minBallBounds = CGFloat(view.frame.size.width - ballWidth) / CGFloat(2.0)
-        let maxBallBounds = CGFloat(view.frame.size.width + ballWidth) / CGFloat(2.0)
 
         // when will the goal post be within bounds for scoring
-        let minGoalBounds = CGFloat(maxBallBounds - 200 * 0.813)
-        let maxGoalBounds = CGFloat(minBallBounds + 200 * 0.813)
-        let cycleSpeed = CGFloat(view.frame.size.width / cycleDuration)
+        let postWidth = CGFloat(200 * 0.8126 * 0.91)
+        let minGoalBounds = CGFloat(view.frame.size.width - postWidth + ballWidth) / CGFloat(2.0)
+        let maxGoalBounds = CGFloat(view.frame.size.width + postWidth - ballWidth) / CGFloat(2.0)
+        let offset = self.view.frame.size.width - (200 * 0.813)
+        let cycleSpeed = CGFloat(offset / cycleDuration)
 
         // note these calculation are performed assuming the goal post is moving left
         // but this game is symmetric about the Y axis, so this should work for 
         // when the goal post is moving right as well
-        let atMinTime = cycleStartTime.dateByAddingTimeInterval(NSTimeInterval(minGoalBounds / cycleSpeed)).timeIntervalSince1970
-        let atMaxTime = cycleStartTime.dateByAddingTimeInterval(NSTimeInterval(maxGoalBounds / cycleSpeed)).timeIntervalSince1970
+        let atMinTime = cycleStartTime + NSTimeInterval(minGoalBounds / cycleSpeed)
+        let atMaxTime = cycleStartTime + NSTimeInterval(maxGoalBounds / cycleSpeed)
 
         if atGoalTime >= atMinTime && atGoalTime <= atMaxTime {
             // wait until the ball has actually passed the bounds to update the score
-            performSelector(#selector(self.scorePoint), withObject: nil, afterDelay: timeToGoal)
-            incrementDifficulty()
+            performSelector(#selector(self.missPoint), withObject: nil, afterDelay: timeToGoal)
         } else {
             // wait until the ball has actually passed the bounds to update the score
-            performSelector(#selector(self.missPoint), withObject: nil, afterDelay: timeToGoal)
+            performSelector(#selector(self.scorePoint), withObject: nil, afterDelay: timeToGoal)
+            incrementDifficulty()
         }
     }
 
     /// Move's the post in the current 'postDir'.
     private func animatePost() {
         // Update the start time for the current travel distance.
-        cycleStartTime = NSDate()
+        cycleStartTime = NSDate().timeIntervalSince1970
 
         // Animate the goal post to the other side of the field.
         UIView.animateWithDuration(NSTimeInterval(cycleDuration), animations: {
