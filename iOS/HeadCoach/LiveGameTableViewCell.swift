@@ -55,7 +55,7 @@ class LiveGameTableViewCell: UITableViewCell{
         }
     }
     
-    func setPlayer(fdplayer: FDPlayer, hcplayer: HCPlayer, pts: Float, winner: Bool){
+    func setPlayer(fdplayer: FDPlayer, hcplayer: HCPlayer, pts: Int, winner: Bool){
         position.text = HCPositionUtil.positionToString(hcplayer.position)
         name.text = fdplayer.name
         points.text = String(pts)

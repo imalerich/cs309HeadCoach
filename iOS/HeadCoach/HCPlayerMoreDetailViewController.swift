@@ -145,10 +145,21 @@ class HCPlayerMoreDetailController: UIViewController, UITableViewDelegate, UITab
                 return false
             }
         }
-        for i in 0...4 {
-            if(i < games.count){
-                self.detail.setOverviewGameData(forGameStatView: i, game: games[i])
+        if let end = HCHeadCoachDataProvider.sharedInstance.league?.week_number{
+            var started = 0
+            var played = 0
+            for i in 0...end {
+                if(i < games.count){
+                    if(i < 5){
+                        self.detail.setOverviewGameData(forGameStatView: i, game: games[i])
+                    }
+                    played += 1
+                    if(games[i].started){
+                        started += 1
+                    }
+                }
             }
+            detail.setOverviewStatData("Played", stat1Text: String(played), stat2Label: "Started", stat2Text: String(started), stat3Label: "Activated", stat3Text: String(played), stat4Label: "Touchdowns", stat4Text: nil, stat5Label: "Tackles", stat5Text: nil, stat6Label: "Fumbles", stat6Text: nil)
         }
         detail.gameTable.reloadData()
     }

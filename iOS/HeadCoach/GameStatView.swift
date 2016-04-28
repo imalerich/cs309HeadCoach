@@ -14,7 +14,7 @@ class GameStatView: UITableViewCell{
         week.text = String(game.week!)
         opp.text = game.opp
         points.text = String(game.pts)
-        started.text = game.started
+        started.text = game.started ? "Yes" : "No"
     }
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {

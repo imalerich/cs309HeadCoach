@@ -30,6 +30,11 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
     var HCPlayerList: [HCPlayer]?
     var FDPlayerList: [FDPlayer]?
     
+    var u1PlayerPts = 0
+    var u1GameResults = 0
+    var u2PlayerPts = 0
+    var u2GameResults = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.edgesForExtendedLayout = UIRectEdge.None
@@ -235,13 +240,22 @@ class HCLiveGameViewController: UIViewController, UITableViewDataSource, UITable
     
     func handleGameResponse(index: Int, playerId: Int, data: Dictionary<String, AnyObject>){
         let game = Game(json: data)
-        FDPlayerList?[findFDIndex(playerId)].pts = game.pts
+        let pts = Int(game.pts)
+        FDPlayerList?[findFDIndex(playerId)].pts = pts
         FDPlayerList?.sortInPlace({ (p1, p2) -> Bool in
             p1.pts > p2.pts
         })
         HCPlayerList?.sortInPlace({ (p1, p2) -> Bool in
             findFDIndex(p1.fantasy_id) < findFDIndex(p2.fantasy_id)
         })
+        let fdind = findFDIndex(playerId)
+        if(HCPlayerList?[fdind].user_id == self.game?.users.0.id){
+            u1PlayerPts += pts
+            u1GameResults += 1
+        } else{
+            u2PlayerPts += pts
+            u2GameResults += 1
+        }
         tableView.reloadData()
     }
 }

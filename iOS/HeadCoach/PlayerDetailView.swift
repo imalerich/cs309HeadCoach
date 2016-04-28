@@ -633,17 +633,17 @@ class PlayerDetailView: UIView {
     
     func setOverviewStatData(stat1Label: String, stat1Text: String?, stat2Label: String, stat2Text: String?, stat3Label: String, stat3Text: String?, stat4Label: String, stat4Text: String?, stat5Label: String, stat5Text:String?, stat6Label: String, stat6Text: String?){
         self.stat1Label.text = stat1Label
-        self.stat1Text.text = stat1Text == nil ? "-" : stat1Text
+        if(stat1Text != nil){self.stat1Text.text = stat1Text}
         self.stat2Label.text = stat2Label
-        self.stat2Text.text = stat2Text == nil ? "-" : stat2Text
+        if(stat2Text != nil){self.stat2Text.text = stat2Text}
         self.stat3Label.text = stat3Label
-        self.stat3Text.text = stat3Text == nil ? "-" : stat3Text
+        if(stat3Text != nil){self.stat3Text.text = stat3Text}
         self.stat4Label.text = stat4Label
-        self.stat4Text.text = stat4Text == nil ? "-" : stat4Text
+        if(stat4Text != nil){self.stat4Text.text = stat4Text}
         self.stat5Label.text = stat5Label
-        self.stat5Text.text = stat5Text == nil ? "-" : stat5Text
+        if(stat5Text != nil){self.stat5Text.text = stat5Text}
         self.stat6Label.text = stat6Label
-        self.stat6Text.text = stat6Text == nil ? "-" : stat6Text
+        if(stat6Text != nil){self.stat6Text.text = stat6Text}
     }
     
     func setOverviewGameData(forGameStatView gameStatViewNum: Int, game: Game){

@@ -21,7 +21,7 @@ class Game{
     var fg30to39:Int?
     var fg40to49:Int?
     var fg50plus:Int?
-    var started:String?
+    var started:Bool = false
     
     init(week: Int, opp:String, homeOrAway:String, passYds:Int, passTds:Int, passInts:Int, recYds:Int, recTds:Int, recInts:Int, rushYds:Int, rushTds:Int, score:Int, oppScore:Int, fg0to19:Int, fg20to29:Int, fg30to39:Int, fg40to49:Int, fg50plus:Int, started:Int){
         pts = 0;
@@ -44,9 +44,9 @@ class Game{
         self.fg40to49 = fg40to49
         self.fg50plus = fg50plus
         if(started == 1){
-            self.started = "Yes"
+            self.started = true
         }else{
-            self.started = "No"
+            self.started = false
         }
     }
     
@@ -138,9 +138,9 @@ class Game{
         }
         if let e = json["Started"] as? Int{
             if(e == 1){
-                self.started = "Yes"
+                self.started = true
             }else{
-                self.started = "No"
+                self.started = false
             }
         }
     }
